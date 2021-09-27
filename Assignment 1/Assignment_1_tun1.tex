@@ -19,6 +19,38 @@
 
 \maketitle
 
+\textbf{Analysis} \\
+
+The first paragraph of the description is ignored when creating the ER diagram
+since it is just an introduction.
+
+The sentence ``First, the system will store information about several cinemas''
+indicates that there is an entity Cinema for the diagram. ``Each cinema has
+a unique name and anaddress'' shows that the entity Cinema has attributes name
+and address. Although each cinema has a unique name, cinema names have changed
+in the past. Thus, we cannot let the attribute name be the primary key. We cannot
+let the attribute address be the primary key either since the location of a
+cinema may change (e.g., moving the cinema to another place or expanding the
+cinema). Thus, I believe it is better to add another attribute called cid, stands
+for cinema id, and let this attribute be the primary key. Therefore, the Cinema
+entity has three cid, name and address where cid is the primary key.
+
+``Per cinema, the system will also maintain information per room'' illustrates
+that the entity Room is a owned by the entity Cinema. In other words, Room is a
+weak entity of Cinema since a room can only be uniquely defined when there is a
+cinema corresponding with it. Since each room has a different room number, the
+attribute room\_num is added to be the partial key for the entity Room. So, the
+primary key for the entity Room is the pair (cid, room\_num). Based on the 
+description, the entity also has attributes screen\_type, screen\_size,
+projector\_type, sound\_system and accessibility. The examples of screen type,
+projector type, sound system are ignored since we focus on the attributes rather
+than the examples of each attribute when creating the diagram.
+
+``This information is not only available for cinema visitors, but will also be
+communicated to private partiesthat are looking to hire a room (e.g., for a
+corporate event)'' is ignored since the visibility is not restricted to anyone
+and 
+
  
 
 \end{document}
