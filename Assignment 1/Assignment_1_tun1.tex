@@ -6,8 +6,27 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{clrscode3e}
+\usepackage{tikz}
+\usepackage[normalem]{ulem}
 
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,shapes.geometric}
+\tikzset{
+    >=Stealth,
+    er/.style={
+        attr/.append style={align=center,draw,thick,ellipse,text width=2cm,text height=1.5ex,text depth=.25ex,font=\strut},
+        entity/.append style={align=center,draw,thick,rectangle,text width=2cm,text height=2ex,text depth=.25ex,minimum height=1cm,font=\strut},
+        rel/.append style={align=center,draw,thick,diamond,text width=2cm,text height=1.5ex,text depth=.25ex,font=\strut,fill=black!10,scale=0.65},
+        isa/.append style={regular polygon, regular polygon sides=3,draw,thick,scale=0.65,font={ISA}},
+        total/.append style={ultra thick},
+        weak/.append style={ultra thick},
+        once/.append style={->},
+        strict/.append style={-Arc Barb[]},
+        every edge/.append style={draw,thick}
+    }
+}
+
+\newcommand{\key}[1]{\underline{\smash{#1}}}
+\newcommand{\pkey}[1]{\dashuline{\smash{#1}}}
 \newcommand{\mname}[1]{\mbox{\sf #1}}
 \newcommand{\pnote}[1]{{\langle \text{#1} \rangle}}
 
@@ -49,8 +68,32 @@ than the examples of each attribute when creating the diagram.
 ``This information is not only available for cinema visitors, but will also be
 communicated to private partiesthat are looking to hire a room (e.g., for a
 corporate event)'' is ignored since the visibility is not restricted to anyone
-and 
+and also, the database is more for storing data rather than showing data.
+``Finally, per room the system also needs to knowthe exact seat arrangement, as
+the online system will allow customers to order tickets for specific seats''
+indicates that the entity Seat is a weak entity of the entity Room since seat is
+a part of the room. The sentence also shows that there is an entity Ticket that
+has a relationship with Seat, this will be explain in details later. The next two
+sentences of the description shows that the entity Seat should have attributes
+row, seat\_num and reserved (which means reserved for disabled people). Since
+only row or seat\_num cannot uniquely identify the seat, I combine the two
+attributes into an attribute row\_and\_seat\_num and let it be the partial key
+for the entity Seat. Thus, the primary key for the entity Seat is (cid, room\_
+num, row\_and\_seat\_num).
 
+``Each screening is assigned a single room'' depicts that there is a one-to-many
+relationship from an entity Screening to the entity Room. The relationship name
+is Room\_Assign and the
+\begin{tikzpicture}[er]
+    \path (0,0) edge[strict] (1,0); 
+\end{tikzpicture}
+arrow from the entity Screening to the relationship Room\_Assign shows that each
+screening is associated with exactly one room while the
+\begin{tikzpicture}[er]
+    \path (0,0) edge (1,0);
+\end{tikzpicture}
+arrow from the entity Room to the relationship Room\_Assign shows that a room
+can have multiple screenings
  
 
 \end{document}
