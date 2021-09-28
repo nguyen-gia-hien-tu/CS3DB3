@@ -93,7 +93,22 @@ screening is associated with exactly one room while the
     \path (0,0) edge (1,0);
 \end{tikzpicture}
 arrow from the entity Room to the relationship Room\_Assign shows that a room
-can have multiple screenings
+can have multiple screenings. The Screening entity has attributes timeslot and
+screening\_type. The explanation of three types of screening and how each type
+affect the ticket price is ignored. ``For each public screening, the system keeps
+track which films are shown. This film information is provided by the film
+distributors in a standard format: for now, the system represents this external
+information via an entity Film with an attribute fid'' depicts that there is a
+relationship between the entity Screening and Film, the relationship is named
+Show in the diagram. There is also the entity Film with the primary key attribute
+fid, as stated in the description. The relationship between Screening and Film
+is many-to-many since a screening can show multiple films and a film can be shown
+in many screenings. ``If a screening will show multiple films (as part of special
+screening), then each of these films will be shown in the same room'' is ingnored
+because this can be inferred as many films are shown in a screening and a
+screening is associated with exactly one room. ``\dots and the ticket of the
+customer assign the same seat during each film'' shows that there is a one to
+many relationship between an entity Ticket and the entity Seat.
  
 
 \end{document}
