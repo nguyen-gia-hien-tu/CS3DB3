@@ -50,17 +50,18 @@ and address. Although each cinema has a unique name, cinema names have changed
 in the past. Thus, we cannot let the attribute name be the primary key. We cannot
 let the attribute address be the primary key either since the location of a
 cinema may change (e.g., moving the cinema to another place or expanding the
-cinema). Thus, I believe it is better to add another attribute called cid, stands
-for cinema id, and let this attribute be the primary key. Therefore, the Cinema
-entity has three cid, name and address where cid is the primary key.
+cinema). Thus, I believe it is better to add another attribute called \key{cinema\_id},
+stands for cinema id, and let this attribute be the primary key. Therefore, the
+Cinema entity has three attributes \key{cinema\_id}, name and address where
+\key{cinema\_id} is the primary key.
 
 ``Per cinema, the system will also maintain information per room'' illustrates
 that the entity Room is a owned by the entity Cinema. In other words, Room is a
 weak entity of Cinema since a room can only be uniquely defined when there is a
 cinema corresponding with it. Since each room has a different room number, the
-attribute room\_num is added to be the partial key for the entity Room. So, the
-primary key for the entity Room is the pair (cid, room\_num). Based on the 
-description, the entity also has attributes screen\_type, screen\_size,
+attribute \pkey{room\_num} is added to be the partial key for the entity Room.
+So, the primary key for the entity Room is the pair (\key{cinema\_id}, \pkey{room\_num}).
+Based on the  description, the entity also has attributes screen\_type, screen\_size,
 projector\_type, sound\_system and accessibility. The examples of screen type,
 projector type, sound system are ignored since we focus on the attributes rather
 than the examples of each attribute when creating the diagram.
@@ -75,11 +76,9 @@ indicates that the entity Seat is a weak entity of the entity Room since seat is
 a part of the room. The sentence also shows that there is an entity Ticket that
 has a relationship with Seat, this will be explain in details later. The next two
 sentences of the description shows that the entity Seat should have attributes
-row, seat\_num and reserved (which means reserved for disabled people). Since
-only row or seat\_num cannot uniquely identify the seat, I combine the two
-attributes into an attribute row\_and\_seat\_num and let it be the partial key
-for the entity Seat. Thus, the primary key for the entity Seat is (cid, room\_
-num, row\_and\_seat\_num).
+\pkey{row}, \pkey{seat\_num} and reserved (which means reserved for disabled
+people). Thus, the primary key for the entity Seat is the tuple (\key{cinema\_id},
+\pkey{room\_num}, \pkey{row}, \pkey{seat\_num}).
 
 ``Each screening is assigned a single room'' depicts that there is a one-to-many
 relationship from an entity Screening to the entity Room. The relationship name
@@ -90,25 +89,29 @@ is Room\_Assign and the
 arrow from the entity Screening to the relationship Room\_Assign shows that each
 screening is associated with exactly one room while the
 \begin{tikzpicture}[er]
-    \path (0,0.5) edge (1,0.5);
+    \path (0,1) edge (1,1);
 \end{tikzpicture}
 arrow from the entity Room to the relationship Room\_Assign shows that a room
 can have multiple screenings. The Screening entity has attributes timeslot and
-screening\_type. The explanation of three types of screening and how each type
-affect the ticket price is ignored. ``For each public screening, the system keeps
-track which films are shown. This film information is provided by the film
-distributors in a standard format: for now, the system represents this external
-information via an entity Film with an attribute fid'' depicts that there is a
-relationship between the entity Screening and Film, the relationship is named
-Show in the diagram. There is also the entity Film with the primary key attribute
-fid, as stated in the description. The relationship between Screening and Film
-is many-to-many since a screening can show multiple films and a film can be shown
-in many screenings. ``If a screening will show multiple films (as part of special
-screening), then each of these films will be shown in the same room'' is ingnored
-because this can be inferred as many films are shown in a screening and a
-screening is associated with exactly one room. ``\dots and the ticket of the
-customer assign the same seat during each film'' shows that there is a one to
-many relationship between an entity Ticket and the entity Seat.
+screening\_type. Since timeslot and screening\_type can be the same for different
+screenings, we need to have a different, unique attribute for each screening. We
+name that atttribute \key{screening\_id}. The explanation of three types of
+screening and how each type affect the ticket price is ignored. ``For each public
+screening, the system keeps track which films are shown. This film information is
+provided by the film distributors in a standard format: for now, the system
+represents this external information via an entity Film with an attribute fid''
+depicts that there is a relationship between the entity Screening and Film, the
+relationship is named Show in the diagram. There is also the entity Film with the
+primary key attribute fid, as stated in the description. The relationship between
+Screening and Film is many to many since a screening can show multiple films and
+a film can be shown in many screenings. ``If a screening will show multiple films
+(as part of special screening), then each of these films will be shown in the
+same room'' is ingnored because this can be inferred as many films are shown in
+a screening and a screening is associated with exactly one room. ``\dots and the
+ticket of the customer assign the same seat during each film'' shows that there
+is a one to many relationship between an entity Ticket and the entity Seat since
+one ticket is only assigned with exactly one seat while one seat can have many
+tickets being assigned to.
 
 ``Via an (online) sale, customers can buy one or more tickets for a specific
 screening and that are assigned a seat on sale'' first, shows that there is an
@@ -120,7 +123,7 @@ Screening, namely, Screening\_Assign. Thus, the
 \end{tikzpicture}
 arrow is used from Ticket to Screening\_Assign and the
 \begin{tikzpicture}[er]
-    \path (0,0.5) edge (1,0.5);
+    \path (0,1) edge (1,1);
 \end{tikzpicture}
 arrow is used from Screening\_Assign to Screening since one ticket can only have
 exactly one screening associated with it while one screening can have multiple
@@ -134,7 +137,9 @@ attribute reservation. The next sentence shows that there should be an attribute
 mode\_of\_purchase for entity Ticket to keep track of how they are made. ``whether
 the sale was related to a reservation'' reassures that there should be an 
 attribute reservation for the entity Ticket. Lastly, the attribute price is added
-to keep track of the paid price.
+to keep track of the paid price. However, these attributes are not unique, so,
+we need to define a unique attribute for the entity Ticket. We name this attribute
+\key{ticket\_id}.
 
 Furthermore, the sentence ``Via an (online) sale,customers can buy one or more
 tickets\dots'' shows that there is an entity Customer and there should be a one
@@ -146,7 +151,12 @@ arrow points from the entity Ticket to the relationship Buy and the
 \begin{tikzpicture}[er]
     \path (0,0) edge (1,0); 
 \end{tikzpicture}
-arrow points 
+arrow points from the relationship Buy and the entity Customer since a ticket can
+only be bought by one customer but a customer can buy multiple tickets. Since
+the description does not mention about the information of the entity Customer,
+we can add some extra attributes to the entity Customer. Let \key{customer\_id}
+be the primary key attribute for entity Customer. We can add some more attributes
+including firstname, lastname, dob (stands for date of birth).
 
 
 \end{document}
