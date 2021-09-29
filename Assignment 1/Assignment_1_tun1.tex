@@ -90,7 +90,7 @@ is Room\_Assign and the
 arrow from the entity Screening to the relationship Room\_Assign shows that each
 screening is associated with exactly one room while the
 \begin{tikzpicture}[er]
-    \path (0,0) edge (1,0);
+    \path (0,0.5) edge (1,0.5);
 \end{tikzpicture}
 arrow from the entity Room to the relationship Room\_Assign shows that a room
 can have multiple screenings. The Screening entity has attributes timeslot and
@@ -109,6 +109,44 @@ because this can be inferred as many films are shown in a screening and a
 screening is associated with exactly one room. ``\dots and the ticket of the
 customer assign the same seat during each film'' shows that there is a one to
 many relationship between an entity Ticket and the entity Seat.
- 
+
+``Via an (online) sale, customers can buy one or more tickets for a specific
+screening and that are assigned a seat on sale'' first, shows that there is an
+entity Ticket (as mentioned before) and an entity Customer. Second, the sentence
+shows that there is a one to many relationship between two entities Ticket and
+Screening, namely, Screening\_Assign. Thus, the
+\begin{tikzpicture}[er]
+    \path (0,0) edge[strict] (1,0); 
+\end{tikzpicture}
+arrow is used from Ticket to Screening\_Assign and the
+\begin{tikzpicture}[er]
+    \path (0,0.5) edge (1,0.5);
+\end{tikzpicture}
+arrow is used from Screening\_Assign to Screening since one ticket can only have
+exactly one screening associated with it while one screening can have multiple
+tickets associated with it. ``Customers that do not feel comfortable with paying
+online can reserve their seats online and buy a ticket for these reservations
+at the counter'' shows that there should be an attribute reservation to keep
+track if the ticket is already paid online or it is a reservation for a seat.
+The information ``(these reservations will be cancelled 45 minutes before the
+start of the film)'' is ignored since they are to inform when to update the
+attribute reservation. The next sentence shows that there should be an attribute
+mode\_of\_purchase for entity Ticket to keep track of how they are made. ``whether
+the sale was related to a reservation'' reassures that there should be an 
+attribute reservation for the entity Ticket. Lastly, the attribute price is added
+to keep track of the paid price.
+
+Furthermore, the sentence ``Via an (online) sale,customers can buy one or more
+tickets\dots'' shows that there is an entity Customer and there should be a one
+to many relationship, namely, Buy, between Ticket and Customer. Therefore, the
+\begin{tikzpicture}[er]
+    \path (0,0) edge[strict] (1,0); 
+\end{tikzpicture}
+arrow points from the entity Ticket to the relationship Buy and the
+\begin{tikzpicture}[er]
+    \path (0,0) edge (1,0); 
+\end{tikzpicture}
+arrow points 
+
 
 \end{document}
