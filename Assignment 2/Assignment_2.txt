@@ -41,4 +41,27 @@ is a condition for the query. A user who is not the organizer of any events is
 the user whose uid does not appear in the organizer column of the table event.
 Thus, `uid NOT IN (SELECT organizer FROM event)` is the second condition for the
 query. We then, only select the uid and name columns of the resulting table.
-Since this query does not require ordering, we do not use `ORDER BY`
+Since this query does not require ordering, we do not use `ORDER BY`.
+
+
+-- Query 4
+
+---- Pretty print the review
+SELECT user, event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review
+
+---- event id, the number of reviews, the average score
+SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event
+
+
+a)
+-- Query
+SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
+
+-- Pretty print the query
+SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
+
+
+b)
+
+
+
