@@ -55,6 +55,16 @@ SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event
 
 a)
 -- Query
+SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
+FROM event INNER JOIN 
+        (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore
+        FROM review
+        GROUP BY event) AS r
+     ON event.eid = r.event
+ORDER BY ascore DESC, title ASC
+
+
+-- One line Query
 SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
 -- Pretty print the query
@@ -62,6 +72,22 @@ SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)
 
 
 b)
+-- Query
+SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
+FROM event INNER JOIN 
+        (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore 
+        FROM review
+        GROUP BY event
+        HAVING COUNT(*) > 5) AS r 
+     ON event.eid = r.event
+ORDER BY ascore DESC, title ASC
+
+-- One line Query
+SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event HAVING COUNT(*) > 5) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
+
+
+-- Pretty print the query
+SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event HAVING COUNT(*) > 5) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
 
 
