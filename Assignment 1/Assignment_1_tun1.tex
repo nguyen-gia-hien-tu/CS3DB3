@@ -77,13 +77,13 @@ exact seat arrangement, as the online system will allow customers to order ticke
 for specific seats'' indicates that the entity Seat is a weak entity of the entity
 Room since seat is a part of the room. The sentence also shows that there is an
 entity Ticket that has a relationship with Seat, this will be explain in details
-later. The next two sentences of the description shows that the entity Seat should
+later. The next two sentences of the description show that the entity Seat should
 have attributes \pkey{row}, \pkey{seat\_num} and reserved (which means reserved
 for disabled people). The reason why we need both \pkey{row} and \pkey{seat\_num}
 to be the partial keys is because only the row or only the seat number cannot
-uniquely define a seat as one row can have multiple seats and each number will
-appear in every row, so, we need both to define/locate a seat. Thus, the primary
-key for the entity Seat is the 4-tuple (\key{cinema\_id}, \pkey{room\_num},
+uniquely define a seat as one row can have multiple seats and each seat number
+will appear in every row, so, we need both to define/locate a seat. Thus, the
+primary key for the entity Seat is the 4-tuple (\key{cinema\_id}, \pkey{room\_num},
 \pkey{row}, \pkey{seat\_num}).
 
 ``Each screening is assigned a single room'' depicts that there is a one-to-many
@@ -163,8 +163,8 @@ arrow points from the entity Ticket to the relationship Buy and the
 \begin{tikzpicture}[er]
     \path (0,0) edge (1,0); 
 \end{tikzpicture}
-arrow points from the relationship Buy and the entity Customer since a ticket can
-only be bought by one customer but a customer can buy multiple tickets. Since
+arrow points from the relationship Buy and the entity Customer since each ticket
+can only be bought by one customer but a customer can buy multiple tickets. Since
 the description does not mention about the information of the entity Customer,
 only a primary key named \key{customer\_id} is added to the entity Customer to
 ensure each entity has a primary key.

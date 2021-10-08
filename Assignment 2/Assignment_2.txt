@@ -1,0 +1,29 @@
+-- Query 1
+
+-- Query to find all multi-day events
+SELECT * FROM event WHERE days(enddate) - days(startdate) > 0 ORDER BY startdate ASC, title ASC
+
+-- Pretty print the above query
+SELECT eid, CAST(title AS VARCHAR(30)), CAST(description AS VARCHAR(20)), startdate, enddate, organizer, postcode FROM event WHERE days(enddate) - days(startdate) > 0 ORDER BY startdate ASC, title ASC
+
+-- Clarifications:
+The `days(enddate) - days(startdate)` part returns the number of days between
+enddate and startdate. If the number of days is greater than 0, then the enddate
+and startdate are not the same, which means that the event is a multi-day event.
+We will select all the columns in the table event whose rows satisfy the above
+condition. `ORDER BY startdate` will order the result by increasing startdate and
+`title ASC` will order the result in alphabetical order on title in case the
+events have the same startdate.
+
+
+-- Query 2
+
+SELECT eid, title FROM event WHERE postcode in (SELECT postcode FROM region WHERE name = 'Golden Horseshoe') ORDER BY title ASC
+
+-- Clarifications:
+`SELECT postcode FROM region WHERE name = 'Golden Horseshoe'` will return a
+"list" of postal codes that are in the region named Golden Horseshoe. Thus,
+`SELECT eid, title FROM event WHERE postcode in (SELECT postcode FROM region WHERE name = 'Golden Horseshoe')`
+will return the columns eid and title of the table event whose event's postal code
+is in the  above list. `ORDER BY title ASC` orders the result in alphabetical
+order in title.
