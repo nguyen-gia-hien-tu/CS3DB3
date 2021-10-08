@@ -27,3 +27,18 @@ SELECT eid, title FROM event WHERE postcode in (SELECT postcode FROM region WHER
 will return the columns eid and title of the table event whose event's postal code
 is in the  above list. `ORDER BY title ASC` orders the result in alphabetical
 order in title.
+
+
+-- Query 3
+
+-- All the users that have written review
+SELECT uid, name FROM user WHERE uid IN (SELECT user FROM review) AND uid NOT IN (SELECT organizer FROM event)
+
+-- Clarifications:
+A user is active (have written a review) is the user whose uid is in the review,
+that is the uid is in the user column of the table review. Thus, `uid IN (SELECT user FROM review)`
+is a condition for the query. A user who is not the organizer of any events is
+the user whose uid does not appear in the organizer column of the table event.
+Thus, `uid NOT IN (SELECT organizer FROM event)` is the second condition for the
+query. We then, only select the uid and name columns of the resulting table.
+Since this query does not require ordering, we do not use `ORDER BY`
