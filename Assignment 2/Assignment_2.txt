@@ -1,4 +1,4 @@
--- Query 1
+-- QUERY 1
 
 -- Query to find all multi-day events
 SELECT * FROM event WHERE days(enddate) - days(startdate) > 0 ORDER BY startdate ASC, title ASC
@@ -16,7 +16,7 @@ condition. `ORDER BY startdate` will order the result by increasing startdate an
 events have the same startdate.
 
 
--- Query 2
+-- QUERY 2
 
 SELECT eid, title FROM event WHERE postcode in (SELECT postcode FROM region WHERE name = 'Golden Horseshoe') ORDER BY title ASC
 
@@ -29,7 +29,7 @@ is in the  above list. `ORDER BY title ASC` orders the result in alphabetical
 order in title.
 
 
--- Query 3
+-- QUERY 3
 
 -- All the users that have written review
 SELECT uid, name FROM user WHERE uid IN (SELECT user FROM review) AND uid NOT IN (SELECT organizer FROM event)
@@ -44,7 +44,7 @@ query. We then, only select the uid and name columns of the resulting table.
 Since this query does not require ordering, we do not use `ORDER BY`.
 
 
--- Query 4
+-- QUERY 4
 
 ---- Pretty print the review
 SELECT user, event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review
@@ -54,7 +54,7 @@ SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event
 
 
 a)
--- Query
+-- QUERY 4a)
 SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
 FROM event INNER JOIN 
         (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore
@@ -63,31 +63,64 @@ FROM event INNER JOIN
      ON event.eid = r.event
 ORDER BY ascore DESC, title ASC
 
-
 -- One line Query
 SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
 -- Pretty print the query
 SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
+-- Clarifications:
+`SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event`
+will group the reviews by event id (eid) from the table review and show the event
+id, the number of reviews for each event and the average score of the reviews for
+each event. Then, we join the table event with this resulting table and match the
+rows where the eid of table event equals to the event column of the above
+resulting table. After that, select the appropriate columns and order the rows
+by decreasing average score and alphabetical order in title in case of events
+having the same score.
+
 
 b)
--- Query
+-- QUERY 4b)
 SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
 FROM event INNER JOIN 
         (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore 
         FROM review
         GROUP BY event
-        HAVING COUNT(*) > 5) AS r 
+        HAVING COUNT(*) >= 5) AS r 
      ON event.eid = r.event
 ORDER BY ascore DESC, title ASC
 
 -- One line Query
-SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event HAVING COUNT(*) > 5) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
-
+SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event HAVING COUNT(*) >= 5) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
 -- Pretty print the query
-SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event HAVING COUNT(*) > 5) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
+SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event HAVING COUNT(*) >= 5) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
+-- Clarifications:
+Similar to part a) but we have `HAVING COUNT(*) >= 5` after 
+`SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event`
+to only include events with at least 5 reviews.
+
+
+-- QUERY 5
+
+-- Query
+SELECT e.eid, e.title
+FROM event AS e INNER JOIN review AS r
+ON e.eid = r.event AND (r.reviewdate < e.startdate OR r.user = e.organizer)
+
+-- One line Query
+SELECT e.eid, e.title FROM event AS e INNER JOIN review AS r ON e.eid = r.event AND (r.reviewdate < e.startdate OR r.user = e.organizer)
+
+-- Pretty print for testing
+SELECT e.eid, CAST(e.title AS VARCHAR(25)) AS title, CAST(e.description AS VARCHAR(12)) AS eventdescription, e.startdate, e.enddate, e.organizer, e.postcode, r.user, r.event, CAST(r.description AS VARCHAR(20)) AS reviewdescription, r.score, r.reviewdate FROM event AS e INNER JOIN review AS r ON e.eid = r.event AND (r.reviewdate < e.startdate OR r.user = e.organizer)
+
+-- Clarifications:
+We will join the table event and the table review. Then, we only select rows
+where first, the eid (of the table event) is the same as the event (of the table
+review). Then, the row is selected if either the reviewdate is smaller than the
+startdate (the review is written before the start of the event) or the review
+user is the same as the event organizer.
 
 
