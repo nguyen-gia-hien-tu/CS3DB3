@@ -56,7 +56,7 @@ SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event
 a)
 -- QUERY 4a)
 SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
-FROM event INNER JOIN 
+FROM event LEFT OUTER JOIN 
         (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore
         FROM review
         GROUP BY event) AS r
@@ -64,10 +64,10 @@ FROM event INNER JOIN
 ORDER BY ascore DESC, title ASC
 
 -- One line Query
-SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
+SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event LEFT OUTER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
 -- Pretty print the query
-SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event INNER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
+SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, ascore FROM event LEFT OUTER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC
 
 -- Clarifications:
 `SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event`
@@ -75,7 +75,8 @@ will group the reviews by event id (eid) from the table review and show the even
 id, the number of reviews for each event and the average score of the reviews for
 each event. Then, we join the table event with this resulting table and match the
 rows where the eid of table event equals to the event column of the above
-resulting table. After that, select the appropriate columns and order the rows
+resulting table. `LEFT OUTER JOIN` is used to also include events that have no 
+review. After that, select the appropriate columns and order the rows
 by decreasing average score and alphabetical order in title in case of events
 having the same score.
 
@@ -100,7 +101,8 @@ SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)
 -- Clarifications:
 Similar to part a) but we have `HAVING COUNT(*) >= 5` after 
 `SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event`
-to only include events with at least 5 reviews.
+to only include events with at least 5 reviews. Since we only include events with
+at least 5 reviews, we used `INNER JOIN` instead of `LEFT OUTER JOIN`.
 
 
 -- QUERY 5
@@ -122,5 +124,37 @@ where first, the eid (of the table event) is the same as the event (of the table
 review). Then, the row is selected if either the reviewdate is smaller than the
 startdate (the review is written before the start of the event) or the review
 user is the same as the event organizer.
+
+
+-- QUERY 6 - NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+-- Display the user and the region they are in
+SELECT u.uid, CAST(u.name AS VARCHAR(10)) AS user_name, u.postcode, CAST(re.name AS VARCHAR(30)) AS region_name FROM user AS u INNER JOIN region AS re ON u.postcode = re.postcode
+
+-- Display the event and the region the event happens in
+SELECT e.eid, CAST(e.title AS VARCHAR(25)) AS title, e.postcode, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode
+
+-- Display review user, review event and event region name
+SELECT r.user, r.event, e_re.region_name FROM review AS r INNER JOIN (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re ON r.event = e_re.eid
+
+-- Display review and postcode of the event in the review
+SELECT r.user, r.event, e.postcode FROM review AS r INNER JOIN event AS e ON r.event = e.eid
+
+
+
+-- QUERY 7
+
+-- Display event id (eid) and keyword associated with the event
+SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event
+
+-- Main Query
+SELECT DISTINCT e1.eid AS fstid, e2.eid AS sndid FROM (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS e1 INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS e2 ON e1.eid <> e2.eid AND (SELECT word FROM (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event)) = (SELECT word FROM (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event)) ORDER BY fstid ASC, sndid ASC
+
+-- Clarifications:
+`SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event`
+will return a table with the event id and the keywords associated with the events.
+We will join the table with itself and only select the events where the even id
+(eid) of the first table is different from the event id (eid) from the second
+table (select two different events) and the keywords are exactly the same between
 
 
