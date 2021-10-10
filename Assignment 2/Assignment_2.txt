@@ -158,3 +158,36 @@ We will join the table with itself and only select the events where the even id
 table (select two different events) and the keywords are exactly the same between
 
 
+-- QUERY 8
+
+-- Display the event and the popularity score (number of reviews + sum of the reviews)
+SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event
+
+a)
+-- 
+SELECT e.eid, e_re.pscore FROM event AS e LEFT OUTER JOIN (SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event) AS e_re ON e.eid = e_re.event ORDER BY e_re.pscore DESC, e.title ASC
+
+-- Clarifications:
+`SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event` will
+group the reviews for the same event together and return the event id along with
+its popularity score pscore (calculated by the number of review plus the sum of
+all the reivew score for that event). We name this table e_re. Then we join the
+table event with the table e_re. `LEFT OUTER JOIN` is used since we want to display
+all the events (even if the event does not have any review). Then we choose the
+rows where the event eid is equal to the event column of the table e_re. After
+that, we select the eid column and the pscore column.
+
+
+b)
+-- Query
+SELECT e.eid, e.title, e_re.pscore FROM event AS e INNER JOIN (SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event) AS e_re ON e.eid = e_re.event AND e_re.pscore >= ALL (SELECT COUNT(*) + SUM(score) FROM review GROUP BY event) ORDER BY e_re.pscore DESC, e.title ASC
+
+-- Pretty print the query
+SELECT e.eid, CAST(e.title AS VARCHAR(30)), e_re.pscore FROM event AS e INNER JOIN (SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event) AS e_re ON e.eid = e_re.event AND e_re.pscore >= ALL (SELECT COUNT(*) + SUM(score) FROM review GROUP BY event) ORDER BY e_re.pscore DESC, e.title ASC
+
+-- Clarifications:
+Similar to query 8a) but `INNER JOIN` is used since we only want to display
+certain events instead of all the events.
+`e_re.pscore >= ALL (SELECT COUNT(*) + SUM(score) FROM review GROUP BY event)`
+will select the highest number in the column pscore. Then, we select the eid
+column, the title, and the pscore of the events that satisfy the conditions.
