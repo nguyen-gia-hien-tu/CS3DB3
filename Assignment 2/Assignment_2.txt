@@ -47,7 +47,7 @@ Since this query does not require ordering, we do not use `ORDER BY`.
 -- QUERY 4
 
 ---- Pretty print the review
-SELECT user, event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review
+SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review
 
 ---- event id, the number of reviews, the average score
 SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event
@@ -142,7 +142,7 @@ SELECT r.user, r.event, e.postcode FROM review AS r INNER JOIN event AS e ON r.e
 
 
 
--- QUERY 7
+-- QUERY 7 - NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 -- Display event id (eid) and keyword associated with the event
 SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event
@@ -191,3 +191,29 @@ certain events instead of all the events.
 `e_re.pscore >= ALL (SELECT COUNT(*) + SUM(score) FROM review GROUP BY event)`
 will select the highest number in the column pscore. Then, we select the eid
 column, the title, and the pscore of the events that satisfy the conditions.
+
+
+-- QUERY 9
+
+---- Pretty print the review
+SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review
+
+-- Display event id (eid) and keyword associated with the event
+
+-- Display the user id, the event id, and the keywords associated with the event.
+SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid
+
+-- Display the user id, the keyword and the number of times the user review an even
+-- with that keyword
+-- by taking the above query and group by user, word
+SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word
+
+-- Display the keyword and the max number of reviews associated with that keyword
+SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word
+
+
+-- Display the user, the keyword, and the max number of reviews associated with
+-- that keyword
+-- by join the above two tables on the same keywords and the same number of
+-- reviews associated with that keyword
+SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs
