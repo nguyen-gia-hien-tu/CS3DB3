@@ -348,34 +348,33 @@ SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a 
 
 -- Subquery 1
 -- Display the review user id, review event id and the review score from table review
-SELECT "USER", event, score FROM review
+-- SELECT "USER", event, score FROM review;
 
 -- Subquery 2
 -- Display the review event and the average review score for each event
-SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event
+-- SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event;
 
 -- Subquery 3
 -- Display the review user id, review event id, the review score by that user,
 -- the average review score and the score factor (absolute value of review score
 -- - average review score) for that event
--- by joining the above two tables on the same event id
-SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event
+-- by joining Subquery 1 and Subquery 2 on the same event id
+-- SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event;
 
 -- Subquery 4
 -- Display the review user id, the sum of all score factors of that user
--- by using SUM(score_factor) and group by user id of the above table
-SELECT "USER", SUM(score_factor) AS sum_factors FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event) GROUP BY "USER"
+-- by using SUM(score_factor) and group by user id of the Subquery 3
+-- SELECT "USER", SUM(score_factor) AS sum_factors FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event) GROUP BY "USER";
 
 -- Subquery 5
 -- Display the review user id and the number of standard-scored reviews for that
--- user by using the table from subquery 3 and adding where clause score = ascore,
+-- user by using the table from Subquery 3 and adding where clause score = ascore,
 -- group by "USER"
-SELECT "USER", COUNT(*) AS sscored_nrevs FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event) WHERE score = ascore GROUP BY "USER"
+-- SELECT "USER", COUNT(*) AS sscored_nrevs FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event) WHERE score = ascore GROUP BY "USER";
 
 -- Subquery 6
--- Display the review user id, and total number of reviews for that user fro the
--- review table
-SELECT "USER", COUNT(*) AS nrevs FROM review GROUP BY "USER"
+-- Display the review user id, and total number of reviews for that user from the review table
+-- SELECT "USER", COUNT(*) AS nrevs FROM review GROUP BY "USER";
 
 
 
