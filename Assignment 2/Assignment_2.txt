@@ -1,7 +1,10 @@
 -- QUERY 1
 
 -- Query to find all multi-day events
-SELECT * FROM event WHERE days(enddate) - days(startdate) > 0 ORDER BY startdate ASC, title ASC;
+SELECT *
+FROM event
+WHERE days(enddate) - days(startdate) > 0
+ORDER BY startdate ASC, title ASC;
 
 -- Pretty print the above query
 -- SELECT eid, CAST(title AS VARCHAR(30)), CAST(description AS VARCHAR(20)), startdate, enddate, organizer, postcode FROM event WHERE days(enddate) - days(startdate) > 0 ORDER BY startdate ASC, title ASC;
@@ -19,7 +22,10 @@ SELECT * FROM event WHERE days(enddate) - days(startdate) > 0 ORDER BY startdate
 -- QUERY 2
 
 -- Query the events in the Golden Horseshoe area
-SELECT eid, title FROM event WHERE postcode in (SELECT postcode FROM region WHERE name = 'Golden Horseshoe') ORDER BY title ASC;
+SELECT eid, title
+FROM event
+WHERE postcode IN (SELECT postcode FROM region WHERE name = 'Golden Horseshoe')
+ORDER BY title ASC;
 
 -- Clarifications:
 -- `SELECT postcode FROM region WHERE name = 'Golden Horseshoe'` will return a
@@ -32,8 +38,10 @@ SELECT eid, title FROM event WHERE postcode in (SELECT postcode FROM region WHER
 
 -- QUERY 3
 
--- All the users that have written review
-SELECT uid, name FROM user WHERE uid IN (SELECT user FROM review) AND uid NOT IN (SELECT organizer FROM event);
+-- Display all the users that have written review and are not the organizers
+SELECT uid, name
+FROM user
+WHERE uid IN (SELECT "USER" FROM review) AND uid NOT IN (SELECT organizer FROM event);
 
 -- Clarifications:
 -- A user is active (have written a review) is the user whose uid is in the review,
@@ -45,16 +53,9 @@ SELECT uid, name FROM user WHERE uid IN (SELECT user FROM review) AND uid NOT IN
 -- Since this query does not require ordering, we do not use `ORDER BY`.
 
 
+
 -- QUERY 4
 
--- Pretty print the review
--- SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review
-
--- event id, the number of reviews, the average score
--- SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event
-
-
-a)
 -- QUERY 4a)
 
 -- Multi-line query
@@ -84,7 +85,6 @@ SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, a
 -- having the same score.
 
 
-b)
 -- QUERY 4b)
 -- SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
 -- FROM event INNER JOIN 
@@ -108,6 +108,7 @@ SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, a
 -- at least 5 reviews, we used `INNER JOIN` instead of `LEFT OUTER JOIN`.
 
 
+
 -- QUERY 5
 
 -- Muti-line Query
@@ -129,7 +130,8 @@ startdate (the review is written before the start of the event) or the review
 user is the same as the event organizer.
 
 
--- QUERY 6 - NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+-- QUERY 6
 
 -- Main Query
 -- SELECT u.uid, u.name
@@ -158,6 +160,7 @@ user is the same as the event organizer.
 --     INNER JOIN
 --             user AS u
 --         ON local_revs.user = u.uid;
+
 
 -- Clarifications:
 -- The following subqueries are steps taken to obtain the Main Query
@@ -274,20 +277,146 @@ user is the same as the event organizer.
 
 
 
--- QUERY 7 - NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
--- Display event id (eid) and keyword associated with the event
-SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event
+-- QUERY 7
 
 -- Main Query
-SELECT DISTINCT e1.eid AS fstid, e2.eid AS sndid FROM (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS e1 INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS e2 ON e1.eid <> e2.eid AND (SELECT word FROM (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) WHERE eid = e1.eid) = (SELECT word FROM (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) WHERE eid = e2.eid) ORDER BY fstid ASC, sndid ASC
+SELECT esk.fstid, esk.sndid
+FROM
+            (SELECT ek1.eid AS fstid, ek2.eid AS sndid, COUNT(*) AS n_same_kwords
+                FROM
+                            (SELECT e.eid, k.word
+                                FROM event AS e INNER JOIN keyword AS k
+                                ON e.eid = k.event) AS ek1
+                    INNER JOIN
+                            (SELECT e.eid, k.word
+                                FROM event AS e INNER JOIN keyword AS k
+                                ON e.eid = k.event) AS ek2
+                        ON ek1.eid <> ek2.eid AND ek1.word = ek2.word
+                GROUP BY ek1.eid, ek2.eid) AS esk
+    INNER JOIN
+            (SELECT ek1.eid AS fstid, ek2.eid AS sndid, ek1.nkwords
+                FROM
+                            (SELECT e.eid, COUNT(*) AS nkwords
+                                FROM event AS e INNER JOIN keyword AS k
+                                ON e.eid = k.event
+                                GROUP BY e.eid) AS ek1
+                    INNER JOIN
+                            (SELECT e.eid, COUNT(*) AS nkwords
+                                FROM event AS e INNER JOIN keyword AS k
+                                ON e.eid = k.event
+                                GROUP BY e.eid) AS ek2
+                        ON ek1.eid <> ek2.eid AND ek1.nkwords = ek2.nkwords) AS etk
+        ON esk.fstid = etk.fstid AND esk.sndid = etk.sndid AND esk.n_same_kwords = etk.nkwords
+ORDER BY fstid ASC, sndid ASC;
+
 
 -- Clarifications:
-`SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event`
-will return a table with the event id and the keywords associated with the events.
-We will join the table with itself and only select the events where the even id
-(eid) of the first table is different from the event id (eid) from the second
-table (select two different events) and the keywords are exactly the same between
+-- The following subqueries are steps taken to obtain the Main Query
+-- Explanation is given in each query
+
+-- Subquery 1
+-- Display event id (eid) and keyword associated with the event
+-- by joining the table event and keyword on the same event id
+-- SELECT e.eid, k.word
+-- FROM event AS e INNER JOIN keyword AS k
+-- ON e.eid = k.event;
+
+-- Subquery 2
+-- Display the event id and the number of keywords associated with that event
+-- by adding to Subquery 1 group by event id and using count(*)
+-- SELECT e.eid, COUNT(*) AS nkwords
+-- FROM event AS e INNER JOIN keyword AS k
+-- ON e.eid = k.event
+-- GROUP BY e.eid;
+
+-- Subquery 3
+-- Display the event id 1, event id 2, and the keyword where
+-- the event id 1 is different from the event id 2 and they have
+-- the same keyword
+-- by joining the table from Subquery 1 with itself on different
+-- event id and the same keyword
+-- SELECT ek1.eid AS fstid, ek2.eid AS sndid, ek1.word
+-- FROM
+--             (SELECT e.eid, k.word
+--                 FROM event AS e INNER JOIN keyword AS k
+--                 ON e.eid = k.event) AS ek1
+--     INNER JOIN
+--             (SELECT e.eid, k.word
+--                 FROM event AS e INNER JOIN keyword AS k
+--                 ON e.eid = k.event) AS ek2
+--         ON ek1.eid <> ek2.eid AND ek1.word = ek2.word;
+
+-- Subquery 4
+-- Display the event id 1, the event id 2, and the number of same keywords
+-- between the two events
+-- by adding to Subquery 3 the group by event id 1 and event id 2 and using
+-- count(*) to count the number of rows
+-- SELECT ek1.eid AS fstid, ek2.eid AS sndid, COUNT(*) AS n_same_kwords
+-- FROM
+--             (SELECT e.eid, k.word
+--                 FROM event AS e INNER JOIN keyword AS k
+--                 ON e.eid = k.event) AS ek1
+--     INNER JOIN
+--             (SELECT e.eid, k.word
+--                 FROM event AS e INNER JOIN keyword AS k
+--                 ON e.eid = k.event) AS ek2
+--         ON ek1.eid <> ek2.eid AND ek1.word = ek2.word
+-- GROUP BY ek1.eid, ek2.eid;
+
+-- Subquery 5
+-- Display the event id 1, the event id 2, and the number of keywords
+-- and the rows are selected such that the total number of keywords for
+-- event id 1 is the same as for event id 2 and the two events are different
+-- by joining the table from Subquery 2 with itself on different event id
+-- and the same total number of keywords
+-- SELECT ek1.eid AS fstid, ek2.eid AS sndid, ek1.nkwords
+-- FROM
+--             (SELECT e.eid, COUNT(*) AS nkwords
+--                 FROM event AS e INNER JOIN keyword AS k
+--                 ON e.eid = k.event
+--                 GROUP BY e.eid) AS ek1
+--     INNER JOIN
+--             (SELECT e.eid, COUNT(*) AS nkwords
+--                 FROM event AS e INNER JOIN keyword AS k
+--                 ON e.eid = k.event
+--                 GROUP BY e.eid) AS ek2
+--         ON ek1.eid <> ek2.eid AND ek1.nkwords = ek2.nkword
+
+-- Main Query
+-- Two different events have exact same keywords when they have
+-- the same total number of keywords and the number of keywords
+-- is equal to the number of same keywords between the two events
+-- To do this, we join the tables from Subquery 4 and Subquery 5
+-- on the same fstid, same sndid and n_same_kwords = n_kwords
+-- SELECT esk.fstid, esk.sndid
+-- FROM
+--             (SELECT ek1.eid AS fstid, ek2.eid AS sndid, COUNT(*) AS n_same_kwords
+--                 FROM
+--                             (SELECT e.eid, k.word
+--                                 FROM event AS e INNER JOIN keyword AS k
+--                                 ON e.eid = k.event) AS ek1
+--                     INNER JOIN
+--                             (SELECT e.eid, k.word
+--                                 FROM event AS e INNER JOIN keyword AS k
+--                                 ON e.eid = k.event) AS ek2
+--                         ON ek1.eid <> ek2.eid AND ek1.word = ek2.word
+--                 GROUP BY ek1.eid, ek2.eid) AS esk
+--     INNER JOIN
+--             (SELECT ek1.eid AS fstid, ek2.eid AS sndid, ek1.nkwords
+--                 FROM
+--                             (SELECT e.eid, COUNT(*) AS nkwords
+--                                 FROM event AS e INNER JOIN keyword AS k
+--                                 ON e.eid = k.event
+--                                 GROUP BY e.eid) AS ek1
+--                     INNER JOIN
+--                             (SELECT e.eid, COUNT(*) AS nkwords
+--                                 FROM event AS e INNER JOIN keyword AS k
+--                                 ON e.eid = k.event
+--                                 GROUP BY e.eid) AS ek2
+--                         ON ek1.eid <> ek2.eid AND ek1.nkwords = ek2.nkwords) AS etk
+--         ON esk.fstid = etk.fstid AND esk.sndid = etk.sndid AND esk.n_same_kwords = etk.nkwords
+-- ORDER BY fstid ASC, sndid ASC;
+
 
 
 -- QUERY 8
