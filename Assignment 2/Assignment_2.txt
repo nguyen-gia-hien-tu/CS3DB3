@@ -131,6 +131,38 @@ user is the same as the event organizer.
 
 -- QUERY 6 - NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+-- Main Query
+-- SELECT u.uid, u.name
+-- FROM
+--     (SELECT "USER", COUNT(*) AS nrevs_local
+--         FROM
+--             (SELECT DISTINCT r.user, r.event
+--                 FROM review AS r
+--                     INNER JOIN
+--                              (SELECT e.eid, re.name AS event_region_name
+--                                 FROM event AS e INNER JOIN region AS re
+--                                 ON e.postcode = re.postcode) AS e_re
+--                         ON r.event = e_re.eid
+--                     INNER JOIN
+--                             (SELECT u.uid, re.name AS user_region_name
+--                             FROM user AS u INNER JOIN region AS re
+--                             ON u.postcode = re.postcode) AS u_re
+--                         ON r.user = u_re.uid
+--                 WHERE user_region_name = event_region_name)
+--         GROUP BY "USER") AS local_revs
+--     INNER JOIN
+--             (SELECT "USER", COUNT(*) AS nrevs
+--                 FROM review
+--                 GROUP BY "USER") AS revs
+--         ON local_revs.user = revs.user AND local_revs.nrevs_local = revs.nrevs
+--     INNER JOIN
+--             user AS u
+--         ON local_revs.user = u.uid;
+
+-- Clarifications:
+-- The following subqueries are steps taken to obtain the Main Query
+-- Explanation is given in each query
+
 -- Subquery 1
 -- Display the user uid and the region they are in
 -- SELECT u.uid, re.name AS user_region_name
@@ -146,6 +178,7 @@ user is the same as the event organizer.
 -- Subquery 3
 -- Display review user, review event, user region name and event region name
 -- but only where the user region name is the same as the event region name
+-- that means only rows where the event is local to the user are selected
 -- by joining the review table with the table from Subquery 1
 -- and the table from Subquery 2 on the same user id and event id
 -- where user_region_name = event_region_name
@@ -180,9 +213,9 @@ user is the same as the event organizer.
 -- WHERE user_region_name = event_region_name;
 
 -- Subquery 5
--- Display the user and the number of events correspond to each user
--- using group by user and count(*)
--- SELECT "USER", COUNT(*) AS nlocalrevs
+-- Display the user and the number of reviews for local events correspond to each user
+-- using group by user and count(*) from Subquery 4
+-- SELECT "USER", COUNT(*) AS nrevs_local
 -- FROM
 --     (SELECT DISTINCT r.user, r.event
 --         FROM review AS r
@@ -199,18 +232,45 @@ user is the same as the event organizer.
 --         WHERE user_region_name = event_region_name)
 -- GROUP BY "USER";
 
+-- Subquery 6
+-- Display the user and the number of reviews each user has reviewed
+-- SELECT "USER", COUNT(*) AS nrevs
+-- FROM review
+-- GROUP BY "USER";
 
-
-
--- Subquery 3
--- Display review user, review event, and postcode of the event in the review
--- SELECT r.user, r.event, e.postcode
--- FROM review AS r INNER JOIN event AS e
--- ON r.event = e.eid;
-
--- Subquery 5 (similar to Subquery 1)
--- Display the user uid and the region they are in
-SELECT u.uid, CAST(re.name AS VARCHAR(30)) AS region_name FROM user AS u INNER JOIN region AS re ON u.postcode = re.postcode;
+-- Main Query
+-- If the number of reviews for local events (in subquery 5) is equal to
+-- the total number of reviews (in subquery 6) that a user has, then the
+-- user only reviewed local event
+-- To do that, we will join Subquery 5 and Subquery 6 on the same user
+-- and the same number of reviews (nrevs_local = nrevs)
+-- We will also join with the table user to get the user uid and the user name
+-- SELECT u.uid, u.name
+-- FROM
+--     (SELECT "USER", COUNT(*) AS nrevs_local
+--         FROM
+--             (SELECT DISTINCT r.user, r.event
+--                 FROM review AS r
+--                     INNER JOIN
+--                              (SELECT e.eid, re.name AS event_region_name
+--                                 FROM event AS e INNER JOIN region AS re
+--                                 ON e.postcode = re.postcode) AS e_re
+--                         ON r.event = e_re.eid
+--                     INNER JOIN
+--                             (SELECT u.uid, re.name AS user_region_name
+--                             FROM user AS u INNER JOIN region AS re
+--                             ON u.postcode = re.postcode) AS u_re
+--                         ON r.user = u_re.uid
+--                 WHERE user_region_name = event_region_name)
+--         GROUP BY "USER") AS local_revs
+--     INNER JOIN
+--             (SELECT "USER", COUNT(*) AS nrevs
+--                 FROM review
+--                 GROUP BY "USER") AS revs
+--         ON local_revs.user = revs.user AND local_revs.nrevs_local = revs.nrevs
+--     INNER JOIN
+--             user AS u
+--         ON local_revs.user = u.uid;
 
 
 
