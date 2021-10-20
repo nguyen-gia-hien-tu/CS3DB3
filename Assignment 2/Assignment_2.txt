@@ -475,7 +475,6 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- Main Query for Part 1
 -- Display the uid and the literal string 'keyword' for user with the most number
 -- of reviews for the events with some specific keyword
--- by joining Sub-query 6 and Sub-query 7 on the uid = user columns.
 -- SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user;
 
 -- Clarifications:
@@ -493,25 +492,80 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- Sub-query 3
 -- Display the review user id, review event id, and the keywords associated with the event
 -- by INNER JOIN-ing Sub-query 1 and Sub-query 2 on the same event id
--- SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid;
+-- SELECT "USER", event, word
+-- FROM
+--             (SELECT "USER", event FROM review) AS r
+--     INNER JOIN
+--             (SELECT e.eid, k.word
+--                 FROM event AS e INNER JOIN keyword AS k
+--                     ON e.eid = k.event) AS ek
+--         ON r.event = ek.eid;
 
 -- Sub-query 4
 -- Display the review user id, the keyword and the number of times the user 
 -- review an even with that keyword
--- by taking the Sub-query 3 and group by user, word
+-- Similar to Sub-query 3 but we add group by user id and keyword and count
+-- the number of reviews
 -- SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word;
+-- SELECT "USER", word, COUNT(*) AS nrevs
+-- FROM
+--             (SELECT "USER", event FROM review) AS r
+--     INNER JOIN
+--             (SELECT e.eid, k.word
+--                 FROM event AS e INNER JOIN keyword AS k
+--                     ON e.eid = k.event) AS ek
+--         ON r.event = ek.eid
+-- GROUP BY "USER", word;
 
 -- Sub-query 5
 -- Display the keyword and the max number of reviews associated with that keyword
--- by using the Sub-query 4 and group by word
+-- by taking the table from Sub-query 4 and add group by word and take the max
+-- of nrevs for each keyword
 -- SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word;
+-- SELECT word, MAX(nrevs) AS max_nrevs
+-- FROM
+--     (SELECT "USER", word, COUNT(*) AS nrevs
+--     FROM
+--                 (SELECT "USER", event FROM review) AS r
+--         INNER JOIN
+--                 (SELECT e.eid, k.word
+--                     FROM event AS e INNER JOIN keyword AS k
+--                         ON e.eid = k.event) AS ek
+--             ON r.event = ek.eid
+--     GROUP BY "USER", word)
+-- GROUP BY word;
 
 -- Sub-query 6
 -- Display the review user who has the most reviews associated with the keyword,
 -- the keyword itself, and the max number of reviews associated  with that keyword
 -- by joining Sub-query 4 and Sub-query 5 on the same keywords and the same number of
--- reviews associated with that keyword
+-- reviews (max reviews) associated with that keyword
 -- SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs;
+-- SELECT "USER", maxrev.word, max_nrevs
+-- FROM
+--             (SELECT "USER", word, COUNT(*) AS nrevs
+--                 FROM
+--                             (SELECT "USER", event FROM review) AS r
+--                     INNER JOIN
+--                             (SELECT e.eid, k.word
+--                                 FROM event AS e INNER JOIN keyword AS k
+--                                     ON e.eid = k.event) AS ek
+--                         ON r.event = ek.eid
+--                 GROUP BY "USER", word) AS rev
+--     INNER JOIN
+--             (SELECT word, MAX(nrevs) AS max_nrevs
+--                 FROM
+--                     (SELECT "USER", word, COUNT(*) AS nrevs
+--                     FROM
+--                                 (SELECT "USER", event FROM review) AS r
+--                         INNER JOIN
+--                                 (SELECT e.eid, k.word
+--                                     FROM event AS e INNER JOIN keyword AS k
+--                                         ON e.eid = k.event) AS ek
+--                             ON r.event = ek.eid
+--                     GROUP BY "USER", word)
+--                 GROUP BY word) AS maxrev
+--         ON rev.word = maxrev.word AND rev.nrevs = maxrev.max_nrevs;
 
 -- Sub-query 7
 -- Display the uid and the literal string 'keyword'
@@ -522,6 +576,36 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- of reviews for the events with some specific keyword
 -- by joining Sub-query 6 and Sub-query 7 on the uid = user columns.
 -- SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user;
+-- SELECT DISTINCT uid, kword
+-- FROM
+--             (SELECT uid, 'keyword' AS kword FROM USER) AS uk
+--     INNER JOIN
+--             (SELECT "USER", maxrev.word, max_nrevs
+--                 FROM
+--                             (SELECT "USER", word, COUNT(*) AS nrevs
+--                                 FROM
+--                                             (SELECT "USER", event FROM review) AS r
+--                                     INNER JOIN
+--                                             (SELECT e.eid, k.word
+--                                                 FROM event AS e INNER JOIN keyword AS k
+--                                                     ON e.eid = k.event) AS ek
+--                                         ON r.event = ek.eid
+--                                 GROUP BY "USER", word) AS rev
+--                     INNER JOIN
+--                             (SELECT word, MAX(nrevs) AS max_nrevs
+--                                 FROM
+--                                     (SELECT "USER", word, COUNT(*) AS nrevs
+--                                     FROM
+--                                                 (SELECT "USER", event FROM review) AS r
+--                                         INNER JOIN
+--                                                 (SELECT e.eid, k.word
+--                                                     FROM event AS e INNER JOIN keyword AS k
+--                                                         ON e.eid = k.event) AS ek
+--                                             ON r.event = ek.eid
+--                                     GROUP BY "USER", word)
+--                                 GROUP BY word) AS maxrev
+--                         ON rev.word = maxrev.word AND rev.nrevs = maxrev.max_nrevs) AS rev
+--         ON uk.uid = rev.user;
 
 
 -- PART 2
@@ -531,6 +615,7 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- of reviews for the events within a region
 -- by joining  Sub-query 6 and Sub-query 7 on the same user id
 -- SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user
+
 
 -- Clarifications:
 -- The below sub-queries explain the process to obtain the Main Query
