@@ -1,3 +1,6 @@
+-- Name: Hien Tu
+-- macID: tun1
+
 -- QUERY 1
 
 -- Query to find all multi-day events
@@ -163,27 +166,27 @@ user is the same as the event organizer.
 
 
 -- Clarifications:
--- The following subqueries are steps taken to obtain the Main Query
+-- The following sub-queries are steps taken to obtain the Main Query
 -- Explanation is given in each query
 
--- Subquery 1
+-- Sub-query 1
 -- Display the user uid and the region they are in
 -- SELECT u.uid, re.name AS user_region_name
 -- FROM user AS u INNER JOIN region AS re
 -- ON u.postcode = re.postcode;
 
--- Subquery 2
+-- Sub-query 2
 -- Display the event and the region the event happens in
 -- SELECT e.eid, re.name AS event_region_name
 -- FROM event AS e INNER JOIN region AS re
 -- ON e.postcode = re.postcode;
 
--- Subquery 3
+-- Sub-query 3
 -- Display review user, review event, user region name and event region name
 -- but only where the user region name is the same as the event region name
 -- that means only rows where the event is local to the user are selected
--- by joining the review table with the table from Subquery 1
--- and the table from Subquery 2 on the same user id and event id
+-- by joining the review table with the table from Sub-query 1
+-- and the table from Sub-query 2 on the same user id and event id
 -- where user_region_name = event_region_name
 -- SELECT r.user, r.event, u_re.user_region_name, e_re.event_region_name
 -- FROM review AS r
@@ -199,8 +202,8 @@ user is the same as the event organizer.
 --         ON r.user = u_re.uid
 -- WHERE user_region_name = event_region_name;
 
--- Subquery 4
--- The same as Subquery 3 but only select distinct pair of user id and event id
+-- Sub-query 4
+-- The same as Sub-query 3 but only select distinct pair of user id and event id
 -- SELECT DISTINCT r.user, r.event
 -- FROM review AS r
 --     INNER JOIN
@@ -215,9 +218,9 @@ user is the same as the event organizer.
 --         ON r.user = u_re.uid
 -- WHERE user_region_name = event_region_name;
 
--- Subquery 5
+-- Sub-query 5
 -- Display the user and the number of reviews for local events correspond to each user
--- using group by user and count(*) from Subquery 4
+-- using group by user and count(*) from Sub-query 4
 -- SELECT "USER", COUNT(*) AS nrevs_local
 -- FROM
 --     (SELECT DISTINCT r.user, r.event
@@ -235,17 +238,17 @@ user is the same as the event organizer.
 --         WHERE user_region_name = event_region_name)
 -- GROUP BY "USER";
 
--- Subquery 6
+-- Sub-query 6
 -- Display the user and the number of reviews each user has reviewed
 -- SELECT "USER", COUNT(*) AS nrevs
 -- FROM review
 -- GROUP BY "USER";
 
 -- Main Query
--- If the number of reviews for local events (in subquery 5) is equal to
--- the total number of reviews (in subquery 6) that a user has, then the
+-- If the number of reviews for local events (in Sub-query 5) is equal to
+-- the total number of reviews (in Sub-query 6) that a user has, then the
 -- user only reviewed local event
--- To do that, we will join Subquery 5 and Subquery 6 on the same user
+-- To do that, we will join Sub-query 5 and Sub-query 6 on the same user
 -- and the same number of reviews (nrevs_local = nrevs)
 -- We will also join with the table user to get the user uid and the user name
 -- SELECT u.uid, u.name
@@ -311,29 +314,29 @@ ORDER BY fstid ASC, sndid ASC;
 
 
 -- Clarifications:
--- The following subqueries are steps taken to obtain the Main Query
+-- The following sub-queries are steps taken to obtain the Main Query
 -- Explanation is given in each query
 
--- Subquery 1
+-- Sub-query 1
 -- Display event id (eid) and keyword associated with the event
 -- by joining the table event and keyword on the same event id
 -- SELECT e.eid, k.word
 -- FROM event AS e INNER JOIN keyword AS k
 -- ON e.eid = k.event;
 
--- Subquery 2
+-- Sub-query 2
 -- Display the event id and the number of keywords associated with that event
--- by adding to Subquery 1 group by event id and using count(*)
+-- by adding to Sub-query 1 group by event id and using count(*)
 -- SELECT e.eid, COUNT(*) AS nkwords
 -- FROM event AS e INNER JOIN keyword AS k
 -- ON e.eid = k.event
 -- GROUP BY e.eid;
 
--- Subquery 3
+-- Sub-query 3
 -- Display the event id 1, event id 2, and the keyword where
 -- the event id 1 is different from the event id 2 and they have
 -- the same keyword
--- by joining the table from Subquery 1 with itself on different
+-- by joining the table from Sub-query 1 with itself on different
 -- event id and the same keyword
 -- SELECT ek1.eid AS fstid, ek2.eid AS sndid, ek1.word
 -- FROM
@@ -346,10 +349,10 @@ ORDER BY fstid ASC, sndid ASC;
 --                 ON e.eid = k.event) AS ek2
 --         ON ek1.eid <> ek2.eid AND ek1.word = ek2.word;
 
--- Subquery 4
+-- Sub-query 4
 -- Display the event id 1, the event id 2, and the number of same keywords
 -- between the two events
--- by adding to Subquery 3 the group by event id 1 and event id 2 and using
+-- by adding to Sub-query 3 the group by event id 1 and event id 2 and using
 -- count(*) to count the number of rows
 -- SELECT ek1.eid AS fstid, ek2.eid AS sndid, COUNT(*) AS n_same_kwords
 -- FROM
@@ -363,11 +366,11 @@ ORDER BY fstid ASC, sndid ASC;
 --         ON ek1.eid <> ek2.eid AND ek1.word = ek2.word
 -- GROUP BY ek1.eid, ek2.eid;
 
--- Subquery 5
+-- Sub-query 5
 -- Display the event id 1, the event id 2, and the number of keywords
 -- and the rows are selected such that the total number of keywords for
 -- event id 1 is the same as for event id 2 and the two events are different
--- by joining the table from Subquery 2 with itself on different event id
+-- by joining the table from Sub-query 2 with itself on different event id
 -- and the same total number of keywords
 -- SELECT ek1.eid AS fstid, ek2.eid AS sndid, ek1.nkwords
 -- FROM
@@ -386,7 +389,7 @@ ORDER BY fstid ASC, sndid ASC;
 -- Two different events have exact same keywords when they have
 -- the same total number of keywords and the number of keywords
 -- is equal to the number of same keywords between the two events
--- To do this, we join the tables from Subquery 4 and Subquery 5
+-- To do this, we join the tables from Sub-query 4 and Sub-query 5
 -- on the same fstid, same sndid and n_same_kwords = n_kwords
 -- SELECT esk.fstid, esk.sndid
 -- FROM
@@ -424,7 +427,7 @@ ORDER BY fstid ASC, sndid ASC;
 -- Display the event and the popularity score (number of reviews + sum of the reviews)
 SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event
 
-a)
+-- Query 8a)
 -- Main Query
 SELECT e.eid, e_re.pscore
 FROM event AS e LEFT OUTER JOIN
@@ -444,7 +447,7 @@ ON e.eid = e_re.event;
 -- that, we select the eid column and the pscore column.
 
 
-b)
+-- Query 8b)
 -- Main Query
 SELECT e.eid, e.title, e_re.pscore
 FROM event AS e INNER JOIN
@@ -472,51 +475,52 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- Main Query for Part 1
 -- Display the uid and the literal string 'keyword' for user with the most number
 -- of reviews for the events with some specific keyword
--- by joining Subquery 6 and Subquery 7 on the uid = user columns.
-SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user;
+-- by joining Sub-query 6 and Sub-query 7 on the uid = user columns.
+-- SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user;
 
 -- Clarifications:
--- The below subqueries explain the process to obtain the Main Query
+-- The below sub-queries explain the process to obtain the Main Query
+-- with explanation in each sub-query
 
--- Subquery 1
+-- Sub-query 1
 -- Display review user and review event
 -- SELECT "USER", event FROM review;
 
--- Subquery 2
+-- Sub-query 2
 -- Display event id (eid) and keyword associated with the event
 -- SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event;
 
--- Subquery 3
+-- Sub-query 3
 -- Display the review user id, review event id, and the keywords associated with the event
--- by INNER JOIN-ing Subquery 1 and Subquery 2 on the same event id
+-- by INNER JOIN-ing Sub-query 1 and Sub-query 2 on the same event id
 -- SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid;
 
--- Subquery 4
+-- Sub-query 4
 -- Display the review user id, the keyword and the number of times the user 
 -- review an even with that keyword
--- by taking the Subquery 3 and group by user, word
+-- by taking the Sub-query 3 and group by user, word
 -- SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word;
 
--- Subquery 5
+-- Sub-query 5
 -- Display the keyword and the max number of reviews associated with that keyword
--- by using the Subquery 4 and group by word
+-- by using the Sub-query 4 and group by word
 -- SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word;
 
--- Subquery 6
+-- Sub-query 6
 -- Display the review user who has the most reviews associated with the keyword,
 -- the keyword itself, and the max number of reviews associated  with that keyword
--- by joining Subquery 4 and Subquery 5 on the same keywords and the same number of
+-- by joining Sub-query 4 and Sub-query 5 on the same keywords and the same number of
 -- reviews associated with that keyword
 -- SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs;
 
--- Subquery 7
+-- Sub-query 7
 -- Display the uid and the literal string 'keyword'
 -- SELECT uid, 'keyword' AS kword FROM USER;
 
 -- Main Query for Part 1
 -- Display the uid and the literal string 'keyword' for user with the most number
 -- of reviews for the events with some specific keyword
--- by joining Subquery 6 and Subquery 7 on the uid = user columns.
+-- by joining Sub-query 6 and Sub-query 7 on the uid = user columns.
 -- SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user;
 
 
@@ -525,53 +529,54 @@ SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a 
 -- Main Query for Part 2
 -- Display the uid and the literal string 'keyword' for user with the most number
 -- of reviews for the events within a region
--- by joining  Subquery 6 and Subquery 7 on the same user id
+-- by joining  Sub-query 6 and Sub-query 7 on the same user id
 -- SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user
 
 -- Clarifications:
--- The below subqueries explain the process to obtain the Main Query
+-- The below sub-queries explain the process to obtain the Main Query
+-- with explanation in each sub-query
 
--- Subquery 1
+-- Sub-query 1
 -- Display the event id and the region the event happens in
 -- SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode;
 
--- Subquery 2
+-- Sub-query 2
 -- Display the review user id and the event id from the table review
 -- SELECT "USER", event FROM review;
 
--- Subquery 3
+-- Sub-query 3
 -- Display the review user id, the event id and the region the event happens in
--- by joining Subquery 1 and Subquery 2 on the same event id
+-- by joining Sub-query 1 and Sub-query 2 on the same event id
 -- SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event;
 
--- Subquery 4
+-- Sub-query 4
 -- Display the review user id, the region name of the event and the number of reviews
 -- that user has reviewed for events at that region
--- using group by user id and region_name from Subquery 3
+-- using group by user id and region_name from Sub-query 3
 -- SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name;
 
--- Subquery 5
+-- Sub-query 5
 -- Display the region name of the events and the max number of reviews associated
 -- with that region
--- using Subquery 4 group by region_name
+-- using Sub-query 4 group by region_name
 -- SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name;
 
--- Subquery 6
+-- Sub-query 6
 -- Display the review user id who has the most reviews in the event region, the
 -- event region name itself and the max number of reviews associated with that
 -- event region
--- by joining Subquery 4 and Subquery 5 on the same region and the number of reviews
+-- by joining Sub-query 4 and Sub-query 5 on the same region and the number of reviews
 -- = max number of reviews associated with that region
 -- SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs;
 
--- Subquery 7
+-- Sub-query 7
 -- Display the user uid and the literal string 'region' from table user
 -- SELECT uid, 'region' AS region_badge FROM user;
 
 -- Main Query for Part 2
 -- Display the uid and the literal string 'keyword' for user with the most number
 -- of reviews for the events within a region
--- by joining  Subquery 6 and Subquery 7 on the same user id
+-- by joining  Sub-query 6 and Sub-query 7 on the same user id
 -- SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user
 
 
@@ -581,37 +586,163 @@ SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a 
 
 
 
--- QUERY 10 - NOT DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- QUERY 10
 
--- Subquery 1
+-- Main Query
+SELECT sum_fac.user, CAST(((sum_fac.sum_factors - COALESCE(sscored_nrevs, 0)) / r.nrevs) AS DECIMAL) AS si
+FROM
+            (SELECT "USER", SUM(score_factor) AS sum_factors
+            FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor
+                    FROM
+                                (SELECT "USER", event, score FROM review) AS r
+                        INNER JOIN
+                                (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+                                    FROM review
+                                    GROUP BY event) AS agr
+                            ON r.event = agr.event)
+            GROUP BY "USER") AS sum_fac
+    LEFT OUTER JOIN
+            (SELECT "USER", COUNT(*) AS sscored_nrevs
+            FROM
+                        (SELECT "USER", event, score FROM review) AS r
+                INNER JOIN
+                        (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+                            FROM review
+                            GROUP BY event) AS agr
+                    ON r.event = agr.event AND r.score = agr.ascore
+            GROUP BY "USER") AS sscore
+        ON sum_fac.user = sscore.user
+    INNER JOIN
+            (SELECT "USER", COUNT(*) AS nrevs FROM review GROUP BY "USER") AS r
+        ON r.user = sum_fac.user
+ORDER BY si DESC;
+
+
+-- Clarifications:
+-- The below sub-queries explain the process to obtain the Main Query
+-- with explanation in each sub-query
+
+-- Sub-query 1
 -- Display the review user id, review event id and the review score from table review
 -- SELECT "USER", event, score FROM review;
 
--- Subquery 2
+-- Sub-query 2
 -- Display the review event and the average review score for each event
 -- SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event;
 
--- Subquery 3
+-- Sub-query 3
 -- Display the review user id, review event id, the review score by that user,
--- the average review score and the score factor (absolute value of review score
--- - average review score) for that event
--- by joining Subquery 1 and Subquery 2 on the same event id
--- SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event;
+-- the average review score and the score factor (absolute value of
+-- (review score - average review score)) for that event
+-- by joining Sub-query 1 and Sub-query 2 on the same event id
+-- SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor
+-- FROM
+--             (SELECT "USER", event, score FROM review) AS r
+--     INNER JOIN
+--             (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                 FROM review
+--                 GROUP BY event) AS agr
+--         ON r.event = agr.event;
 
--- Subquery 4
+-- Sub-query 4
 -- Display the review user id, the sum of all score factors of that user
--- by using SUM(score_factor) and group by user id of the Subquery 3
--- SELECT "USER", SUM(score_factor) AS sum_factors FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event) GROUP BY "USER";
+-- by using SUM(score_factor) and group by user id of the Sub-query 3
+-- SELECT "USER", SUM(score_factor) AS sum_factors
+-- FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor
+--         FROM
+--                     (SELECT "USER", event, score FROM review) AS r
+--             INNER JOIN
+--                     (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                         FROM review
+--                         GROUP BY event) AS agr
+--                 ON r.event = agr.event)
+-- GROUP BY "USER";
 
--- Subquery 5
+-- Sub-query 5
 -- Display the review user id and the number of standard-scored reviews for that
--- user by using the table from Subquery 3 and adding where clause score = ascore,
--- group by "USER"
--- SELECT "USER", COUNT(*) AS sscored_nrevs FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor FROM (SELECT "USER", event, score FROM review) AS r INNER JOIN (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore FROM review GROUP BY event) AS agr ON r.event = agr.event) WHERE score = ascore GROUP BY "USER";
+-- user by using the table from Sub-query 3 and adding another condition
+-- score = ascore for inner join, and then group by "USER"
+-- since the standard-scored review has score = ascore
+-- Note that this will only return users who have standard-scored reviews,
+-- users who review but don't have standard-scored reviews will not appear
+-- in this table
+-- SELECT "USER", COUNT(*) AS sscored_nrevs
+-- FROM
+--             (SELECT "USER", event, score FROM review) AS r
+--     INNER JOIN
+--             (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                 FROM review
+--                 GROUP BY event) AS agr
+--         ON r.event = agr.event AND r.score = agr.ascore
+-- GROUP BY "USER";
 
--- Subquery 6
+-- Sub-query 6
 -- Display the review user id, and total number of reviews for that user from the review table
 -- SELECT "USER", COUNT(*) AS nrevs FROM review GROUP BY "USER";
 
+-- Sub-query 7
+-- Display the review user id and the result of ((L+H) - S), the numerator
+-- of the scoring indicator si
+-- Note that, since the table in Sub-query 5 only contains users who have
+-- standard-scored reviews and doesn't contain users who review but don't
+-- have standard-scored reviews, we will use Sub-query 4 and LEFT OUTER JOIN
+-- with Sub-query 5
+-- Users without standard-scored reviews will have null as value
+-- for the column sscored_nrevs, we will convert this null value to 0 using
+-- COALESCE
+-- SELECT sum_fac.user, (sum_fac.sum_factors - COALESCE(sscored_nrevs, 0)) AS numer
+-- FROM
+--             (SELECT "USER", SUM(score_factor) AS sum_factors
+--             FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor
+--                     FROM
+--                                 (SELECT "USER", event, score FROM review) AS r
+--                         INNER JOIN
+--                                 (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                                     FROM review
+--                                     GROUP BY event) AS agr
+--                             ON r.event = agr.event)
+--             GROUP BY "USER") AS sum_fac
+--     LEFT OUTER JOIN
+--             (SELECT "USER", COUNT(*) AS sscored_nrevs
+--             FROM
+--                         (SELECT "USER", event, score FROM review) AS r
+--                 INNER JOIN
+--                         (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                             FROM review
+--                             GROUP BY event) AS agr
+--                     ON r.event = agr.event AND r.score = agr.ascore
+--             GROUP BY "USER") AS sscore
+--         ON sum_fac.user = sscore.user;
+
+-- Main Query
+-- Similar to Sub-query 7 but we also INNER JOIN with table from Sub-query 6
+-- on the same user id and we also divide the number of reviews of each user
+-- SELECT sum_fac.user, CAST(((sum_fac.sum_factors - COALESCE(sscored_nrevs, 0)) / r.nrevs) AS DECIMAL) AS si
+-- FROM
+--             (SELECT "USER", SUM(score_factor) AS sum_factors
+--             FROM (SELECT "USER", r.event, score, ascore, ABS(score - ascore) AS score_factor
+--                     FROM
+--                                 (SELECT "USER", event, score FROM review) AS r
+--                         INNER JOIN
+--                                 (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                                     FROM review
+--                                     GROUP BY event) AS agr
+--                             ON r.event = agr.event)
+--             GROUP BY "USER") AS sum_fac
+--     LEFT OUTER JOIN
+--             (SELECT "USER", COUNT(*) AS sscored_nrevs
+--             FROM
+--                         (SELECT "USER", event, score FROM review) AS r
+--                 INNER JOIN
+--                         (SELECT event, CAST(AVG(score) AS DECIMAL) AS ascore
+--                             FROM review
+--                             GROUP BY event) AS agr
+--                     ON r.event = agr.event AND r.score = agr.ascore
+--             GROUP BY "USER") AS sscore
+--         ON sum_fac.user = sscore.user
+--     INNER JOIN
+--             (SELECT "USER", COUNT(*) AS nrevs FROM review GROUP BY "USER") AS r
+--         ON r.user = sum_fac.user
+-- ORDER BY si DESC;
 
 
