@@ -478,7 +478,7 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user;
 
 -- Clarifications:
--- The below sub-queries explain the process to obtain the Main Query
+-- The below sub-queries explain the process to obtain the Main Query for Part 1
 -- with explanation in each sub-query
 
 -- Sub-query 1
@@ -613,17 +613,48 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- Main Query for Part 2
 -- Display the uid and the literal string 'keyword' for user with the most number
 -- of reviews for the events within a region
--- by joining  Sub-query 6 and Sub-query 7 on the same user id
--- SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user
-
+-- SELECT DISTINCT uid, region_badge
+-- FROM
+--             (SELECT uid, 'region' AS region_badge FROM user) AS ur
+--     INNER JOIN
+--             (SELECT "USER", e_rev.event_region_name, e_max_rev.max_nrevs
+--                 FROM
+--                             (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                                 FROM
+--                                             (SELECT e.eid, re.name AS event_region_name
+--                                                 FROM event AS e INNER JOIN region AS re
+--                                                 ON e.postcode = re.postcode) AS e_re
+--                                     INNER JOIN
+--                                             (SELECT "USER", event FROM review) AS r
+--                                         ON e_re.eid = r.event
+--                                 GROUP BY "USER", event_region_name) AS e_rev
+--                     INNER JOIN
+--                             (SELECT event_region_name, MAX(nrevs) AS max_nrevs
+--                                 FROM
+--                                      (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                                         FROM
+--                                                     (SELECT e.eid, re.name AS event_region_name
+--                                                         FROM event AS e INNER JOIN region AS re
+--                                                         ON e.postcode = re.postcode) AS e_re
+--                                             INNER JOIN
+--                                                     (SELECT "USER", event FROM review) AS r
+--                                                 ON e_re.eid = r.event
+--                                         GROUP BY "USER", event_region_name)
+--                                 GROUP BY event_region_name) AS e_max_rev
+--                         ON e_rev.event_region_name = e_max_rev.event_region_name AND
+--                            e_rev.nrevs = e_max_rev.max_nrevs) AS reg
+--         ON ur.uid = reg.user;
 
 -- Clarifications:
--- The below sub-queries explain the process to obtain the Main Query
+-- The below sub-queries explain the process to obtain the Main Query for Part 2
 -- with explanation in each sub-query
 
 -- Sub-query 1
 -- Display the event id and the region the event happens in
 -- SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode;
+-- SELECT e.eid, re.name AS event_region_name
+-- FROM event AS e INNER JOIN region AS re
+--     ON e.postcode = re.postcode;
 
 -- Sub-query 2
 -- Display the review user id and the event id from the table review
@@ -633,26 +664,82 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- Display the review user id, the event id and the region the event happens in
 -- by joining Sub-query 1 and Sub-query 2 on the same event id
 -- SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event;
+-- SELECT "USER", event, event_region_name
+-- FROM
+--             (SELECT e.eid, re.name AS event_region_name
+--                 FROM event AS e INNER JOIN region AS re
+--                 ON e.postcode = re.postcode) AS e_re
+--     INNER JOIN
+--             (SELECT "USER", event FROM review) AS r
+--         ON e_re.eid = r.event;
 
 -- Sub-query 4
 -- Display the review user id, the region name of the event and the number of reviews
 -- that user has reviewed for events at that region
--- using group by user id and region_name from Sub-query 3
+-- Similar to Sub-query 3 but add group by user id and event region name, and
+-- select user id, event_region_name, count(*)
 -- SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name;
+-- SELECT "USER", event_region_name, COUNT(*) AS nrevs
+-- FROM
+--             (SELECT e.eid, re.name AS event_region_name
+--                 FROM event AS e INNER JOIN region AS re
+--                 ON e.postcode = re.postcode) AS e_re
+--     INNER JOIN
+--             (SELECT "USER", event FROM review) AS r
+--         ON e_re.eid = r.event
+-- GROUP BY "USER", event_region_name;
 
 -- Sub-query 5
 -- Display the region name of the events and the max number of reviews associated
 -- with that region
--- using Sub-query 4 group by region_name
+-- by using Sub-query 4 group by event_region_name and select max(nrevs)
 -- SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name;
+-- SELECT event_region_name, MAX(nrevs) AS max_nrevs
+-- FROM
+--      (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--         FROM
+--                     (SELECT e.eid, re.name AS event_region_name
+--                         FROM event AS e INNER JOIN region AS re
+--                         ON e.postcode = re.postcode) AS e_re
+--             INNER JOIN
+--                     (SELECT "USER", event FROM review) AS r
+--                 ON e_re.eid = r.event
+--         GROUP BY "USER", event_region_name)
+-- GROUP BY event_region_name;
 
 -- Sub-query 6
 -- Display the review user id who has the most reviews in the event region, the
 -- event region name itself and the max number of reviews associated with that
 -- event region
--- by joining Sub-query 4 and Sub-query 5 on the same region and the number of reviews
--- = max number of reviews associated with that region
+-- by joining Sub-query 4 and Sub-query 5 on the same event region name and
+-- the number of reviews = max number of reviews associated with that region
 -- SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs;
+-- SELECT "USER", e_rev.event_region_name, e_max_rev.max_nrevs
+-- FROM
+--             (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                 FROM
+--                             (SELECT e.eid, re.name AS event_region_name
+--                                 FROM event AS e INNER JOIN region AS re
+--                                 ON e.postcode = re.postcode) AS e_re
+--                     INNER JOIN
+--                             (SELECT "USER", event FROM review) AS r
+--                         ON e_re.eid = r.event
+--                 GROUP BY "USER", event_region_name) AS e_rev
+--     INNER JOIN
+--             (SELECT event_region_name, MAX(nrevs) AS max_nrevs
+--                 FROM
+--                      (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                         FROM
+--                                     (SELECT e.eid, re.name AS event_region_name
+--                                         FROM event AS e INNER JOIN region AS re
+--                                         ON e.postcode = re.postcode) AS e_re
+--                             INNER JOIN
+--                                     (SELECT "USER", event FROM review) AS r
+--                                 ON e_re.eid = r.event
+--                         GROUP BY "USER", event_region_name)
+--                 GROUP BY event_region_name) AS e_max_rev
+--         ON e_rev.event_region_name = e_max_rev.event_region_name AND
+--            e_rev.nrevs = e_max_rev.max_nrevs;
 
 -- Sub-query 7
 -- Display the user uid and the literal string 'region' from table user
@@ -663,12 +750,103 @@ ORDER BY e_re.pscore DESC, e.title ASC;
 -- of reviews for the events within a region
 -- by joining  Sub-query 6 and Sub-query 7 on the same user id
 -- SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user
-
+-- SELECT DISTINCT uid, region_badge
+-- FROM
+--             (SELECT uid, 'region' AS region_badge FROM user) AS ur
+--     INNER JOIN
+--             (SELECT "USER", e_rev.event_region_name, e_max_rev.max_nrevs
+--                 FROM
+--                             (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                                 FROM
+--                                             (SELECT e.eid, re.name AS event_region_name
+--                                                 FROM event AS e INNER JOIN region AS re
+--                                                 ON e.postcode = re.postcode) AS e_re
+--                                     INNER JOIN
+--                                             (SELECT "USER", event FROM review) AS r
+--                                         ON e_re.eid = r.event
+--                                 GROUP BY "USER", event_region_name) AS e_rev
+--                     INNER JOIN
+--                             (SELECT event_region_name, MAX(nrevs) AS max_nrevs
+--                                 FROM
+--                                      (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                                         FROM
+--                                                     (SELECT e.eid, re.name AS event_region_name
+--                                                         FROM event AS e INNER JOIN region AS re
+--                                                         ON e.postcode = re.postcode) AS e_re
+--                                             INNER JOIN
+--                                                     (SELECT "USER", event FROM review) AS r
+--                                                 ON e_re.eid = r.event
+--                                         GROUP BY "USER", event_region_name)
+--                                 GROUP BY event_region_name) AS e_max_rev
+--                         ON e_rev.event_region_name = e_max_rev.event_region_name AND
+--                            e_rev.nrevs = e_max_rev.max_nrevs) AS reg
+--         ON ur.uid = reg.user;
 
 -- PART 3: FINAL QUERY
 -- Union the two Main Query for Part 1 and Part 2
-(SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user) UNION (SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user);
-
+-- (SELECT DISTINCT uid, kword FROM (SELECT uid, 'keyword' AS kword FROM USER) AS a INNER JOIN (SELECT "USER", a.word, max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) AS a INNER JOIN (SELECT word, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", word, COUNT(*) AS nrevs FROM (SELECT "USER", event, word FROM (SELECT "USER", event, CAST(description AS VARCHAR(30)) AS description, score, reviewdate FROM review) AS r INNER JOIN (SELECT e.eid, k.word FROM event AS e INNER JOIN keyword AS k ON e.eid = k.event) AS ek ON r.event = ek.eid) GROUP BY "USER", word) GROUP BY word) AS b ON a.word = b.word AND a.nrevs = b.max_nrevs) AS b ON a.uid = b.user) UNION (SELECT DISTINCT uid, region_badge FROM (SELECT uid, 'region' AS region_badge FROM user) AS u INNER JOIN (SELECT "USER", a.region_name, max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) AS a INNER JOIN (SELECT region_name, MAX(nrevs) AS max_nrevs FROM (SELECT "USER", region_name, COUNT(*) AS nrevs FROM (SELECT "USER", event, region_name FROM (SELECT e.eid, CAST(re.name AS VARCHAR(30)) AS region_name FROM event AS e INNER JOIN region AS re ON e.postcode = re.postcode) AS e_re INNER JOIN (SELECT "USER", event FROM review) AS r ON e_re.eid = r.event) GROUP BY "USER", region_name) GROUP BY region_name) AS b ON a.region_name = b.region_name AND a.nrevs = b.max_nrevs) AS b ON u.uid = b.user);
+-- (SELECT DISTINCT uid, kword
+-- FROM
+--     (SELECT uid, 'keyword' AS kword FROM USER) AS uk
+-- INNER JOIN
+--     (SELECT "USER", maxrev.word, max_nrevs
+--         FROM
+--             (SELECT "USER", word, COUNT(*) AS nrevs
+--                 FROM
+--                     (SELECT "USER", event FROM review) AS r
+--                 INNER JOIN
+--                     (SELECT e.eid, k.word
+--                         FROM event AS e INNER JOIN keyword AS k
+--                         ON e.eid = k.event) AS ek
+--                 ON r.event = ek.eid
+--                 GROUP BY "USER", word) AS rev
+--         INNER JOIN
+--             (SELECT word, MAX(nrevs) AS max_nrevs
+--                 FROM
+--                     (SELECT "USER", word, COUNT(*) AS nrevs
+--                         FROM
+--                             (SELECT "USER", event FROM review) AS r
+--                         INNER JOIN
+--                             (SELECT e.eid, k.word
+--                                 FROM event AS e INNER JOIN keyword AS k
+--                                     ON e.eid = k.event) AS ek
+--                         ON r.event = ek.eid
+--                         GROUP BY "USER", word)
+--                 GROUP BY word) AS maxrev
+--         ON rev.word = maxrev.word AND rev.nrevs = maxrev.max_nrevs) AS rev
+-- ON uk.uid = rev.user)
+-- UNION
+-- (SELECT DISTINCT uid, region_badge
+-- FROM
+--             (SELECT uid, 'region' AS region_badge FROM user) AS ur
+--     INNER JOIN
+--             (SELECT "USER", e_rev.event_region_name, e_max_rev.max_nrevs
+--                 FROM
+--                             (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                                 FROM
+--                                             (SELECT e.eid, re.name AS event_region_name
+--                                                 FROM event AS e INNER JOIN region AS re
+--                                                 ON e.postcode = re.postcode) AS e_re
+--                                     INNER JOIN
+--                                             (SELECT "USER", event FROM review) AS r
+--                                         ON e_re.eid = r.event
+--                                 GROUP BY "USER", event_region_name) AS e_rev
+--                     INNER JOIN
+--                             (SELECT event_region_name, MAX(nrevs) AS max_nrevs
+--                                 FROM
+--                                      (SELECT "USER", event_region_name, COUNT(*) AS nrevs
+--                                         FROM
+--                                                     (SELECT e.eid, re.name AS event_region_name
+--                                                         FROM event AS e INNER JOIN region AS re
+--                                                         ON e.postcode = re.postcode) AS e_re
+--                                             INNER JOIN
+--                                                     (SELECT "USER", event FROM review) AS r
+--                                                 ON e_re.eid = r.event
+--                                         GROUP BY "USER", event_region_name)
+--                                 GROUP BY event_region_name) AS e_max_rev
+--                         ON e_rev.event_region_name = e_max_rev.event_region_name AND
+--                            e_rev.nrevs = e_max_rev.max_nrevs) AS reg
+--         ON ur.uid = reg.user);
 
 
 -- QUERY 10
