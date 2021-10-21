@@ -60,7 +60,6 @@ WHERE uid IN (SELECT "USER" FROM review) AND uid NOT IN (SELECT organizer FROM e
 -- QUERY 4
 
 -- QUERY 4a)
-
 -- Multi-line query
 -- SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore
 -- FROM event LEFT OUTER JOIN 
@@ -72,9 +71,6 @@ WHERE uid IN (SELECT "USER" FROM review) AND uid NOT IN (SELECT organizer FROM e
 
 -- One-line Query
 SELECT eid, title, description, startdate, enddate, organizer, postcode, nrev, ascore FROM event LEFT OUTER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC;
-
--- Pretty print the query
--- SELECT eid, CAST(title AS VARCHAR(28)) AS title, CAST(description AS VARCHAR(12)) AS description, startdate, enddate, organizer, postcode, nrev, CAST(ascore AS DECIMAL) AS ascore FROM event LEFT OUTER JOIN (SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event) AS r ON event.eid = r.event ORDER BY ascore DESC, title ASC;
 
 -- Clarifications:
 -- `SELECT event, COUNT(*) AS nrev, AVG(score) AS ascore FROM review GROUP BY event`
