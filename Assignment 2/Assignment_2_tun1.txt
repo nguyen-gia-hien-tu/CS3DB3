@@ -1,6 +1,8 @@
 -- Name: Hien Tu
 -- macID: tun1
 
+
+
 -- QUERY 1
 
 -- Query to find all multi-day events
@@ -22,6 +24,7 @@ ORDER BY startdate ASC, title ASC;
 -- events have the same startdate.
 
 
+
 -- QUERY 2
 
 -- Query the events in the Golden Horseshoe area
@@ -37,6 +40,7 @@ ORDER BY title ASC;
 -- will return the columns eid and title of the table event whose event's postal code
 -- is in the  above list. `ORDER BY title ASC` orders the result in alphabetical
 -- order in title.
+
 
 
 -- QUERY 3
@@ -423,7 +427,7 @@ ORDER BY fstid ASC, sndid ASC;
 -- Display the event and the popularity score (number of reviews + sum of the reviews)
 SELECT event, COUNT(*) + SUM(score) AS pscore FROM review GROUP BY event
 
--- Query 8a)
+-- QUERY 8a)
 -- Main Query
 SELECT e.eid, e_re.pscore
 FROM event AS e LEFT OUTER JOIN
@@ -443,7 +447,7 @@ ON e.eid = e_re.event;
 -- that, we select the eid column and the pscore column.
 
 
--- Query 8b)
+-- QUERY 8b)
 -- Main Query
 SELECT e.eid, e.title, e_re.pscore
 FROM event AS e INNER JOIN
