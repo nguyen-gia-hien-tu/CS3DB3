@@ -205,5 +205,29 @@ is
                             & \text{birthdate: DATE).}
 \end{align*}
 
+For the table Film, we have the \key{title}, \key{year} and \key{creator} as the
+primary keys. Since the title of the film is usually short, we will use
+VARCHAR(100). We will use INT to store the \key{year}. Since the \key{creator}
+references the \key{id} column in the table Person, we will use INT for
+\key{creator}. We will use INTERVAL to specify the domain of the attribute
+duration and DECIMAL for the attribute budget since the budget can have half a
+dollar. We also need to check that the year should be before or equal to 2021
+(\textbf{CHECK} year $<=$ 2021). Since a released film should have title, year
+of release, the creator, the duration and the budget, all the keys and
+attributes should not be null. The relational schema for Film is
+\begin{align*}
+    \text{\textbf{Film}(} & \text{\key{title}: VARCHAR(100),} \\
+                          & \text{\key{year}: INT,} \\
+                          & \text{\key{creator}: INT,} \\
+                          & \text{duration: INTERVAL,} \\
+                          & \text{budget: DECIMAL).} \\
+\end{align*}
+
+For the table Role, since a person can have multiple role and a film can have
+multiple people with their roles, we cannot use them as primary keys. Thus, we
+will have a primary key \key{rid} to represent the role number. It will have the
+type INT and is auto-generated. The table also have pid: INT, referencing the
+\key{id} of the Person table
+
 
 \end{document}
