@@ -227,7 +227,26 @@ For the table Role, since a person can have multiple role and a film can have
 multiple people with their roles, we cannot use them as primary keys. Thus, we
 will have a primary key \key{rid} to represent the role number. It will have the
 type INT and is auto-generated. The table also have pid: INT, referencing the
-\key{id} of the Person table
+\key{id} in the Person table; the ftitle: VARCHAR(100), fyear: INT, fcreator:
+INT, referencing the \key{title}, \key{year}, \key{creator} of the Film table,
+correspondingly. The table Role also has the attribute role to store the role of
+each person, we will use VARCHAR(100) since the role should not be too long. To
+create a constraint that all film creators have the role of director for that
+film, we will check, in the table Role, if the pid is equal to fcreator (that
+is, the id of the person in a role is the same as the id of the film creator),
+then that person is the creator of the film and the role should be `director'.
+Mathematically represent the idea, pid = fcreator $\implies$ role = `director'.
+Since SQL does not have $\implies$, and we know that $p \implies q \equiv \neg p
+\lor q$, we can present the constraint in SQL as \textbf{CHECK} NOT (pid =
+fcreator) OR (role = `director'). The relational schema of Role is
+\begin{align*}
+    \text{\textbf{Role}(} & \text{\key{rid}: INT,} \\
+                          & \text{pid: INT,} \\
+                          & \text{ftitle: VARCHAR(100),} \\
+                          & \text{fyear: INT,} \\
+                          & \text{fcreator: INT,} \\
+                          & \text{role: VARCHAR(100)).} \\
+\end{align*}
 
 
 \end{document}
