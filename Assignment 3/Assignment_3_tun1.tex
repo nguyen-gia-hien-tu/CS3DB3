@@ -71,12 +71,28 @@ Friend\_Of table is
 \end{align*}
 
 We also have the entity Reaction, which will be the table Reaction in the
-relational schema. Since Reaction has a one-to-many relationship with Subscriber,
-we can add the primary keys of the table Subscriber to be the attributes of the
-table Reaction to represent this relationship. We name these attributes to be
-uname and unum correspond to the \key{username} and \key{number} in the table
-Subscriber with the domain of CLOB and INT, respectively.
+relational schema. Notice that Reaction, ThreadR, and ReviewR has an ISA
+relationship, thus, we will use the ER method to create the relational schema
+for this entity-relationship model. Since Reaction has a strict-one-to-many
+relationship with Subscriber, we can add the primary keys of the table
+Subscriber to be the attributes of the table Reaction to represent this
+relationship without having another table. We name these attributes to be uname
+and unum reference to the \key{username} and \key{number} in the table
+Subscriber with the domain of CLOB and INT, respectively. The primary key for
+Reaction is \key{id} with INT as the type. We will automatically increment the
+\key{id} of the Reaction. Furthermore, Reaction has title and content as its
+attributes. Since the title would be shorter than the content of a reaction, we
+will use VARCHAR(100) for title and CLOB for content. The relational schema for
+Reaction is
+\begin{align*}
+    \text{\textbf{Reaction}(} & \text{\key{id}: INT,} \\
+                              & \text{title: VARCHAR(100),} \\
+                              & \text{content: CLOB,} \\
+                              & \text{uname: CLOB,} \\
+                              & \text{unum: INT} 
+\end{align*}
 
+Notice that ThreadR has strict-one-to-many and ISA relationships with Reaction
 
 
 \end{document}
