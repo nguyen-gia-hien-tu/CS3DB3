@@ -114,14 +114,13 @@ the entity Review as attributes of the table ReviewR. Thus, we will have
 reacteduname: CLOB, referencing the username of the subscriber whose review is
 being reacted to, reactedunum: INT, referencing the number of the subscriber
 whose review is being reacted to, reactedrevision: INT, referencing the revision
-number of the review. We will need to add one or more attributes to the table
-ReviewR as well since Review is also a weak entity of another entity in Part 2
-(the Film entity). These will be explained more in the table Review part. For
-now, the table ReviewR is
+number of the review. We will need to add some more attributes to the table
+ReviewR since Review is also a weak entity of the entity Film (in Part 2). These
+will be explained more in the table Review part. For now, the table ReviewR is
 \begin{align*}
     \text{\textbf{ReviewR}(} & \text{\key{reactfrom}: INT,} \\
-                             & \text{reacteduname: CLOB} \\
-                             & \text{reactedunum: INT} \\
+                             & \text{reacteduname: CLOB,} \\
+                             & \text{reactedunum: INT,} \\
                              & \text{reactedrevision: INT).}
 \end{align*}
 
@@ -144,13 +143,45 @@ explained in Part 2. Therefore, the primary key of the Review is (\key{uname},
 are necessary to create a review. The table Review is
 \begin{align*}
     \text{\textbf{Review}(} & \text{\key{uname}: CLOB,} \\
-                            & \text{\key{unum}: INT} \\
-                            & \text{\key{revision}: INT} \\
-                            & \text{\key{ftitle}: VARCHAR(100)} \\
-                            & \text{\key{fyear}: INT} \\
-                            & \text{\key{fcreator}: INT} \\
-                            & \text{score: INT} \\
-                            & \text{timestamp: TIMESTAMP}
+                            & \text{\key{unum}: INT,} \\
+                            & \text{\key{revision}: INT,} \\
+                            & \text{\key{ftitle}: VARCHAR(100),} \\
+                            & \text{\key{fyear}: INT,} \\
+                            & \text{\key{fcreator}: INT,} \\
+                            & \text{score: INT,} \\
+                            & \text{timestamp: TIMESTAMP).}
+\end{align*}
+
+Notice that VideoReview and TextReview have ISA relationships with Review, we
+will use the ER method to do represent these relationships. Thus, in the table
+VideoReview, we will have (\key{uname}, \key{unum}, \key{revision},
+\key{ftitle}, \key{fyear}, \key{fcreator}, \pkey{revision}) as the primary key
+with the explanation as the above. In addition, we will have one more attribute,
+named video. Since videos need to be store as binary files and are often large,
+we will use BLOB for video attribute, this attribute should not be null as well.
+The table for VideoReview is
+\begin{align*}
+    \text{\textbf{VideoReview}(} & \text{\key{uname}: CLOB,} \\
+                                 & \text{\key{unum}: INT,} \\
+                                 & \text{\key{revision}: INT,} \\
+                                 & \text{\key{ftitle}: VARCHAR(100),} \\
+                                 & \text{\key{fyear}: INT,} \\
+                                 & \text{\key{fcreator}: INT,} \\
+                                 & \text{video: BLOB).}
+\end{align*}
+
+Similarly, the table TextReview has (\key{uname}, \key{unum}, \key{revision},
+\key{ftitle}, \key{fyear}, \key{fcreator}, \pkey{revision}) as the primary key
+and one more attribute description with the domain as CLOB and the attribute
+should not be null.
+\begin{align*}
+    \text{\textbf{TextReview}(} & \text{\key{uname}: CLOB,} \\
+                                & \text{\key{unum}: INT,} \\
+                                & \text{\key{revision}: INT,} \\
+                                & \text{\key{ftitle}: VARCHAR(100),} \\
+                                & \text{\key{fyear}: INT,} \\
+                                & \text{\key{fcreator}: INT,} \\
+                                & \text{description: CLOB).}
 \end{align*}
 
 
