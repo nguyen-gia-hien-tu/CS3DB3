@@ -115,13 +115,19 @@ reacteduname: CLOB, referencing the username of the subscriber whose review is
 being reacted to, reactedunum: INT, referencing the number of the subscriber
 whose review is being reacted to, reactedrevision: INT, referencing the revision
 number of the review. We will need to add some more attributes to the table
-ReviewR since Review is also a weak entity of the entity Film (in Part 2). These
-will be explained more in the table Review part. For now, the table ReviewR is
+ReviewR since Review is also a weak entity of the entity Film (in Part 2). We
+will have reactedftitle: VARCHAR(100), reactedfyear: INT, reactedfrevision: INT
+as attributes, referencing the \key{title}, \key{year}, \key{creator} of the
+table Film in Part 2. These will be explained more in Part 2. The table ReviewR
+is
 \begin{align*}
     \text{\textbf{ReviewR}(} & \text{\key{reactfrom}: INT,} \\
                              & \text{reacteduname: CLOB,} \\
                              & \text{reactedunum: INT,} \\
-                             & \text{reactedrevision: INT).}
+                             & \text{reactedrevision: INT,} \\
+                             & \text{reactedftitle: VARCHAR(100),} \\
+                             & \text{reactedfyear: INT,} \\
+                             & \text{reactedfcreator: INT).}
 \end{align*}
 
 For the entity Review, we will have a table Review. Since Review is a weak
