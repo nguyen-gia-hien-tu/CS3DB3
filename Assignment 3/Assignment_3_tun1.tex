@@ -24,9 +24,48 @@
 \textbf{Part One: The social media features}
 
 From the ER-diagram, there is the entity Subscriber with the primary keys
-\key{username} and \key{number}. Thus, we will make (\key{username}, \key{number})
-to be the primary key pair. There are also attributes email, hash and salt
-in the entity Subscriber.
+\key{username} and \key{number}. Thus, we will have a table named Subscriber and
+we will make (\key{username}, \key{number}) to be the primary key pair. There
+are also attributes email, hash and salt in the entity Subscriber. We will use
+large strings CLOB for \key{username}. For \key{number}, INT is used for the
+type and we will let it automatically increment (GENERATED ALWAYS AS IDENTITY).
+We would use VARCHAR(320) to store email. Since hash and salt values require
+64-byte each, we would use BINARY(64) for each of them. Since all the above
+attributes are required to create a subscriber, all of them need to be not null
+(except for \key{number} since it is already automatically incremented). The
+relational schema for Subscriber table is
+\begin{align*}
+    \text{\textbf{Subscriber}(} & \text{\key{username}: CLOB,} \\
+                                & \text{\key{number}: INT,} \\
+                                & \text{email: VARCHAR(320),} \\
+                                & \text{hash: BINARY(64),} \\
+                                & \text{salt: BINARY(64)).}
+\end{align*}
+
+The ER-diagram has a many-to-many relationship Friend\_Of between Subscriber and
+Subscriber. Thus, we will have a table name Friend\_Of. The primary keys of the
+Subscriber will be the primary keys of the Friend\_Of. Since there are two
+subscribers, we will have a 4-tuple primary key (\key{funame}, \key{funum},
+\key{tuname}, \key{tunum}). \key{funame} is short for from username, which is
+the username of the subscriber who is following and \key{funum} is short for
+from user number, which is the number of the subscriber who is following.
+Similarly, \key{tuname} and \key{tunum} is the username and the user number of
+the subscriber who is being followed, respectively. Thus, \key{funame} and
+\key{tuname} would reference \key{username} (column) of the Subscriber table
+while \key{funum} and \key{tunum} would reference \key{number} (column) of the
+Subscriber table. Since the domain of the attribute \key{username} in the
+Subscriber table is CLOB, we need to use CLOB to be the domain of the attributes
+(keys) \key{funame} and \key{tuname}. Similarly, we need to use INT for
+\key{funum} and \key{tunum}. All of the attributes would be not null as well. We
+also need to check that a subscriber is not following themselves. The relational
+schema for the Friend\_Of table is
+\begin{align*}
+    \text{\textbf{Friend\_Of}(} & \text{\key{funame}: CLOB,} \\
+                                & \text{\key{funum}: INT,} \\
+                                & \text{\key{tuname}: CLOB,} \\
+                                & \text{\key{tunum}: INT).} 
+\end{align*}
+
 
 
 \end{document}
