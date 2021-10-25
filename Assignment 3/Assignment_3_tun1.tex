@@ -28,12 +28,14 @@ From the ER-diagram, there is the entity Subscriber with the primary keys
 we will make (\key{username}, \key{number}) to be the primary key pair. There
 are also attributes email, hash and salt in the entity Subscriber. We will use
 large strings CLOB for \key{username}. For \key{number}, INT is used for the
-type and we will let it automatically increment (GENERATED ALWAYS AS IDENTITY).
-We would use VARCHAR(320) to store email. Since hash and salt values require
-64-byte each, we would use BINARY(64) for each of them. Since all the above
-attributes are required to create a subscriber, all of them need to be not null
-(except for \key{number} since it is already automatically incremented). The
-relational schema for Subscriber table is
+domain of attribute. Since both \key{username} and \key{number} are used as
+primary keys, two different subscribers can either have the same username or the
+same number but not both (exclusive or). We would use VARCHAR(320) to store
+email. Since hash and salt values require 64-byte each, we would use BINARY(64)
+for each of them. Since all the above attributes are required to create a
+subscriber, all of them need to be not null (except for \key{number} since it is
+already automatically incremented). The relational schema for Subscriber table
+is
 \begin{align*}
     \text{\textbf{Subscriber}(} & \text{\key{username}: CLOB,} \\
                                 & \text{\key{number}: INT,} \\
@@ -57,14 +59,23 @@ Subscriber table. Since the domain of the attribute \key{username} in the
 Subscriber table is CLOB, we need to use CLOB to be the domain of the attributes
 (keys) \key{funame} and \key{tuname}. Similarly, we need to use INT for
 \key{funum} and \key{tunum}. All of the attributes would be not null as well. We
-also need to check that a subscriber is not following themselves. The relational
-schema for the Friend\_Of table is
+also need to check that a subscriber is not following themselves, that is, we
+need to check either \key{funame} $<>$ \key{tuname} or \key{funum} $<>$
+\key{tunum} or both are different (inclusive or). The relational schema for the
+Friend\_Of table is
 \begin{align*}
     \text{\textbf{Friend\_Of}(} & \text{\key{funame}: CLOB,} \\
                                 & \text{\key{funum}: INT,} \\
                                 & \text{\key{tuname}: CLOB,} \\
                                 & \text{\key{tunum}: INT).} 
 \end{align*}
+
+We also have the entity Reaction, which will be the table Reaction in the
+relational schema. Since Reaction has a one-to-many relationship with Subscriber,
+we can add the primary keys of the table Subscriber to be the attributes of the
+table Reaction to represent this relationship. We name these attributes to be
+uname and unum correspond to the \key{username} and \key{number} in the table
+Subscriber with the domain of CLOB and INT, respectively.
 
 
 
