@@ -140,12 +140,17 @@ keys of the table Review, referencing the \key{title}, the \key{year}, and the
 \key{creator} of the table Film. The choice of the domain of attributes will be
 explained in Part 2. Therefore, the primary key of the Review is (\key{uname},
 \key{unum}, \key{revision}, \key{ftitle}, \key{fyear}, \key{fcreator},
-\pkey{revision}). The table Review is
+\pkey{revision}). All of the keys and attributes should be not null since they
+are necessary to create a review. The table Review is
 \begin{align*}
-    \text{\textbf{ReviewR}(} & \text{\key{reactfrom}: INT,} \\
-                             & \text{reacteduname: CLOB} \\
-                             & \text{reactedunum: INT} \\
-                             & \text{reactedrevision: INT).}
+    \text{\textbf{Review}(} & \text{\key{uname}: CLOB,} \\
+                            & \text{\key{unum}: INT} \\
+                            & \text{\key{revision}: INT} \\
+                            & \text{\key{ftitle}: VARCHAR(100)} \\
+                            & \text{\key{fyear}: INT} \\
+                            & \text{\key{fcreator}: INT} \\
+                            & \text{score: INT} \\
+                            & \text{timestamp: TIMESTAMP}
 \end{align*}
 
 
