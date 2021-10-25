@@ -92,7 +92,15 @@ Reaction is
                               & \text{unum: INT} 
 \end{align*}
 
-Notice that ThreadR has strict-one-to-many and ISA relationships with Reaction
+Notice that ThreadR has strict-one-to-many and ISA relationships with Reaction.
+As mentioned before, we use the ER method for the ISA relationship. Thus, we
+will have \key{threadfrom} as the primary key of the table ThreadR to reference
+the \key{id} of the current reaction. We also have an attribute threadto to
+reference the \key{id} of the reaction that the current reaction is reacting to.
+Since both \key{threadfrom} and threadto reference the \key{id} of the
+reactions, both have the type INT and must be not null. To make sure a reaction
+is not reacting to itself, we need to check that \key{threadfrom} $<>$ threadto
+(\textbf{CHECK}(threadfrom $<>$ threadto)).
 
 
 \end{document}
