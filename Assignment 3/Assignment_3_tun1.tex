@@ -162,11 +162,11 @@ review. Furthermore, we need to check that the score should be between 0 and 10
 Notice that VideoReview and TextReview have ISA relationships with Review, we
 will use the ER method to do represent these relationships. Thus, in the table
 VideoReview, we will have (\key{uname}, \key{unum}, \key{ftitle}, \key{fyear},
-\key{fcreator}, \pkey{revision}) as the primary key with the explanation as the
-above. In addition, we will have one more attribute, named video. Since videos
-need to be store as binary files and are often large, we will use BLOB for video
-attribute, this attribute should not be null as well. The table for VideoReview
-is
+\key{fcreator}, \pkey{revision}) as the primary key, referencing the above keys
+of the Review table. In addition, we will have one more attribute, named video.
+Since videos need to be store as binary files and are often large, we will use
+BLOB for video attribute, this attribute should not be null as well. The table
+for VideoReview is
 \begin{align*}
     \text{\textbf{VideoReview}(} & \text{\key{uname}: CLOB,} \\
                                  & \text{\key{unum}: INT,} \\

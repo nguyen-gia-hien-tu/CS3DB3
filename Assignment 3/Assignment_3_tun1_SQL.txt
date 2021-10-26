@@ -2,3 +2,124 @@
 -- Name: Hien Tu
 -- MacID: tun1
 
+-- Subscriber
+CREATE TABLE subscriber
+(
+    username VARCHAR(100) NOT NULL,
+    number INT NOT NULL,
+    email VARCHAR(320) NOT NULL,
+    hash VARCHAR(64) NOT NULL,
+    salt VARCHAR(64) NOT NULL,
+    PRIMARY KEY (username, number)
+);
+
+-- Friend_Of
+CREATE TABLE friend_of
+(
+    funame VARCHAR(100) NOT NULL,
+    funum INT NOT NULL,
+    tuname VARCHAR(100) NOT NULL,
+    tunum INT NOT NULL,
+    FOREIGN KEY (funame, funum) REFERENCES subscriber(username, number),
+    FOREIGN KEY (tuname, tunum) REFERENCES subscriber(username, number),
+    PRIMARY KEY (funame, funum, tuname, tunum)
+);
+
+-- Person
+CREATE TABLE person
+(
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name CLOB NOT NULL,
+    birthdate DATE
+);
+
+-- Film
+CREATE TABLE film
+(
+    title VARCHAR(100) NOT NULL,
+    year INT NOT NULL,
+    creator INT NOT NULL REFERENCES person(id),
+    duration DECIMAL NOT NULL,
+    budget DECIMAL NOT NULL,
+    PRIMARY KEY (title, year, creator)
+);
+
+-- Role
+CREATE TABLE role
+(
+    rid INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pid INT NOT NULL,
+    ftitle VARCHAR(100) NOT NULL,
+    fyear INT NOT NULL,
+    fcreator INT NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    FOREIGN KEY (pid) REFERENCES person(id),
+    FOREIGN KEY (ftitle, fyear, fcreator) REFERENCES film(title, year, creator)
+);
+
+-- Review
+CREATE TABLE review
+(
+    uname VARCHAR(100) NOT NULL,
+    unum INT NOT NULL,
+    ftitle VARCHAR(100) NOT NULL,
+    fyear INT NOT NULL,
+    fcreator INT NOT NULL,
+    revision INT NOT NULL,
+    score INT NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    PRIMARY KEY (uname, unum, ftitle, fyear, fcreator, revision),
+    FOREIGN KEY (uname, unum) REFERENCES subscriber(username, number),
+    FOREIGN KEY (ftitle, fyear, fcreator) REFERENCES film(title, year, creator),
+    CHECK (0 <= score AND score <= 10)
+);
+
+-- VideoReview
+CREATE TABLE videoReview
+(
+    uname VARCHAR(100) NOT NULL,
+    unum INT NOT NULL,
+    ftitle VARCHAR(100) NOT NULL,
+    fyear INT NOT NULL,
+    fcreator INT NOT NULL,
+    revision INT NOT NULL,
+    video BLOB NOT NULL,
+    PRIMARY KEY (uname, unum, ftitle, fyear, fcreator, revision),
+    FOREIGN KEY (uname, unum, ftitle, fyear, fcreator, revision)
+        REFERENCES review(uname, unum,ftitle, fyear, fcreator, revision)
+);
+
+-- TextReview
+CREATE TABLE textReview
+(
+    uname VARCHAR(100) NOT NULL,
+    unum INT NOT NULL,
+    ftitle VARCHAR(100) NOT NULL,
+    fyear INT NOT NULL,
+    fcreator INT NOT NULL,
+    revision INT NOT NULL,
+    description CLOB NOT NULL,
+    PRIMARY KEY (uname, unum, ftitle, fyear, fcreator, revision),
+    FOREIGN KEY (uname, unum, ftitle, fyear, fcreator, revision)
+        REFERENCES review(uname, unum,ftitle, fyear, fcreator, revision)
+);
+
+-- Reaction
+CREATE TABLE reaction
+(
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    content CLOB NOT NULL,
+    uname VARCHAR(100) NOT NULL,
+    unum INT NOT NULL,
+    FOREIGN KEY (uname, unum) REFERENCES subscriber(username, number)
+)
+
+-- ThreadR
+CREATE TABLE threadR
+(
+    threadfrom INT NOT NULL REFERENCES reaction(id),
+    threadto INT NOT NULL REFERENCES reaction(id),
+    PRIMARY KEY (threadfrom)
+);
+
