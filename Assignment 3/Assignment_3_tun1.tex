@@ -187,7 +187,8 @@ for VideoReview is
 Similarly, the table TextReview has (\key{uname}, \key{unum}, \key{ftitle},
 \key{fyear}, \key{fcreator}, \pkey{revision}) as the primary key and one more
 attribute description with the domain as CLOB and the attribute should not be
-null.
+null. Since the description of the review of the film could be long, we use CLOB
+as the domain of attribute.
 \begin{align*}
     \text{\textbf{TextReview}(} & \text{\key{uname}: VARCHAR(100),} \\
                                 & \text{\key{unum}: INT,} \\
@@ -217,20 +218,36 @@ primary keys. Since the title of the film is usually short, we will use
 VARCHAR(100). We will use INT to store the \key{year}. Since the \key{creator}
 references the \key{id} column in the table Person, we will use INT for
 \key{creator}. We will use DECIMAL to specify the domain of the attribute
-duration to demonstrate how many hours a film is and DECIMAL for the attribute
-budget since the budget can have part of a dollar (for example, \$4,500,000.25).
-We also need to check that the year should be before or equal to 2021 (current
-year) (\textbf{CHECK} year $<=$ 2021). Unless the cinema wants to store films
-whose expected release year is later than 2021, then we can skip this check.
-Since a film should have title, year of release, the creator, the duration and
-the budget, all the keys and attributes should not be null. The relational
-schema for Film is
+duration to demonstrate how many hours a film lasts and DECIMAL for the
+attribute budget since the budget can have part of a dollar (for example,
+\$4,500,000.25). We also need to check that the year should be before or equal
+to 2021 (current year) (\textbf{CHECK} year $<=$ 2021). Unless the cinema wants
+to store films whose expected release year is later than 2021, then we can skip
+this check. Since a film should have title, year of release, the creator, the
+duration and the budget, all the keys and attributes should not be null. The
+relational schema for Film is
 \begin{align*}
     \text{\textbf{Film}(} & \text{\key{title}: VARCHAR(100),} \\
                           & \text{\key{year}: INT,} \\
                           & \text{\key{creator}: INT,} \\
-                          & \text{duration: INTERVAL,} \\
-                          & \text{budget: DECIMAL).} \\
+                          & \text{duration: DECIMAL,} \\
+                          & \text{budget: DECIMAL).}
+\end{align*}
+
+The view Film\_Info will have the columns title, year, duration, and budget from
+the table Film and the column creator\_name from the column name in table
+Person. Thus, we will inner join the two tables Film and Person where the
+creator id is the same as the id in the Person table. The domains of attributes
+title, year, duration, and budget are similar to the ones in the Film table,
+which are VARCHAR(100), INT, DECIMAL, and DECIMAL, respectively. The domain of
+attribute for creator\_name is the same as the attribute name in table Person,
+which is VARCHAR(100).
+\begin{align*}
+    \text{\textbf{Film\_Info}(} & \text{title: VARCHAR(100),} \\
+                                & \text{year: INT,} \\
+                                & \text{duration: DECIMAL,} \\
+                                & \text{budget: DECIMAL,} \\
+                                & \text{creator\_name: VARCHAR(100)).}
 \end{align*}
 
 For the table Role, since a person can have multiple role and a film can have
@@ -259,8 +276,15 @@ table Role is
                           & \text{ftitle: VARCHAR(100),} \\
                           & \text{fyear: INT,} \\
                           & \text{fcreator: INT,} \\
-                          & \text{role: VARCHAR(100)).} \\
+                          & \text{role: VARCHAR(100)).}
 \end{align*}
 
+For the SQL part, since we need to have the tables in Part 2 for the tables
+Review, VideoReview, TextReview, Reaction, ThreadR, ReviewR to use, we need to
+create the tables in Part 2 first, then create those tables later. Thus, I
+decided to create the tables (and views) in Part 2 after creating tables
+Subscriber and Friend\_Of, and create the tables Review, VideoReview,
+TextReview, Reaction, ThreadR, ReviewR after creating the tables (and views) in
+Part 2.
 
 \end{document}

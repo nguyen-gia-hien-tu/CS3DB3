@@ -60,6 +60,12 @@ CREATE TABLE film
     -- CHECK (year <= 2021)
 );
 
+-- Film_Info
+CREATE VIEW film_info
+AS (SELECT title, year, duration, budget, name AS creator_name
+    FROM film INNER JOIN person
+    ON film.creator = person.id);
+
 -- Role
 CREATE TABLE role
 (
