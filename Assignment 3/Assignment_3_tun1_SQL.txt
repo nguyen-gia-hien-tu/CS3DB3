@@ -56,7 +56,7 @@ CREATE TABLE film
     creator INT NOT NULL REFERENCES person(id),
     duration DECIMAL NOT NULL,
     budget DECIMAL NOT NULL,
-    PRIMARY KEY (title, year, creator),
+    PRIMARY KEY (title, year, creator)
     -- CHECK (year <= 2021)
 );
 

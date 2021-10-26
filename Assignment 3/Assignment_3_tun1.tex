@@ -121,16 +121,19 @@ referencing the revision number of the review. We will need to add some more
 attributes to the table ReviewR since Review is also a weak entity of the entity
 Film (in Part 2). We will have reactedftitle: VARCHAR(100), reactedfyear: INT,
 reactedfcreator: INT as attributes, referencing the \key{title}, \key{year},
-\key{creator} of the table Film in Part 2. These attributes will be explained
-more in the table Review and the table Film in Part 2. The table ReviewR is
+\key{creator} of the table Film in Part 2. In other words, reacteduname,
+reactedunum, reactedftitle, reactedfyear, reactedfcreator, and reactedrevision
+reference the uname, unum, ftitle, fyear and fcreator in the table Review. These
+attributes will be explained more in the table Review and the table Film in Part
+2. The table ReviewR is
 \begin{align*}
     \text{\textbf{ReviewR}(} & \text{\key{reactfrom}: INT,} \\
                              & \text{reacteduname: VARCHAR(100),} \\
                              & \text{reactedunum: INT,} \\
-                             & \text{reactedrevision: INT,} \\
                              & \text{reactedftitle: VARCHAR(100),} \\
                              & \text{reactedfyear: INT,} \\
-                             & \text{reactedfcreator: INT).}
+                             & \text{reactedfcreator: INT,} \\
+                             & \text{reactedrevision: INT).}
 \end{align*}
 
 For the entity Review, we will have a table Review. Since Review is a weak
@@ -241,14 +244,15 @@ each person, we will use VARCHAR(100) since the role should not be too long. The
 attributes in the table Role should not be null as well since most of the
 attributes reference other not null attributes from other tables, while
 \key{rid} is auto-generated and every person who is in a film needs to have a
-role in the film To create a constraint that all film creators have the role of
+role in the film. To create a constraint that all film creators have the role of
 director for that film, we will check, in the table Role, if the pid is equal to
 fcreator (that is, the id of the person in a role is the same as the id of the
 film creator), then that person is the creator of the film and the role should
 be `director'. Mathematically represent the idea, pid = fcreator $\implies$ role
 = `director'. Since SQL does not have $\implies$, and we know that $p \implies q
 \equiv \neg p \lor q$, we can present the constraint in SQL as \textbf{CHECK}
-NOT (pid = fcreator) OR (role = `director'). The relational schema of Role is
+(NOT (pid = fcreator) OR (role = `director')). The relational schema of the
+table Role is
 \begin{align*}
     \text{\textbf{Role}(} & \text{\key{rid}: INT,} \\
                           & \text{pid: INT,} \\
