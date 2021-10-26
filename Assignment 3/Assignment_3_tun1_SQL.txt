@@ -22,8 +22,8 @@ CREATE TABLE subscriber
     username VARCHAR(100) NOT NULL,
     number INT NOT NULL,
     email VARCHAR(320) NOT NULL,
-    hash VARCHAR(64) NOT NULL,
-    salt VARCHAR(64) NOT NULL,
+    hash CHAR(64) NOT NULL,
+    salt CHAR(64) NOT NULL,
     PRIMARY KEY (username, number)
 );
 
@@ -36,7 +36,8 @@ CREATE TABLE friend_of
     tunum INT NOT NULL,
     FOREIGN KEY (funame, funum) REFERENCES subscriber(username, number),
     FOREIGN KEY (tuname, tunum) REFERENCES subscriber(username, number),
-    PRIMARY KEY (funame, funum, tuname, tunum)
+    PRIMARY KEY (funame, funum, tuname, tunum),
+    CHECK (funame <> tuname OR funum <> tunum)
 );
 
 -- Person
@@ -56,7 +57,7 @@ CREATE TABLE film
     duration DECIMAL NOT NULL,
     budget DECIMAL NOT NULL,
     PRIMARY KEY (title, year, creator),
-    CHECK (year <= 2021)
+    -- CHECK (year <= 2021)
 );
 
 -- Role

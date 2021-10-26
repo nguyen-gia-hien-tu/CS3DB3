@@ -27,26 +27,26 @@ From the ER-diagram, there is the entity Subscriber with the primary keys
 \key{username} and \key{number}. Thus, we will have a table named Subscriber and
 we will make (\key{username}, \key{number}) to be the primary key pair. There
 are also attributes email, hash and salt in the entity Subscriber. We will use
-large strings CLOB for \key{username}. For \key{number}, INT is used for the
-domain of attribute. Since both \key{username} and \key{number} are used as
+large strings VARCHAR(100) for \key{username}. For \key{number}, INT is used for
+the domain of attribute. Since both \key{username} and \key{number} are used as
 primary keys, two different subscribers can either have the same username or the
 same number but not both (exclusive or). We would use VARCHAR(320) to store
 email. Since hash and salt values require 64-byte each, we would use BINARY(64)
-for each of them. Since all the above attributes are required to create a
-subscriber, all of them need to be not null (except for \key{number} since it is
-already automatically incremented). The relational schema for Subscriber table
-is
+for each of them. However, since the db2 server does not have BINARY(64), we
+need to use CHAR(64) instead. Since all the above attributes are required to
+create a subscriber, all of them need to be not null. The relational schema for
+Subscriber table is
 \begin{align*}
-    \text{\textbf{Subscriber}(} & \text{\key{username}: CLOB,} \\
+    \text{\textbf{Subscriber}(} & \text{\key{username}: VARCHAR(100),} \\
                                 & \text{\key{number}: INT,} \\
                                 & \text{email: VARCHAR(320),} \\
-                                & \text{hash: BINARY(64),} \\
-                                & \text{salt: BINARY(64)).}
+                                & \text{hash: CHAR(64),} \\
+                                & \text{salt: CHAR(64)).}
 \end{align*}
 
 The ER-diagram has a many-to-many relationship Friend\_Of between Subscriber and
 Subscriber. Thus, we will have a table name Friend\_Of. The primary keys of the
-Subscriber will be the primary keys of the Friend\_Of. Since there are two
+Subscriber will be the primary keys of the Friend\_Of table. Since there are two
 subscribers, we will have a 4-tuple primary key (\key{funame}, \key{funum},
 \key{tuname}, \key{tunum}). \key{funame} is short for from username, which is
 the username of the subscriber who is following and \key{funum} is short for
@@ -56,17 +56,17 @@ the subscriber who is being followed, respectively. Thus, \key{funame} and
 \key{tuname} would reference \key{username} (column) of the Subscriber table
 while \key{funum} and \key{tunum} would reference \key{number} (column) of the
 Subscriber table. Since the domain of the attribute \key{username} in the
-Subscriber table is CLOB, we need to use CLOB to be the domain of the attributes
-(keys) \key{funame} and \key{tuname}. Similarly, we need to use INT for
-\key{funum} and \key{tunum}. All of the attributes would be not null as well. We
-also need to check that a subscriber is not following themselves, that is, we
-need to check either \key{funame} $<>$ \key{tuname} or \key{funum} $<>$
-\key{tunum} or both are different (inclusive or). The relational schema for the
-Friend\_Of table is
+Subscriber table is VARCHAR(100), we need to use VARCHAR(100) to be the domain
+of the attributes (keys) \key{funame} and \key{tuname}. Similarly, we need to
+use INT for \key{funum} and \key{tunum}. All of the attributes would be not null
+as well. We also need to check that a subscriber is not following themselves,
+that is, we need to check either \key{funame} $<>$ \key{tuname} or \key{funum}
+$<>$ \key{tunum} or both are different (inclusive or). The relational schema for
+the Friend\_Of table is
 \begin{align*}
-    \text{\textbf{Friend\_Of}(} & \text{\key{funame}: CLOB,} \\
+    \text{\textbf{Friend\_Of}(} & \text{\key{funame}: VARCHAR(100),} \\
                                 & \text{\key{funum}: INT,} \\
-                                & \text{\key{tuname}: CLOB,} \\
+                                & \text{\key{tuname}: VARCHAR(100),} \\
                                 & \text{\key{tunum}: INT).} 
 \end{align*}
 
@@ -77,18 +77,18 @@ for this entity-relationship model. Since Reaction has a strict-one-to-many
 relationship with Subscriber, we can add the primary keys of the table
 Subscriber to be the attributes of the table Reaction to represent this
 relationship without having another table. We name these attributes to be uname
-and unum reference to the \key{username} and \key{number} in the table
-Subscriber with the domain of CLOB and INT, respectively. The primary key for
-Reaction is \key{id} with INT as the type. We will automatically increment the
-\key{id} of the Reaction. Furthermore, Reaction has title and content as its
-attributes. Since the title would be shorter than the content of a reaction, we
-will use VARCHAR(100) for title and CLOB for content. The relational schema for
-Reaction is
+and unum, referencing the \key{username} and \key{number} in the table
+Subscriber with the domain of VARCHAR(100) and INT, respectively. The primary
+key for Reaction is \key{id} with INT as the type. We will automatically
+increment the \key{id} of the Reaction. Furthermore, Reaction has title and
+content as its attributes. Since the title would be shorter than the content of
+a reaction, we will use VARCHAR(100) for title and CLOB for content. The
+relational schema for Reaction is
 \begin{align*}
     \text{\textbf{Reaction}(} & \text{\key{id}: INT,} \\
                               & \text{title: VARCHAR(100),} \\
                               & \text{content: CLOB,} \\
-                              & \text{uname: CLOB,} \\
+                              & \text{uname: VARCHAR(100),} \\
                               & \text{unum: INT).} 
 \end{align*}
 
@@ -98,7 +98,10 @@ will have \key{threadfrom} as the primary key of the table ThreadR to reference
 the \key{id} of the current reaction. We also have an attribute threadto to
 reference the \key{id} of the reaction that the current reaction is reacting to.
 Since both \key{threadfrom} and threadto reference the \key{id} of the
-reactions, both have the type INT and must be not null. To make sure a reaction
+reactions, both have the type INT and must be not null. We only have
+\key{threadfrom} as the primary key since a reaction can only react to exactly
+one other reaction (the other reaction can be a reaction or review) while a
+reaction (or review) can be reacted by many reactions. To make sure a reaction
 is not reacting to itself, we need to check that \key{threadfrom} $<>$ threadto
 (\textbf{CHECK}(threadfrom $<>$ threadto)). The table ThreadR is
 \begin{align*}
@@ -107,22 +110,22 @@ is not reacting to itself, we need to check that \key{threadfrom} $<>$ threadto
 \end{align*}
 
 We also have the table for the entity ReviewR. We will have \key{reactfrom} as
-the primary key for the table ReviewR, referencing the \key{id} of a reaction,
-whose domain of attribute is INT. Since ReviewR also has a strict-one-to-many
-relationship with Review entity, we will add the primary (and partial) keys of
-the entity Review as attributes of the table ReviewR. Thus, we will have
-reacteduname: CLOB, referencing the username of the subscriber whose review is
-being reacted to, reactedunum: INT, referencing the number of the subscriber
-whose review is being reacted to, reactedrevision: INT, referencing the revision
-number of the review. We will need to add some more attributes to the table
-ReviewR since Review is also a weak entity of the entity Film (in Part 2). We
-will have reactedftitle: VARCHAR(100), reactedfyear: INT, reactedfcreator: INT
-as attributes, referencing the \key{title}, \key{year}, \key{creator} of the
-table Film in Part 2. These will be explained more in the table Review and the
-table Film Part 2. The table ReviewR is
+the primary key for the table ReviewR, referencing the \key{id} of the current
+reaction, whose domain of attribute is INT. Since ReviewR also has a
+strict-one-to-many relationship with Review entity, we will add the primary (and
+partial) keys of the entity Review as attributes of the table ReviewR. Thus, we
+will have reacteduname: VARCHAR(100), referencing the username of the subscriber
+whose review is being reacted to, reactedunum: INT, referencing the number of
+the subscriber whose review is being reacted to, reactedrevision: INT,
+referencing the revision number of the review. We will need to add some more
+attributes to the table ReviewR since Review is also a weak entity of the entity
+Film (in Part 2). We will have reactedftitle: VARCHAR(100), reactedfyear: INT,
+reactedfcreator: INT as attributes, referencing the \key{title}, \key{year},
+\key{creator} of the table Film in Part 2. These attributes will be explained
+more in the table Review and the table Film in Part 2. The table ReviewR is
 \begin{align*}
     \text{\textbf{ReviewR}(} & \text{\key{reactfrom}: INT,} \\
-                             & \text{reacteduname: CLOB,} \\
+                             & \text{reacteduname: VARCHAR(100),} \\
                              & \text{reactedunum: INT,} \\
                              & \text{reactedrevision: INT,} \\
                              & \text{reactedftitle: VARCHAR(100),} \\
@@ -133,23 +136,24 @@ table Film Part 2. The table ReviewR is
 For the entity Review, we will have a table Review. Since Review is a weak
 entity of Subscriber, we will have the primary keys of the table Subscriber as
 part of the primary keys of the table Review. Hence, we will have \key{uname}:
-CLOB and \key{unum}: INT for the table Review, referencing the \key{username}
-and \key{number} of the table Subscriber. We also have \key{revision} as the
-partial key of the table Review. Since it store the version of the review, it
-has INT as the domain. We will also have attributes score of type INT and
-timestamp whose domain is TIMESTAMP. Notice that Review is also a weak entity of
-the table Film in Part 2. Thus, we will need to add primary keys of the table
-Film as part of the primary keys of the table Review. Thus, we will have
-\key{ftitle}: VARCHAR(100), \key{fyear}: INT, \key{fcreator}: INT as primary
-keys of the table Review, referencing the \key{title}, the \key{year}, and the
-\key{creator} of the table Film. The choice of the domain of attributes will be
-explained in Part 2. Therefore, the primary key of the Review is (\key{uname},
-\key{unum}, \key{ftitle}, \key{fyear}, \key{fcreator}, \pkey{revision}). All of
-the keys and attributes should be not null since they are necessary to create a
-review. Furthermore, we need to check that the score should be between 0 and 10
-(\textbf{CHECK}(0 $<=$ score AND score $<=$ 10)). The table Review is
+VARCHAR(100) and \key{unum}: INT for the table Review, referencing the
+\key{username} and \key{number} of the table Subscriber. We also have
+\key{revision} as the partial key of the table Review. Since it stores the
+version of the review, it has INT as the domain. We will also have attributes
+score of type INT and timestamp whose domain is TIMESTAMP. Notice that Review is
+also a weak entity of the table Film in Part 2. Thus, we will need to add
+primary keys of the table Film as part of the primary keys of the table Review.
+Thus, we will have \key{ftitle}: VARCHAR(100), \key{fyear}: INT, \key{fcreator}:
+INT as primary keys of the table Review, referencing the \key{title}, the
+\key{year}, and the \key{creator} of the table Film. The choice of the domain of
+attributes for Film will be explained in Part 2. Therefore, the primary key of
+the Review is (\key{uname}, \key{unum}, \key{ftitle}, \key{fyear},
+\key{fcreator}, \pkey{revision}). All of the keys and attributes should be not
+null since they are necessary to create a review. Furthermore, we need to check
+that the score should be between 0 and 10 (\textbf{CHECK}(0 $<=$ score AND score
+$<=$ 10)). The table Review is
 \begin{align*}
-    \text{\textbf{Review}(} & \text{\key{uname}: CLOB,} \\
+    \text{\textbf{Review}(} & \text{\key{uname}: VARCHAR(100),} \\
                             & \text{\key{unum}: INT,} \\
                             & \text{\key{ftitle}: VARCHAR(100),} \\
                             & \text{\key{fyear}: INT,} \\
@@ -168,7 +172,7 @@ Since videos need to be store as binary files and are often large, we will use
 BLOB for video attribute, this attribute should not be null as well. The table
 for VideoReview is
 \begin{align*}
-    \text{\textbf{VideoReview}(} & \text{\key{uname}: CLOB,} \\
+    \text{\textbf{VideoReview}(} & \text{\key{uname}: VARCHAR(100),} \\
                                  & \text{\key{unum}: INT,} \\
                                  & \text{\key{ftitle}: VARCHAR(100),} \\
                                  & \text{\key{fyear}: INT,} \\
@@ -182,7 +186,7 @@ Similarly, the table TextReview has (\key{uname}, \key{unum}, \key{ftitle},
 attribute description with the domain as CLOB and the attribute should not be
 null.
 \begin{align*}
-    \text{\textbf{TextReview}(} & \text{\key{uname}: CLOB,} \\
+    \text{\textbf{TextReview}(} & \text{\key{uname}: VARCHAR(100),} \\
                                 & \text{\key{unum}: INT,} \\
                                 & \text{\key{ftitle}: VARCHAR(100),} \\
                                 & \text{\key{fyear}: INT,} \\
@@ -196,12 +200,12 @@ null.
 
 The table Person has the primary key \key{id}. We will let the domain of
 \key{id} to be INT and let it be auto-generated. The name of the person should
-be stored in CLOB and we will store birthdate in DATE type. While \key{id} and
-name should be not null, birthdate can be null. The relational schema for Person
-is
+be stored in VARCHAR(100) and we will store birthdate in DATE type. While
+\key{id} and name should be not null, birthdate can be null. The relational
+schema for Person is
 \begin{align*}
     \text{\textbf{Person}(} & \text{\key{id}: INT,} \\
-                            & \text{name: CLOB,} \\
+                            & \text{name: VARCHAR(100),} \\
                             & \text{birthdate: DATE).}
 \end{align*}
 
@@ -209,12 +213,15 @@ For the table Film, we have the \key{title}, \key{year} and \key{creator} as the
 primary keys. Since the title of the film is usually short, we will use
 VARCHAR(100). We will use INT to store the \key{year}. Since the \key{creator}
 references the \key{id} column in the table Person, we will use INT for
-\key{creator}. We will use INTERVAL to specify the domain of the attribute
-duration and DECIMAL for the attribute budget since the budget can have half a
-dollar. We also need to check that the year should be before or equal to 2021
-(\textbf{CHECK} year $<=$ 2021). Since a released film should have title, year
-of release, the creator, the duration and the budget, all the keys and
-attributes should not be null. The relational schema for Film is
+\key{creator}. We will use DECIMAL to specify the domain of the attribute
+duration to demonstrate how many hours a film is and DECIMAL for the attribute
+budget since the budget can have part of a dollar (for example, \$4,500,000.25).
+We also need to check that the year should be before or equal to 2021 (current
+year) (\textbf{CHECK} year $<=$ 2021). Unless the cinema wants to store films
+whose expected release year is later than 2021, then we can skip this check.
+Since a film should have title, year of release, the creator, the duration and
+the budget, all the keys and attributes should not be null. The relational
+schema for Film is
 \begin{align*}
     \text{\textbf{Film}(} & \text{\key{title}: VARCHAR(100),} \\
                           & \text{\key{year}: INT,} \\
