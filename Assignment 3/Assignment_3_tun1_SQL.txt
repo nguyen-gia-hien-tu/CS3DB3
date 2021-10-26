@@ -2,6 +2,20 @@
 -- Name: Hien Tu
 -- MacID: tun1
 
+
+-- Commands to drop tables
+-- DROP TABLE subscriber;
+-- DROP TABLE friend_of;
+-- DROP TABLE person;
+-- DROP TABLE film;
+-- DROP TABLE role;
+-- DROP TABLE review;
+-- DROP TABLE videoReview;
+-- DROP TABLE textReview;
+-- DROP TABLE reaction;
+-- DROP TABLE threadR;
+-- DROP TABLE reviewR;
+
 -- Subscriber
 CREATE TABLE subscriber
 (
@@ -41,7 +55,8 @@ CREATE TABLE film
     creator INT NOT NULL REFERENCES person(id),
     duration DECIMAL NOT NULL,
     budget DECIMAL NOT NULL,
-    PRIMARY KEY (title, year, creator)
+    PRIMARY KEY (title, year, creator),
+    CHECK (year <= 2021)
 );
 
 -- Role
@@ -54,7 +69,8 @@ CREATE TABLE role
     fcreator INT NOT NULL,
     role VARCHAR(100) NOT NULL,
     FOREIGN KEY (pid) REFERENCES person(id),
-    FOREIGN KEY (ftitle, fyear, fcreator) REFERENCES film(title, year, creator)
+    FOREIGN KEY (ftitle, fyear, fcreator) REFERENCES film(title, year, creator),
+    CHECK (NOT (pid = fcreator) OR (role = 'director'))
 );
 
 -- Review
@@ -118,8 +134,24 @@ CREATE TABLE reaction
 -- ThreadR
 CREATE TABLE threadR
 (
-    threadfrom INT NOT NULL REFERENCES reaction(id),
+    threadfrom INT NOT NULL REFERENCES reaction(id) PRIMARY KEY ,
     threadto INT NOT NULL REFERENCES reaction(id),
-    PRIMARY KEY (threadfrom)
+    CHECK (threadfrom <> threadto)
 );
+
+-- ReviewR
+CREATE TABLE reviewR
+(
+    reactfrom INT NOT NULL PRIMARY KEY,
+    reacteduname VARCHAR(100) NOT NULL,
+    reactedunum INT NOT NULL,
+    reactedftitle VARCHAR(100) NOT NULL,
+    reactedfyear INT NOT NULL,
+    reactedfcreator INT NOT NULL,
+    reactedrevision INT NOT NULL,
+    FOREIGN KEY (reactfrom) REFERENCES reaction(id),
+    FOREIGN KEY (reacteduname, reactedunum, reactedftitle, reactedfyear, reactedfcreator, reactedrevision)
+        REFERENCES review(uname, unum,ftitle, fyear, fcreator, revision)
+);
+
 
