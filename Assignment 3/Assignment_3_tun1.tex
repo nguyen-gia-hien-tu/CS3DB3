@@ -102,8 +102,9 @@ reactions, both have the type INT and must be not null. We only have
 \key{threadfrom} as the primary key since a reaction can only react to exactly
 one other reaction (the other reaction can be a reaction or review) while a
 reaction (or review) can be reacted by many reactions. To make sure a reaction
-is not reacting to itself, we need to check that \key{threadfrom} $<>$ threadto
-(\textbf{CHECK}(threadfrom $<>$ threadto)). The table ThreadR is
+is not reacting to itself (a user can react to their reaction, but the reaction
+\key{id}s would be different), we need to check that \key{threadfrom} $<>$
+threadto (\textbf{CHECK}(threadfrom $<>$ threadto)). The table ThreadR is
 \begin{align*}
     \text{\textbf{ThreadR}(} & \text{\key{threadfrom}: INT,} \\
                              & \text{threadto: INT).}
