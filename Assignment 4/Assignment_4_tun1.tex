@@ -1,0 +1,67 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+
+\newcommand{\mname}[1]{\mbox{\sf #1}}
+\newcommand{\pnote}[1]{{\langle \text{#1} \rangle}}
+
+\newcommand{\GETS}{:=}
+
+%% Highlight, strike-out
+\newcommand{\key}[1]{\underline{\smash{#1}}}
+\newcommand{\pkey}[1]{\dashuline{\smash{#1}}}
+
+%% SQL
+\newcommand{\SQL}[1]{\texttt{#1}}
+\newcommand{\SQLK}[1]{\texttt{\bf #1}}
+\newcommand{\SQLCOMMENT}{\texttt{-}\texttt{-} }
+
+%% RA
+\newcommand{\rename}{\rho}
+\newcommand{\select}{\sigma}
+\newcommand{\join}{\times}
+\newcommand{\rel}[1]{\text{#1}}
+\newcommand{\attr}[1]{\text{#1}}
+\newcommand{\ra}[2]{\rel{#1}.\attr{#2}}
+\newcommand{\project}{\pi}
+\newcommand{\product}{\times}
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\newcommand{\difference}{\setminus}
+\newcommand{\goesto}[2]{#1 \mapsto #2}
+\newcommand{\njoin}{\Join}
+\newcommand{\dedup}{\delta}
+\newcommand{\group}{\gamma}
+
+\title{Assignment 4: The Relational Algebra}
+\author{Hien Tu - tun1}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{The requested queries}
+\begin{enumerate}
+  \item $\select_{\attr{startdate } < \attr{ enddate}}(\rel{event})$
+  \item $\project_{\ra{U}{uid}, \ra{E}{eid}}
+          (\rename_{\rel{U}}(\rel{user}) \Join_{\ra{U}{postcode } = \ra{ E}{postcode }}
+          \rename_{\rel{E}}(\rel{event}))$
+  \item $X \GETS
+          \rename_{\rel{E}}(\rel{event}) \Join_{\ra{E}{eid } = \ra{ EnoRv}{eid}}
+          \rename_{\rel{EnoRv}}
+            (\project_{\attr{eid}}(\rel{event}) \difference
+            \project_{\attr{event}}(\rel{review}))$ \\
+        $\project_{\ra{E}{eid}, \ra{E}{title}, \ra{E}{description},
+          \ra{E}{startdate}, \ra{E}{enddate}, \ra{E}{organizer},
+          \ra{E}{postcode}}(X)$
+\end{enumerate}
+
+
+\end{document}

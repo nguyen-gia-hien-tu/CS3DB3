@@ -37,7 +37,7 @@ CREATE TABLE friend_of
     FOREIGN KEY (funame, funum) REFERENCES subscriber(username, number),
     FOREIGN KEY (tuname, tunum) REFERENCES subscriber(username, number),
     PRIMARY KEY (funame, funum, tuname, tunum),
-    CHECK (funame <> tuname OR funum <> tunum)
+    -- CHECK (funame <> tuname OR funum <> tunum)
 );
 
 -- Person
@@ -77,7 +77,7 @@ CREATE TABLE role
     role VARCHAR(100) NOT NULL,
     FOREIGN KEY (pid) REFERENCES person(id),
     FOREIGN KEY (ftitle, fyear, fcreator) REFERENCES film(title, year, creator),
-    CHECK (NOT (pid = fcreator) OR (role = 'director'))
+    -- CHECK (NOT (pid = fcreator) OR (role = 'director'))
 );
 
 -- Review
@@ -94,7 +94,7 @@ CREATE TABLE review
     PRIMARY KEY (uname, unum, ftitle, fyear, fcreator, revision),
     FOREIGN KEY (uname, unum) REFERENCES subscriber(username, number),
     FOREIGN KEY (ftitle, fyear, fcreator) REFERENCES film(title, year, creator),
-    CHECK (0 <= score AND score <= 10)
+    -- CHECK (0 <= score AND score <= 10)
 );
 
 -- VideoReview
@@ -143,7 +143,7 @@ CREATE TABLE threadR
 (
     threadfrom INT NOT NULL REFERENCES reaction(id) PRIMARY KEY ,
     threadto INT NOT NULL REFERENCES reaction(id),
-    CHECK (threadfrom <> threadto)
+    -- CHECK (threadfrom <> threadto)
 );
 
 -- ReviewR
