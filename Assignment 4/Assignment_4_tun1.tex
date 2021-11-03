@@ -6,6 +6,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{tikz}
 \usepackage[normalem]{ulem}
 
 \newcommand{\mname}[1]{\mbox{\sf #1}}
@@ -111,5 +112,27 @@
 
 
 \textbf{Effiency of queries}
+\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item \ \\
+    \begin{tikzpicture}
+      \node (p) at (0, 0) {$\project_{\ra{E}{title}}$};
+      \node[above right] at (p) {\strut{}\emph{$\approx 25$ rows}};
+      \node (su) at (0, -1) {$\select_{\ra{U}{uid} = ?}$} edge (p);
+      \node[above right] at (su) {\strut{}\emph{$\approx 25$ rows}};
+      \node (ss) at (0, -2) {$\select_{\ra{U}{uid} = \ra{R}{user} \land \ra{E}{eid} = \ra{R}{event} \land \ra{E}{postcode} = \ra{U}{postcode}}$} edge (su);
+      \node[above right] at (ss) {\strut{}\emph{$\approx 25000$ rows}};
+      \node (uer) at (0, -3) {$\product$} edge (ss);
+      \node[above left] at (uer) {\strut{}\emph{$5 \cdot 10^6 \cdot 25000 = 125 \cdot 10^9$ rows}};
+      \node (rv) at (1, -4) {$\rel{review}$} edge (uer);
+      \node[above right] at (rv) {\strut{}\emph{$25000$ reviews}};
+      \node (ue) at (-1, -4) {$\product$} edge (uer);
+      \node[above left] at (ue) {\strut{}\emph{$1000 \cdot 5000 = 5 \cdot 10^6$ rows}};
+      \node (u) at (-2, -5) {$\rel{user}$} edge (ue);
+      \node[above left] at (u) {\strut{}\emph{$1000$ users}};
+      \node (e) at (0, -5) {$\rel{event}$} edge (ue);
+      \node[above right] at (e) {\strut{}\emph{$5000$ events}};
+    \end{tikzpicture}
+\end{enumerate}
 
 \end{document}
