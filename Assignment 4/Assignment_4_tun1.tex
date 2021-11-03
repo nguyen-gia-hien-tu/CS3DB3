@@ -176,12 +176,27 @@
     \begin{quote}
       \SQL{\SQLK{SELECT} \SQLK{DISTINCT} E.title\\
       \SQLK{FROM} user U, event E, review R\\
-      \SQLK{WHERE} U.uid = $?_1$ \SQLK{AND}\\
+      \SQLK{WHERE} U.uid = $?$ \SQLK{AND}\\
       \phantom{\SQLK{WHERE}} R.user = U.uid \SQLK{AND}\\
       \phantom{\SQLK{WHERE}} R.event = E.eid \SQLK{AND}\\
       \phantom{\SQLK{WHERE}} U.postcode = E.postcode;} \\
     \end{quote}
 
+  \item The given SQL query can be simplified to
+    \begin{quote}
+      \SQL{\SQLK{SELECT} \SQLK{DISTINCT} K.word\\
+      \SQLK{FROM} user U, review Rv, keyword K, event E, region Rg\\
+      \SQLK{WHERE} U.uid = $?_1$ \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} Rv.user = U.uid \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} Rv.event = K.eid \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} E.postcode = Rg.postcode \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} Rg.name = $?_2$ \SQLK{AND} \\
+      \phantom{\SQLK{WHERE}} K.event = E.eid;} \\
+    \end{quote}
+
+
 \end{enumerate}
+
+
 
 \end{document}
