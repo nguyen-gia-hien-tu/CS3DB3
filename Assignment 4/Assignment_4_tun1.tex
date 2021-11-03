@@ -61,6 +61,24 @@
         $\project_{\ra{E}{eid}, \ra{E}{title}, \ra{E}{description},
           \ra{E}{startdate}, \ra{E}{enddate}, \ra{E}{organizer},
           \ra{E}{postcode}}(X)$
+  \item Select events with at least 3 keywords \\
+        $X \GETS \rename_{\rel{K}_1}(\attr{keyword}) \product
+                  \rename_{\rel{K}_2}(\attr{keyword}) \product
+                  \rename_{\rel{K}_3}(\attr{keyword})$ \\
+        $Y \GETS \select_{K_1.\attr{word } \neq K_2.\attr{ word } \land
+                          K_1.\attr{word } \neq K_3.\attr{ word } \land
+                          K_2.\attr{word } \neq K_3.\attr{ word }}(X)$ \\
+        $Z \GETS \select_{K_1.\attr{event } = K_2.\attr{event } \land
+                          K_1.\attr{event } = K_3.\attr{event }}(Y)$ \\ \\
+        Select events with at least 2 keywords \\
+        $A \GETS \rename_{\rel{K}_4}(\attr{keyword}) \product
+                  \rename_{\rel{K}_4}(\attr{keyword})$ \\
+        $B \GETS \select_{K_4.\attr{word } \neq K_5.\attr{word}}(A)$ \\
+        $C \GETS \select_{K_4.\attr{event } = K_5.\attr{event}}(B)$ \\ \\
+
+        Select events with exactly 3 keywords \\
+        $\project_{K_4.event}(C) \difference \project_{K_1.event}(Z)$
+
 \end{enumerate}
 
 
