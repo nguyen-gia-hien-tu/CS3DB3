@@ -216,16 +216,19 @@
       \node[above left] at (eprgp) {\strut{}\emph{$\approx 125$ rows}};
       \node (keeid) at (-1.25, -2) {$\njoin_{\ra{K}{event} = \ra{E}{eid}}$} edge (eprgp);
       \node[above left] at (keeid) {\strut{}\emph{$\approx 125$ rows}};
-      \node (srg) at (1.25, -2) {$\select_{\ra{Rg}{name} = ?_2}$} edge (eprgp);
+      \node (srg) at (3, -2) {$\select_{\ra{Rg}{name} = ?_2}$} edge (eprgp);
       \node[above right] at (srg) {\strut{}\emph{$\approx 1250$ rows}};
-      \node (rg) at (1.25, -3) {\strut{}\rel{region}} edge (srg);
-      \node[above right] at (rg) {\strut{}\emph{$5000$ rows}};
+      \node (rg) at (3, -3) {\strut{}\rel{region}} edge (srg);
+      \node[above right] (rg1) at (rg) {\strut{}\emph{$1250$ postal codes}};
+      \node[above] at (rg1) {\strut{}\emph{$5000$ rows} with};      
       \node (rveke) at (-2.5, -3) {$\njoin_{\ra{Rv}{event} = \ra{K}{event}}$} edge (keeid);
       \node[above left] at (rveke) {\strut{}\emph{$\approx 25 \cdot 5 = 125$ rows}};
-      \node (rvuuid) at (-3.75, -4) {$\njoin_{\ra{Rv}{event} = \ra{U}{uid}}$} edge (rveke);
+      \node (e) at (0, -3) {\strut{}\rel{event}} edge (keeid);
+      \node[above right] at (e) {\strut{}\emph{$5000$ events}};
+      \node (rvuuid) at (-3.75, -4) {$\njoin_{\ra{Rv}{user} = \ra{U}{uid}}$} edge (rveke);
       \node[above left] at (rvuuid) {\strut{}\emph{$\approx 25$ rows}};
       \node (k) at (-1.25, -4) {\strut{}\rel{keyword}} edge (rveke);
-      \node[above right] at (k) {\strut{}\emph{$2500$ keywords}};
+      \node[above right] at (k) {\strut{}\emph{$5$ keywords/event}};
       \node (su) at (-5, -5) {$\select_{\ra{U}{uid} = ?_1}$} edge (rvuuid);
       \node[above left] at (su) {\strut{}\emph{$1$ user}};
       \node (rv) at (-2.5, -5) {\strut{}\emph{\rel{review}}} edge (rvuuid);
@@ -234,24 +237,34 @@
       \node[above left] at (u) {\strut{}\emph{$1000$ users}};
     \end{tikzpicture}
 
-    % \begin{tikzpicture}[yscale=1.2]
-    %   \node (p) at (0, 0) {$\project_{\ra{E}{title}}$};
-    %   \node[above right] at (p) {\strut{}\emph{$\approx 25$ rows}};
-    %   \node (su) at (0, -1) {$\select_{\ra{U}{uid} = ?}$} edge (p);
-    %   \node[above right] at (su) {\strut{}\emph{$\approx 25$ rows}};
-    %   \node (ss) at (0, -2) {$\select_{\ra{U}{uid} = \ra{R}{user} \land \ra{E}{eid} = \ra{R}{event} \land \ra{E}{postcode} = \ra{U}{postcode}}$} edge (su);
-    %   \node[above right] at (ss) {\strut{}\emph{$\approx 25000$ rows}};
-    %   \node (uer) at (0, -3) {$\product$} edge (ss);
-    %   \node[above left] at (uer) {\strut{}\emph{$5 \cdot 10^6 \cdot 25000 = 125 \cdot 10^9$ rows}};
-    %   \node (rv) at (1, -4) {$\rel{review}$} edge (uer);
-    %   \node[above right] at (rv) {\strut{}\emph{$25000$ reviews}};
-    %   \node (ue) at (-1, -4) {$\product$} edge (uer);
-    %   \node[above left] at (ue) {\strut{}\emph{$1000 \cdot 5000 = 5 \cdot 10^6$ rows}};
-    %   \node (u) at (-2, -5) {$\rel{user}$} edge (ue);
-    %   \node[above left] at (u) {\strut{}\emph{$1000$ users}};
-    %   \node (e) at (0, -5) {$\rel{event}$} edge (ue);
-    %   \node[above right] at (e) {\strut{}\emph{$5000$ events}};
-    % \end{tikzpicture} \\
+    This query execution plan is good since the result in each intermediate step
+    is significantly small comparing to the size of the original tables. First,
+    from the table \emph{user}, we select the user whose \emph{uid} is the same
+    as the required user (in this case, denoted as $?_1$). Since each \emph{uid}
+    is unique and we only select one user, the result only contains 1 rows.
+    Then, we will join (conditional join) the result with the \emph{review}
+    table. Since the previous result returns 1 user and it is estimated that
+    each user writes around 25 reviews, the result of this only contains
+    approximately 25 rows, that is 25 reviews on 25 events that the specified
+    user writes. After that, we will perform conditional join the result with
+    the table \emph{keyword}. Since each event that the specified user writes
+    has 5 keywords associated with it and there are 25 events that the user
+    writes review about, the result table would have $25 \cdot 5 = 125$ rows.
+    Then, we will conditional join with the table \emph{event}. Since there are
+    only 125 rows in our above query, we only have 125 rows in the resulting
+    query (each row in the above query will be augmented with the event info
+    from the \emph{event} table). Let's call this query (A) to use later.
+    Separately, we will select the from the \emph{region} table whose region
+    name is the same as the required region name (in this case, denoted as
+    $?_2$). In the worst cases, the required region is associated with all 1250
+    distinct postal codes. Then, the result of the select would contain 1250
+    rows. Let's call this result (B). Now, we will conditional join the query
+    (A) with the query (B). Since the result of query (A) only contain 125 rows,
+    there are only 125 postal codes in it. Thus, there will only be around 125
+    postal codes from (B) that matches the ones in (A). Therefore, the result
+    would have around 125 rows. Since projecting does not change the rows, our
+    final result for this query execution plan would have approximately 125
+    rows.
 
 \end{enumerate}
 
