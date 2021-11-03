@@ -1,0 +1,9 @@
+SELECT DISTINCT K.word
+FROM user U, review Rv, keyword K
+WHERE U.uid = "Hien" AND
+      Rv.user = U.uid AND
+      Rv.event = K.event AND
+      K.event IN (SELECT E.eid
+                  FROM event E, region Rg
+                  WHERE E.postcode = Rg.postcode AND
+                        Rg.name = "Hamilton")

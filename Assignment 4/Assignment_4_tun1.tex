@@ -219,8 +219,10 @@
       \node (srg) at (1.25, -2) {$\select_{\ra{Rg}{name} = ?_2}$} edge (eprgp);
       \node[above right] at (srg) {\strut{}\emph{$\approx 1250$ rows}};
       \node (rg) at (1.25, -3) {\strut{}\rel{region}} edge (srg);
+      \node[above right] at (rg) {\strut{}\emph{$5000$ rows}};
       \node (rveke) at (-2.5, -3) {$\njoin_{\ra{Rv}{event} = \ra{K}{event}}$} edge (keeid);
       \node[above left] at (rveke) {\strut{}\emph{$\approx 25 \cdot 5 = 125$ rows}};
+      \node (rvuuid) at (-3.25, -4) {$\njoin_{\ra{Rv}{event} = \ra{U}{uid}}$} edge (rveke);
     \end{tikzpicture}
 
     % \begin{tikzpicture}[yscale=1.2]
