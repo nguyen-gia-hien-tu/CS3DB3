@@ -49,10 +49,10 @@
 
 \textbf{The requested queries}
 \begin{enumerate}
-  \item $\select_{\attr{startdate } < \attr{ enddate}}(\rel{event})$
+  \item $\select_{\attr{startdate } < \attr{ enddate}}(\rel{event})$ \\
   \item $\project_{\ra{U}{uid}, \ra{E}{eid}}
           (\rename_{\rel{U}}(\rel{user}) \Join_{\ra{U}{postcode } = \ra{ E}{postcode }}
-          \rename_{\rel{E}}(\rel{event}))$
+          \rename_{\rel{E}}(\rel{event}))$ \\
   \item $X \GETS
           \rename_{\rel{E}}(\rel{event}) \Join_{\ra{E}{eid } = \ra{ EnoRv}{eid}}
           \rename_{\rel{EnoRv}}
@@ -60,8 +60,8 @@
             \project_{\attr{event}}(\rel{review}))$ \\
         $\project_{\ra{E}{eid}, \ra{E}{title}, \ra{E}{description},
           \ra{E}{startdate}, \ra{E}{enddate}, \ra{E}{organizer},
-          \ra{E}{postcode}}(X)$
-  \item Select events with at least 3 keywords \\
+          \ra{E}{postcode}}(X)$ \\
+  \item Select events with at least 3 keywords: \\
         $X \GETS \rename_{\rel{K}_1}(\attr{keyword}) \product
                   \rename_{\rel{K}_2}(\attr{keyword}) \product
                   \rename_{\rel{K}_3}(\attr{keyword})$ \\
@@ -70,16 +70,46 @@
                           K_2.\attr{word } \neq K_3.\attr{ word }}(X)$ \\
         $Z \GETS \select_{K_1.\attr{event } = K_2.\attr{event } \land
                           K_1.\attr{event } = K_3.\attr{event }}(Y)$ \\ \\
-        Select events with at least 2 keywords \\
+        Select events with at least 2 keywords: \\
         $A \GETS \rename_{\rel{K}_4}(\attr{keyword}) \product
                   \rename_{\rel{K}_4}(\attr{keyword})$ \\
         $B \GETS \select_{K_4.\attr{word } \neq K_5.\attr{word}}(A)$ \\
         $C \GETS \select_{K_4.\attr{event } = K_5.\attr{event}}(B)$ \\ \\
-
-        Select events with exactly 3 keywords \\
-        $\project_{K_4.event}(C) \difference \project_{K_1.event}(Z)$
+        Select events with exactly 3 keywords: \\
+        $\project_{K_4.event}(C) \difference \project_{K_1.event}(Z)$ \\
+  \item
+    \begin{enumerate}
+      \item $X \GETS \rename_{R_1}(\rel{review}) \product
+                      \rename_{R_2}(\rel{review})$ \\ \\
+            Keep reviews from $R_1$ that are not from latest date: \\
+            $Y \GETS \select_{R_1.\attr{reviewdate } < R_2.\attr{reviewdate }
+                              \land R_1.\attr{user } = R_2.\attr{user }}(X)$ \\ \\
+            Select user id and event id for which the user wrote a review most
+            recently: \\
+            $Z \GETS
+              \project_{\attr{user}, \attr{event}}(\rel{review}) \difference
+              \project_{R_1.\attr{user}, R_1.\attr{event}}(Y)$ \\
+      \item $A \GETS \rename_{R_1}(\rel{review}) \product
+                      \rename_{R_2}(\rel{review}) \product
+                      \rename_{E_1}(\rel{event}) \product
+                      \rename_{E_2}(\rel{event})$ \\
+            $B \GETS \select_{R_1.\attr{user } = R_2.\attr{user } \land
+                              R_1.\attr{event } = E_1.\attr{eid } \land
+                              R_2.\attr{event } = E_2.\attr{eid }}(A)$ \\ \\
+            Select reviews whose $E_1.\attr{enddate}$ are not from the latest: \\
+            $C \GETS \select_{E_1.\attr{enddate} < E_2.\attr{enddate}(B)}$ \\ \\
+            Select user id and event id of the most-recent event (according to
+            enddate) for which the user wrote a review: \\
+            $D \GETS \project_{R_1.\attr{user}, E_1.\attr{eid}}(B \difference C)$ \\
+      \item $\project_{\ra{LR}{user}, \ra{LR}{lreview}, \ra{LE}{levent}}
+              (\rename_{\rel{LR}(\rel{user}, \rel{lreview})}(Z)
+                \njoin_{\ra{LR}{user } = \ra{LE}{user}}
+                \rename_{\rel{LE}(\rel{user}, \rel{levent})}(D))$ \\
+    \end{enumerate}
 
 \end{enumerate}
 
+
+\textbf{Effiency of queries}
 
 \end{document}
