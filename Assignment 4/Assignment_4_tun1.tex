@@ -206,8 +206,41 @@
                         \ra{E}{postcode} = \ra{Rg}{postcode} \land
                         \ra{Rg}{name} = ?_2 \land
                         \ra{K}{event} = \ra{E}{eid}}(X)$ \\
-    $\project_{\ra{K}{word}}(Y)$
+    $\project_{\ra{K}{word}}(Y)$ \\
 
+  \item \ \\
+    \begin{tikzpicture}[yscale = 1.3]
+      \node (p) at (0, 0) {$\project_{\ra{K}{word}}$};
+      \node[above left] at (p) {\strut{}\emph{$\approx 125$ rows}};
+      \node (eprgp) at (0, -1) {$\njoin_{\ra{E}{postcode} = \ra{Rg}{postcode}}$} edge (p);
+      \node[above left] at (eprgp) {\strut{}\emph{$\approx 125$ rows}};
+      \node (keeid) at (-1.25, -2) {$\njoin_{\ra{K}{event} = \ra{E}{eid}}$} edge (eprgp);
+      \node[above left] at (keeid) {\strut{}\emph{$\approx 125$ rows}};
+      \node (srg) at (1.25, -2) {$\select_{\ra{Rg}{name} = ?_2}$} edge (eprgp);
+      \node[above right] at (srg) {\strut{}\emph{$\approx 1250$ rows}};
+      \node (rg) at (1.25, -3) {\strut{}\rel{region}} edge (srg);
+      \node (rveke) at (-2.5, -3) {$\njoin_{\ra{Rv}{event} = \ra{K}{event}}$} edge (keeid);
+      \node[above left] at (rveke) {\strut{}\emph{$\approx 25 \cdot 5 = 125$ rows}};
+    \end{tikzpicture}
+
+    % \begin{tikzpicture}[yscale=1.2]
+    %   \node (p) at (0, 0) {$\project_{\ra{E}{title}}$};
+    %   \node[above right] at (p) {\strut{}\emph{$\approx 25$ rows}};
+    %   \node (su) at (0, -1) {$\select_{\ra{U}{uid} = ?}$} edge (p);
+    %   \node[above right] at (su) {\strut{}\emph{$\approx 25$ rows}};
+    %   \node (ss) at (0, -2) {$\select_{\ra{U}{uid} = \ra{R}{user} \land \ra{E}{eid} = \ra{R}{event} \land \ra{E}{postcode} = \ra{U}{postcode}}$} edge (su);
+    %   \node[above right] at (ss) {\strut{}\emph{$\approx 25000$ rows}};
+    %   \node (uer) at (0, -3) {$\product$} edge (ss);
+    %   \node[above left] at (uer) {\strut{}\emph{$5 \cdot 10^6 \cdot 25000 = 125 \cdot 10^9$ rows}};
+    %   \node (rv) at (1, -4) {$\rel{review}$} edge (uer);
+    %   \node[above right] at (rv) {\strut{}\emph{$25000$ reviews}};
+    %   \node (ue) at (-1, -4) {$\product$} edge (uer);
+    %   \node[above left] at (ue) {\strut{}\emph{$1000 \cdot 5000 = 5 \cdot 10^6$ rows}};
+    %   \node (u) at (-2, -5) {$\rel{user}$} edge (ue);
+    %   \node[above left] at (u) {\strut{}\emph{$1000$ users}};
+    %   \node (e) at (0, -5) {$\rel{event}$} edge (ue);
+    %   \node[above right] at (e) {\strut{}\emph{$5000$ events}};
+    % \end{tikzpicture} \\
 
 \end{enumerate}
 
