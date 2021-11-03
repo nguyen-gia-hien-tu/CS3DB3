@@ -115,7 +115,7 @@
 \begin{enumerate}
   \setcounter{enumi}{6}
   \item \ \\
-    \begin{tikzpicture}
+    \begin{tikzpicture}[yscale=1.2]
       \node (p) at (0, 0) {$\project_{\ra{E}{title}}$};
       \node[above right] at (p) {\strut{}\emph{$\approx 25$ rows}};
       \node (su) at (0, -1) {$\select_{\ra{U}{uid} = ?}$} edge (p);
@@ -132,7 +132,56 @@
       \node[above left] at (u) {\strut{}\emph{$1000$ users}};
       \node (e) at (0, -5) {$\rel{event}$} edge (ue);
       \node[above right] at (e) {\strut{}\emph{$5000$ events}};
+    \end{tikzpicture} \\
+
+  \item \ \\
+    \begin{tikzpicture}[yscale=1.2]
+      \node (s) at (-1, 0) {\strut{}user};
+      \node[above left] at (s) {\strut{}\emph{$1000$ users}};
+      \node (ss) at (-1, 1) {$\select_{\ra{U}{uid} = ?}$} edge (s);
+      \node[above left] at (ss) {\strut{}\emph{$1$ user}};
+      \node (ei) at (1, 1) {\strut{}review};
+      \node[above right] at (ei) {\strut{}\emph{$25$ reviews/user}};
+      \node (ssei) at (0, 2) {$\njoin_{\ra{U}{uid} = \ra{R}{user}}$} edge (ss) edge (ei);
+      \node[above left] at (ssei) {\strut{}\emph{$\approx 25$ rows}};
+      \node (c) at (2, 2) {\strut{}event};
+      \node[above right] at (c) {\strut{}\emph{$5000$ events}};
+      \node (cssei) at (1, 3) {$\njoin_{\ra{R}{event} = \ra{E}{eid} \land \ra{U}{postcode} = \ra{E}{postcode}}$} edge (ssei) edge (c);
+      \node[above left] at (cssei) {\strut{}\emph{$\approx 25$ rows}};
+      \node (pr) at (1, 4) {$\project$} edge (cssei);
+      \node[above left] at (pr) {\strut{}\emph{$\approx 25$ rows}};
     \end{tikzpicture}
+
+    From the query execution plan in question 7, we can see that the result of
+    the cross product of the 3 tables, \emph{user}, \emph{review} and
+    \emph{event} would have $125 \cdot 10^9$ rows, which is enormous. We can
+    reduce this significantly by first selecting the row from the table
+    \emph{user} where the \emph{uid} is equal to the required user id (in this
+    case, denoted as $?$). This will result in only 1 rows since each \emph{uid}
+    is unique. After that, we will join the result with the \emph{review}.
+    Although the table \emph{review} has 25000 rows, each user only has 25
+    reviews and since we have selected only 1 user, the result of this join
+    would have approximately 25 rows. Then, we join this result with the table
+    \emph{event}. Again, although the table \emph{event} has 5000 rows, since
+    the previous result only has approximately 25 rows, there are only
+    approximately 25 different event id. Thus, the result of this join only
+    contains approximately 25 rows. Projecting just takes the specified column
+    so the result of the whole query execution plan would have approximately 25
+    rows. This execution plan is good since the returned table in each
+    intermediate step is significantly small.
+
+  \item The answer for question 9 is given in the answer for question 8.
+
+  \item
+    \begin{quote}
+      \SQL{\SQLK{SELECT} \SQLK{DISTINCT} E.title\\
+      \SQLK{FROM} user U, event E, review R\\
+      \SQLK{WHERE} U.uid = $?_1$ \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} R.user = U.uid \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} R.event = E.eid \SQLK{AND}\\
+      \phantom{\SQLK{WHERE}} U.postcode = E.postcode;} \\
+    \end{quote}
+
 \end{enumerate}
 
 \end{document}
