@@ -108,8 +108,27 @@
                 \rename_{\rel{LE}(\rel{user}, \rel{levent})}(D))$ \\
     \end{enumerate}
 
+  \item $A \GETS \rename_{\rel{Rv}}(\rel{review}) \product
+                  \rename_{\rel{U}}(\rel{user}) \product
+                  \rename_{\rel{E}}(\rel{event})$ \\ \\
+        Select reviews where the user has the same postal code as the event:
+        $B \GETS \select_{\ra{Rv}{user} = \ra{U}{uid} \land
+                          \ra{Rv}{event} = \ra{E}{eid}\land
+                          \ra{U}{postcode} = \ra{E}{postcode}}(A)$ \\ \\
+        $C \GETS \project_{\ra{Rv}{user}, \ra{Rv}{event}}(B)$ \\
+        $D \GETS \rename_{U_2}(\rel{user})
+                  \njoin_{U_2.\attr{postcode} = E_2.\attr{postcode}}
+                  \rename_{E}(\rel{event})$ \\ \\
+        Select \emph{uid} and \emph{eid} where user has the same postal code as
+        the event: \\
+        $E \GETS \project_{U_2.\attr{uid}, E_2.\attr{eid}}(D)$ \\ \\
+        Select \emph{uid} and \emph{eid} where the user has the same postal code
+        as the event but haven't written review for that event: \\
+        $F \GETS E \difference C$ \\ \\
+        $\project_{\attr{uid}}(user) \difference \project_{U_2.\attr{uid}}(F)$
 \end{enumerate}
 
+\ \\
 
 \textbf{Effiency of queries}
 \begin{enumerate}
