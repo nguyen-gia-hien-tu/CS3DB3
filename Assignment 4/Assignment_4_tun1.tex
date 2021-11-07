@@ -76,7 +76,7 @@
                   \rename_{\rel{K}_4}(\attr{keyword})$ \\
         $B \GETS \select_{K_4.\attr{word } \neq K_5.\attr{word}}(A)$ \\
         $C \GETS \select_{K_4.\attr{event } = K_5.\attr{event}}(B)$ \\ \\
-        Select events with exactly 3 keywords: \\
+        Select events with exactly 3 keywords (final query): \\
         $\project_{K_4.event}(C) \difference \project_{K_1.event}(Z)$ \\
   \item
     \begin{enumerate}
@@ -86,7 +86,7 @@
             $Y \GETS \select_{R_1.\attr{reviewdate } < R_2.\attr{reviewdate }
                               \land R_1.\attr{user } = R_2.\attr{user }}(X)$ \\ \\
             Select user id and event id for which the user wrote a review most
-            recently: \\
+            recently (final query): \\
             $Z \GETS
               \project_{\attr{user}, \attr{event}}(\rel{review}) \difference
               \project_{R_1.\attr{user}, R_1.\attr{event}}(Y)$ \\
@@ -100,7 +100,7 @@
             Select reviews whose $E_1.\attr{enddate}$ are not from the latest: \\
             $C \GETS \select_{E_1.\attr{enddate} < E_2.\attr{enddate}(B)}$ \\ \\
             Select user id and event id of the most-recent event (according to
-            enddate) for which the user wrote a review: \\
+            enddate) for which the user wrote a review (final query): \\
             $D \GETS \project_{R_1.\attr{user}, E_1.\attr{eid}}(B \difference C)$ \\
       \item $\project_{\ra{LR}{user}, \ra{LR}{lreview}, \ra{LE}{levent}}
               (\rename_{\rel{LR}(\rel{user}, \rel{lreview})}(Z)
@@ -125,6 +125,7 @@
         Select \emph{uid} and \emph{eid} where the user has the same postal code
         as the event but haven't written review for that event: \\
         $F \GETS E \difference C$ \\ \\
+        Final query: \\
         $\project_{\attr{uid}}(user) \difference \project_{U_2.\attr{uid}}(F)$
 \end{enumerate}
 
@@ -251,7 +252,7 @@
       \node (su) at (-5, -5) {$\select_{\ra{U}{uid} = ?_1}$} edge (rvuuid);
       \node[above left] at (su) {\strut{}\emph{$1$ user}};
       \node (rv) at (-2.5, -5) {\strut{}\emph{\rel{review}}} edge (rvuuid);
-      \node[above right] at (rv) {$25$ reviews/user};
+      \node[above right] at (rv) {\emph{$25$ reviews/user}};
       \node (u) at (-5, -6) {\strut{}\rel{user}} edge (su);
       \node[above left] at (u) {\strut{}\emph{$1000$ users}};
     \end{tikzpicture}
@@ -289,7 +290,5 @@
         (above).
 
 \end{enumerate}
-
-
 
 \end{document}
