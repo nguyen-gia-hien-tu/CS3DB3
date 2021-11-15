@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
@@ -60,6 +60,7 @@
             that $r_1[Z] = r_2[Z]$
       \item Hence, $r_1[Z] = r_2[Z]$ holds.
     \end{itemize}
+  \ \\
 
   % Question 3
   \item
@@ -75,6 +76,128 @@
             r_3[Z]$
       \item Hence, $R[X] \subseteq T[Z]$
     \end{itemize}
+  \ \\
+
+  % Question 4
+  \item
+    \begin{itemize}
+      \item Assume $X \twoheadrightarrow Y$ and $XY \longrightarrow Z$
+      \item Apply Complementation on $X \twoheadrightarrow Y$ to derive $X
+            \twoheadrightarrow Z$ (with $Z$ all attributes of $\textbf{R}$ not
+            in $X$ and $Y$)
+      \item Apply Reflexivity on $Z \setminus (X \cup Y) \subseteq Z$ to derive
+            $Z \longrightarrow Z \setminus (X \cup Y)$
+      \item Apply Transitivity on $XY \longrightarrow Z$ and $Z \longrightarrow
+            Z \setminus (X \cup Y)$ to derive $XY \longrightarrow Z \setminus (X
+            \cup Y)$
+      \item Since $Z$ is all attributes of $\textbf{R}$ not in $X$ and $Y$, $Z
+            \cap XY = \emptyset$
+      \item Apply Coalensence on $X \twoheadrightarrow Z$, $XY \longrightarrow Z
+            \setminus (X \cup Y)$, $Z \cap XY = \emptyset$ and $Z \setminus (X
+            \cup Y) \subseteq Z$, we conclude that $X \longrightarrow Z
+            \setminus (X \cup Y)$
+      \item Hence, $X \longrightarrow Z \setminus (X \cup Y)$
+    \end{itemize}
+  \ \\
+
+  % Question 5
+  \item Consider the following table of the schema
+        \begin{center}
+          \textbf{person}(\underline{name}, \underline{number}, birthdate, age)
+        \end{center}
+        \begin{center}
+          \begin{tabular}{ | c | c | c | c | }
+            \hline
+            \textbf{name} & \textbf{number} & \textbf{birthdate} & \textbf{age} \\
+            \hline
+            Alice         & 1               & 2001-01-01        & 20 \\
+            Alice         & 2               & 2005-09-05        & 16 \\
+            \hline
+          \end{tabular}
+        \end{center}
+        Since \underline{name}, \underline{number} are the primary keys, they       
+        determine all attributes. Thus, ``name, number $\longrightarrow$
+        birthdate''. \\
+        We know from the lecture that birthdate determines age since people who
+        have the same birthdate would have the same age, and so ``birthdate
+        $\longrightarrow$ age''. \\
+        Since \{birthdate\} $\subseteq$ \{name, birthdate\}, by applying
+        Reflexivity, we get ``name, birthdate $\longrightarrow$ birthdate''. \\
+        Applying Transitivity on ``name, birthdate $\longrightarrow$ birthdate''
+        and ``birthdate $\longrightarrow$ age'', we derive ``name, birthdate
+        $\longrightarrow$ age'' \\
+        Hence, we have ``name, number $\longrightarrow$ birthdate'' and ``name,
+        birthdate $\longrightarrow$ age''. \\
+        However, from the table, we can see that ``name $\longrightarrow$ age''
+        does not hold. \\
+        Let $X =$ name, $W =$ number, $Y =$ birthdate, $Z =$ age, we have shown
+        that the inference rule from the question is not sound.
+  \ \\
+
+  % Question 6
+  \item TODO: Do Question 6
+  \ \\
+
+  % Question 7
+  \item The attribute closure of set of attributes $C$:
+        \begin{itemize}
+          \item Initially, $closure = \{C\}$
+          \item From $C \longrightarrow A$, since $C \subseteq closure$ and $A
+                \not \subseteq closure$, $closure = \{C, A\}$
+          \item From $AC \longrightarrow E$, since $AC \subseteq closure$ and
+                $E \not \subseteq closure$, $closure = \{C, A, E\}$
+          \item From $E \longrightarrow B$, since $E \subseteq closure$ and $B
+                \not \subseteq closure$, $closure = \{C, A, E ,B\}$
+          \item From $AB \longrightarrow D$, since $AB \subseteq closure$ and $D
+                \not \subseteq closure$, $closure = \{C, A, E, B, D\}$
+          \item From $BC \longrightarrow D$, since $BC \subseteq closure$ and $D
+                \subseteq closure$, we don't need to add $D$ into $closure$ more
+                (as $D$ is already in $closure$)
+          \item From $D \longrightarrow A$, since $D \subseteq closure$ and $A
+                \subseteq closure$, we don't need to add $A$ into $closure$ more
+                (as $A$ is already in $closure$)
+          \item Therefore, $C^+ = \{A, B, C, D, E\}$
+        \end{itemize}
+
+        The attribute closure of set of attributes $(EA)$:
+        \begin{itemize}
+          \item Initially, $closure = \{E, A\}$
+          \item From $E \longrightarrow B$, since $E \subseteq closure$ and $B
+                \not \subseteq closure$, $closure = \{E, A, B\}$
+          \item From $AB \longrightarrow D$, since $AB \subseteq closure$ and $D
+                \not \subseteq closure$, $closure = \{E, A, B, D\}$
+          \item From $AC \longrightarrow E$, since $AC \not \subseteq closure$,
+                we don't need to add $E$ into $closure$
+          \item From $BC \longrightarrow D$, since $BC \not \subseteq closure$,
+                we don't need to add $D$ into $closure$
+          \item From $C \longrightarrow A$, since $C \not \subseteq closure$,
+                we don't need to add $A$ into $closure$
+          \item From $D \longrightarrow A$, since $D \subseteq closure$ and $A
+                \subseteq closure$, we don't need to add $A$ into $closure$ more
+                (as $A$ is already in $closure$)
+          \item Therefore, $(EA)^+ = \{A, B, D, E\}$
+        \end{itemize}
+  \ \\
+    
+  % Question 8
+  \item Compute $X^+$ for every $X \subseteq \{A, B, C, D, E\}$
+        \begin{itemize}
+          \item $A^+ = \{A\}$ since there is no $A \longrightarrow \dots$ in
+                $\mathfrak{S}$
+          \item $B^+ = \{B\}$ since there is no $B \longrightarrow \dots$ in
+                $\mathfrak{S}$
+          \item $C^+ = \{A, B, C, D, E\}$ from question 7
+          \item $D^+ = \{A, D\}$ since there is only $D \longrightarrow A$ that
+                would satisfy the closure algorithm
+          \item $E^+ = \{B, E\}$ since there is only $E \longrightarrow B$ that
+                would satisfy the closure algorithm
+        \end{itemize}
+  \ \\
+
+  % Question 9
+  \item 
+  
+  
 
 \end{enumerate}
 
