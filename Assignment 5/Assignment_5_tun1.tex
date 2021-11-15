@@ -195,7 +195,44 @@
   \ \\
 
   % Question 9
-  \item 
+  \item
+    \begin{itemize}
+      \item starting with $\{AB \longrightarrow D, AC \longrightarrow E, BC
+            \longrightarrow D, C \longrightarrow A, D \longrightarrow A, E
+            \longrightarrow B\}$
+      \item From $C \longrightarrow A$, we can use Augmentation with $C$ to
+            derive $C \longrightarrow AC$. We also have $AC \longrightarrow E$.
+            Then, by Transitivity, we conclude $C \longrightarrow E$. Thus, we
+            can add $C \longrightarrow E$ to our set. \\
+            $\{AB \longrightarrow D, AC \longrightarrow E, BC \longrightarrow
+            D, C \longrightarrow A, D \longrightarrow A, E \longrightarrow B, C
+            \longrightarrow E\}$
+      \item From $C \longrightarrow E$, we can use Augmentation with $A$ to
+            derive $AC \longrightarrow AE$. Then, we can use Decomposition to
+            get $AC \longrightarrow A$ and $AC \longrightarrow E$. $AC
+            \longrightarrow A$ is trivial since $A \subseteq AC$. This means
+            that, from $C \longrightarrow E$, we can get $AC \longrightarrow E$.
+            So, we can get rid of $AC \longrightarrow E$. \\
+            $\{AB \longrightarrow D, BC \longrightarrow D, C \longrightarrow A,
+            D \longrightarrow A, E \longrightarrow B, C \longrightarrow E\}$
+      \item From $C \longrightarrow E$ and $E \longrightarrow B$, by
+            Transitivity, we get $C \longrightarrow B$. Then, we get apply
+            Augmentation on $C \longrightarrow B$ with $C$ to derive $C
+            \longrightarrow BC$. We also have $BC \longrightarrow D$. So, by
+            Transitivity, we derive $C \longrightarrow D$. Thus, we can add $C
+            \longrightarrow D$ to our set. \\
+            $\{AB \longrightarrow D, BC \longrightarrow D, C \longrightarrow A,
+            D \longrightarrow A, E \longrightarrow B, C \longrightarrow E, C
+            \longrightarrow D\}$
+      \item From $C \longrightarrow D$, we can apply Augmentation with $B$ to
+            get $BC \longrightarrow BD$. Then, we can use Decomposition to get
+            $BC \longrightarrow B$ and $BC \longrightarrow D$. $BC
+            \longrightarrow B$ is trivial since $B \subseteq BC$. This means
+            that from $C \longrightarrow D$, we can get $BC \longrightarrow D$.
+            So, we can get rid of $BC \longrightarrow D$. \\
+            $\{AB \longrightarrow D, C \longrightarrow A, D \longrightarrow A, E
+            \longrightarrow B, C \longrightarrow E, C \longrightarrow D\}$
+    \end{itemize}
   
   
 
