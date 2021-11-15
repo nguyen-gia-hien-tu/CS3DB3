@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[normalem]{ulem}
+
+\newcommand{\mname}[1]{\mbox{\sf #1}}
+\newcommand{\pnote}[1]{{\langle \text{#1} \rangle}}
+
+
+\title{Assignment 5: Dependency Theory}
+\author{Hien Tu - tun1}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{D1 Reasoning with dependencies}
+
+\begin{enumerate}
+  \item
+    \begin{itemize}
+      \item Assume $AB \longrightarrow C, A \longrightarrow D$ and $CD
+            \longrightarrow EF$
+      \item Apply Augmentation on $AB \longrightarrow C$ with $A$ to derive $AB
+            \longrightarrow CA$
+      \item Apply Augmentation on $A \longrightarrow D$ with $C$ to dervie $CA
+            \longrightarrow CD$
+      \item Apply Transitivity on $AB \longrightarrow CA$ and $CA
+            \longrightarrow CD$ to derive $AB \longrightarrow CD$
+      \item Apply Transitivity on $AB \longrightarrow CD$ and $CD
+            \longrightarrow EF$ to derive $AB \longrightarrow EF$
+      \item Apply Reflection on $F \subseteq EF$ to derive $EF \longrightarrow
+            F$
+      \item Apply Transitivity on $AB \longrightarrow EF$ and $EF
+            \longrightarrow F$ to derive $AB \longrightarrow F$
+      \item Hence, $AB \longrightarrow F$
+    \end{itemize}
+\end{enumerate}
+
+\end{document}
