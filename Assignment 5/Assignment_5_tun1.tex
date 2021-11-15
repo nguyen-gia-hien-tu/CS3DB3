@@ -24,6 +24,7 @@
 \textbf{D1 Reasoning with dependencies}
 
 \begin{enumerate}
+  % Question 1
   \item
     \begin{itemize}
       \item Assume $AB \longrightarrow C, A \longrightarrow D$ and $CD
@@ -42,6 +43,39 @@
             \longrightarrow F$ to derive $AB \longrightarrow F$
       \item Hence, $AB \longrightarrow F$
     \end{itemize}
+    \ \\
+
+  % Question 2
+  \item
+    \begin{itemize}
+      \item Assume we have rows $r_1, r_2 \in I$ of instance $I$ such that
+            $r_1[XW] = r_2[XW]$
+      \item By $r_1[XW] = r_2[XW]$, we have $r_1[X] = r_2[X]$ and $r_1[W] =
+            r_2[W]$
+      \item Using $X \longrightarrow Y$ and $r_1[X] = r_2[X]$, we conclude that
+            $r_1[Y] = r_2[Y]$
+      \item By $r_1[Y] = r_2[Y]$ and $r_1[W] = r_2[W]$, we have $r_1[YW] =
+            r_2[YW]$
+      \item Using $YW \longrightarrow Z$ and $r_1[YW] = r_2[YW]$, we conclude
+            that $r_1[Z] = r_2[Z]$
+      \item Hence, $r_1[Z] = r_2[Z]$ holds.
+    \end{itemize}
+
+  % Question 3
+  \item
+    \begin{itemize}
+      \item Assume we have $r_1[X]$ for every instance $I_1$ of $R$ and every
+            row $r_1 \in I_1$
+      \item Using $R[X] \subseteq S[Y]$ and $r_1[X]$, there exists a row in
+            instance $I_2$ of $S$ with $r_1[X] = r_2[X]$
+      \item Using $S[Y] \subseteq T[Z]$ and $r_2[Y]$, there exists a row in
+            instance $I_3$ of $T$ with $r_2[Y] = r_3[Z]$
+      \item Thus, for every instance $I_1$ of $R$ and every row $r_1 \in R$,
+            there exists a row in instance $I_3$ of $T$ such that $r_1[X] =
+            r_3[Z]$
+      \item Hence, $R[X] \subseteq T[Z]$
+    \end{itemize}
+
 \end{enumerate}
 
 \end{document}
