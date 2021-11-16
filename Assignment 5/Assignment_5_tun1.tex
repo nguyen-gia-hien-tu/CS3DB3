@@ -182,56 +182,112 @@
   % Question 8
   \item Compute $X^+$ for every $X \subseteq \{A, B, C, D, E\}$
         \begin{itemize}
-          \item $A^+ = \{A\}$ since there is no $A \longrightarrow \dots$ in
-                $\mathfrak{S}$
-          \item $B^+ = \{B\}$ since there is no $B \longrightarrow \dots$ in
-                $\mathfrak{S}$
-          \item $C^+ = \{A, B, C, D, E\}$ from question 7
+          \item $A^+ = \{A\}$ since there is no dependency that would
+                satisfy the closure algorithm \\
+                So we have $A \longrightarrow A$
+          \item $B^+ = \{B\}$ since there is no dependency that would
+                satisfy the closure algorithm \\
+                So we have $B \longrightarrow B$
+          \item $C^+ = \{A, B, C, D, E\}$ from question 7 \\
+                So we have $C \longrightarrow X$ for all $X \subseteq \{A, B, C,
+                D, E\}$
           \item $D^+ = \{A, D\}$ since there is only $D \longrightarrow A$ that
-                would satisfy the closure algorithm
+                would satisfy the closure algorithm \\
+                So we have $D \longrightarrow X$ for all $X \subseteq \{A, D\}$
           \item $E^+ = \{B, E\}$ since there is only $E \longrightarrow B$ that
-                would satisfy the closure algorithm
+                would satisfy the closure algorithm \\
+                So we have $E \longrightarrow X$ for all $X \subseteq \{B, E\}$
           \item $(AB)^+ = \{A, B, D\}$ since there is only $AB \longrightarrow
-                D$ that would satisfy the closure algorithm
+                D$ that would satisfy the closure algorithm \\
+                So we have $AB \longrightarrow X$ for all $X \subseteq \{A, B,
+                D\}$
           \item $(AC)^+ = \{A, B, C, D, E\}$ since $AC$ includes $C$ and we can
-                reach others from only $C$
+                reach others from only $C$ \\
+                So we have $AC \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(AD)^+ = \{A, D\}$ since there is no dependency that would
-                satisfy the closure algorithm
+                satisfy the closure algorithm \\
+                So we have $AD \longrightarrow X$ for all $X \subseteq \{A, D\}$
           \item $(AE)^+ = \{A, B, E\}$ since there is only $E \longrightarrow B$
-                that would satisfy the closure algorithm
+                that would satisfy the closure algorithm \\
+                So we have $AE \longrightarrow X$ for all $X \subseteq \{A, B,
+                E\}$
           \item $(BC)^+ = \{A, B, C, D, E\}$ since $BC$ includes $C$ and we can
-                reach others from only $C$
+                reach others from only $C$ \\
+                So we have $BC \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(BD)^+ = \{A, B, D\}$ since there is only $D \longrightarrow A$
-                that would satisfy the closure algorithm
+                that would satisfy the closure algorithm \\
+                So we have $BD \longrightarrow X$ for all $X \subseteq \{A, B, D
+                \}$
           \item $(BE)^+ = \{B, E\}$ since there is no dependency that would
-                satisfy the closure algorithm
+                satisfy the closure algorithm \\
+                So we have $BE \longrightarrow X$ for all $X \subseteq \{B, E\}$
           \item $(CD)^+ = \{A, B, C, D, E\}$ since $CD$ includes $C$ and we can
-                reach others from only $C$
+                reach others from only $C$ \\
+                So we have $CD \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(CE)^+ = \{A, B, C, D, E\}$ since $CE$ includes $C$ and we can
-                reach others from only $C$
+                reach others from only $C$ \\
+                So we have $CE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(DE)^+ = \{A, B, D, E\}$ there are $D \longrightarrow A$, $E
-                \longrightarrow B$ satisfy the closure algorithm
-          \item $(ABC)^+ = \{A, B, C, D, E\}$ since $ABC$ includes $C$
+                \longrightarrow B$ satisfy the closure algorithm \\
+                So we have $DE \longrightarrow X$ for all $X \subseteq \{A, B,
+                D, E\}$
+          \item $(ABC)^+ = \{A, B, C, D, E\}$ since $ABC$ includes $C$ \\
+                So we have $ABC \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(ABD)^+ = \{A, B, D\}$ since there is no dependency that would
-                satisfy the closure algorithm
+                satisfy the closure algorithm \\
+                So we have $ABD \longrightarrow X$ for all $X \subseteq \{A, B,
+                D\}$
           \item $(ABE)^+ = \{A, B, D, E\}$ since there is only $AB
-                \longrightarrow D$ that would satisfy the closure algorithm
-          \item $(ACD)^+ = \{A, B, C, D, E\}$ since $ACD$ includes $C$
-          \item $(ACE)^+ = \{A, B, C, D, E\}$ since $ACE$ includes $C$
+                \longrightarrow D$ that would satisfy the closure algorithm \\
+                So we have $ABE \longrightarrow X$ for all $X \subseteq \{A, B,
+                D, E\}$
+          \item $(ACD)^+ = \{A, B, C, D, E\}$ since $ACD$ includes $C$ \\
+                So we have $ACD \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(ACE)^+ = \{A, B, C, D, E\}$ since $ACE$ includes $C$ \\
+                So we have $ACE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(ADE)^+ = \{A, B, D, E\}$ since there is only $E
-                \longrightarrow B$ that would satisfy the closure algorithm
-          \item $(BCD)^+ = \{A, B, C, D, E\}$ since $BCD$ includes $C$
-          \item $(BCE)^+ = \{A, B, C, D, E\}$ since $BCE$ includes $C$
-          \item $(BDE)^+ = \{A, B, D, E\}$ since there is only $D
-                \longrightarrow A$ that would satisfy the closure algorithm
-          \item $(CDE)^+ = \{A, B, C, D, E\}$ since $CDE$ includes $C$
-          \item $(ABCD)^+ = \{A, B, C, D, E\}$ since $ABCD$ includes $C$
-          \item $(ABCE)^+ = \{A, B, C, D, E\}$ since $ABCE$ includes $C$
+                \longrightarrow B$ that would satisfy the closure algorithm \\
+                So we have $ADE \longrightarrow X$ for all $X \subseteq \{A, B,
+                D, E\}$
+          \item $(BCD)^+ = \{A, B, C, D, E\}$ since $BCD$ includes $C$ \\
+                So we have $BCD \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(BCE)^+ = \{A, B, C, D, E\}$ since $BCE$ includes $C$ \\
+                So we have $BCE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(BDE)^+ = \{A, B, D, E\}$ since there is only $D 
+                \longrightarrow A$ that would satisfy the closure algorithm \\
+                So we have $BDE \longrightarrow X$ for all $X \subseteq \{A, B,
+                D, E\}$
+          \item $(CDE)^+ = \{A, B, C, D, E\}$ since $CDE$ includes $C$ \\
+                So we have $CDE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(ABCD)^+ = \{A, B, C, D, E\}$ since $ABCD$ includes $C$ \\
+                So we have $ABCD \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(ABCE)^+ = \{A, B, C, D, E\}$ since $ABCE$ includes $C$ \\
+                So we have $ABCE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
           \item $(ABDE)^+ = \{A, B, D, E\}$ since there is no dependency that
-                would satisfy the closure algorithm
-          \item $(ACDE)^+ = \{A, B, C, D, E\}$ since $ACDE$ includes $C$
-          \item $(BCDE)^+ = \{A, B, C, D, E\}$ since $BCDE$ includes $C$
-          \item $(ABCDE)^+ = \{A, B, C, D, E\}$ since $ABCDE$ includes $C$
+                would satisfy the closure algorithm \\
+                So we have $ABDE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(ACDE)^+ = \{A, B, C, D, E\}$ since $ACDE$ includes $C$ \\
+                So we have $ACDE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(BCDE)^+ = \{A, B, C, D, E\}$ since $BCDE$ includes $C$ \\
+                So we have $BCDE \longrightarrow X$ for all $X \subseteq \{A, B,
+                C, D, E\}$
+          \item $(ABCDE)^+ = \{A, B, C, D, E\}$ since $ABCDE$ includes $C$ \\
+                So we have $ABCDE \longrightarrow X$ for all $X \subseteq \{A,
+                B, C, D, E\}$
 
           \item Any combination that contains $C$ is the superkey
           \item $C$ is the (candidate) key
