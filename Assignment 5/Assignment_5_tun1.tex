@@ -191,13 +191,30 @@
                 would satisfy the closure algorithm
           \item $E^+ = \{B, E\}$ since there is only $E \longrightarrow B$ that
                 would satisfy the closure algorithm
+          \item $(AB)^+ = \{A, B, D\}$ since there is only $AB \longrightarrow
+                D$ that would satisfy the closure algorithm
+          \item $(AC)^+ = \{A, B, C, D, E\}$ since $AC$ includes $C$ and we can
+                reach others from only $C$
+          \item $(AD)^+ = \{A, D\}$ since there is no dependency that would
+                satisfy the closure algorithm
+          \item $(AE)^+ = \{A, B, E\}$ since there is only $E \longrightarrow B$
+                that would satisfy the closure algorithm
+          \item $(BC)^+ = \{A, B, C, D, E\}$ since $BC$ includes $C$ and we can
+                reach others from only $C$
+          \item $(BD)^+ = \{A, B, D\}$ since there is only $D \longrightarrow A$
+                that would satisfy the closure algorithm
+          \item $(BE)^+ = \{B, E\}$ since there is no dependency that would
+                satisfy the closure algorithm
+
+          \item Any combination that contains $C$ is the superkey
+          \item $C$ is the (candidate) key
         \end{itemize}
   \ \\
 
   % Question 9
   \item
     \begin{itemize}
-      \item starting with $\{AB \longrightarrow D, AC \longrightarrow E, BC
+      \item Starting with $\{AB \longrightarrow D, AC \longrightarrow E, BC
             \longrightarrow D, C \longrightarrow A, D \longrightarrow A, E
             \longrightarrow B\}$
       \item From $C \longrightarrow A$, we can use Augmentation with $C$ to
@@ -233,7 +250,7 @@
             $\{AB \longrightarrow D, C \longrightarrow A, D \longrightarrow A, E
             \longrightarrow B, C \longrightarrow E, C \longrightarrow D\}$
       \item By Transitivity on $C \longrightarrow D$ and $D \longrightarrow A$,
-            we can derive $C \longleftarrow A$. Thus, we can get rid of $C
+            we can derive $C \longrightarrow A$. Thus, we can get rid of $C
             \longrightarrow A$. \\
             $\{AB \longrightarrow D, D \longrightarrow A, E \longrightarrow B, C
             \longrightarrow E, C \longrightarrow D\}$
