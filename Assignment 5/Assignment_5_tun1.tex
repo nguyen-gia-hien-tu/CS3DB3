@@ -205,6 +205,33 @@
                 that would satisfy the closure algorithm
           \item $(BE)^+ = \{B, E\}$ since there is no dependency that would
                 satisfy the closure algorithm
+          \item $(CD)^+ = \{A, B, C, D, E\}$ since $CD$ includes $C$ and we can
+                reach others from only $C$
+          \item $(CE)^+ = \{A, B, C, D, E\}$ since $CE$ includes $C$ and we can
+                reach others from only $C$
+          \item $(DE)^+ = \{A, B, D, E\}$ there are $D \longrightarrow A$, $E
+                \longrightarrow B$ satisfy the closure algorithm
+          \item $(ABC)^+ = \{A, B, C, D, E\}$ since $ABC$ includes $C$
+          \item $(ABD)^+ = \{A, B, D\}$ since there is no dependency that would
+                satisfy the closure algorithm
+          \item $(ABE)^+ = \{A, B, D, E\}$ since there is only $AB
+                \longrightarrow D$ that would satisfy the closure algorithm
+          \item $(ACD)^+ = \{A, B, C, D, E\}$ since $ACD$ includes $C$
+          \item $(ACE)^+ = \{A, B, C, D, E\}$ since $ACE$ includes $C$
+          \item $(ADE)^+ = \{A, B, D, E\}$ since there is only $E
+                \longrightarrow B$ that would satisfy the closure algorithm
+          \item $(BCD)^+ = \{A, B, C, D, E\}$ since $BCD$ includes $C$
+          \item $(BCE)^+ = \{A, B, C, D, E\}$ since $BCE$ includes $C$
+          \item $(BDE)^+ = \{A, B, D, E\}$ since there is only $D
+                \longrightarrow A$ that would satisfy the closure algorithm
+          \item $(CDE)^+ = \{A, B, C, D, E\}$ since $CDE$ includes $C$
+          \item $(ABCD)^+ = \{A, B, C, D, E\}$ since $ABCD$ includes $C$
+          \item $(ABCE)^+ = \{A, B, C, D, E\}$ since $ABCE$ includes $C$
+          \item $(ABDE)^+ = \{A, B, D, E\}$ since there is no dependency that
+                would satisfy the closure algorithm
+          \item $(ACDE)^+ = \{A, B, C, D, E\}$ since $ACDE$ includes $C$
+          \item $(BCDE)^+ = \{A, B, C, D, E\}$ since $BCDE$ includes $C$
+          \item $(ABCDE)^+ = \{A, B, C, D, E\}$ since $ABCDE$ includes $C$
 
           \item Any combination that contains $C$ is the superkey
           \item $C$ is the (candidate) key
