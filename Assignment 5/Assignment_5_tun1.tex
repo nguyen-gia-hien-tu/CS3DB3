@@ -288,9 +288,11 @@
           \item $(ABCDE)^+ = \{A, B, C, D, E\}$ since $ABCDE$ includes $C$ \\
                 So we have $ABCDE \longrightarrow X$ for all $X \subseteq \{A,
                 B, C, D, E\}$
-
-          \item Any combination that contains $C$ is the superkey
-          \item $C$ is the (candidate) key
+          \item From the closure, we know that any combination that contains $C$
+                is the superkey, more specifically, $AC, BC, C, CD, CE, ABC,
+                ACD, ACE, BCD, BCE, CDE, ABCD, ABCE, ACDE, BCDE, ABCDE$
+          \item notice that, from $C$, we can derive all attributes in
+                \textbf{r} $C$ is already minimal, so $C$ is the (candidate) key
         \end{itemize}
   \ \\
 
