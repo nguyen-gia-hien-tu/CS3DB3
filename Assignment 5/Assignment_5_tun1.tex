@@ -31,7 +31,7 @@
             \longrightarrow EF$
       \item Apply Augmentation on $AB \longrightarrow C$ with $A$ to derive $AB
             \longrightarrow CA$
-      \item Apply Augmentation on $A \longrightarrow D$ with $C$ to dervie $CA
+      \item Apply Augmentation on $A \longrightarrow D$ with $C$ to derive $CA
             \longrightarrow CD$
       \item Apply Transitivity on $AB \longrightarrow CA$ and $CA
             \longrightarrow CD$ to derive $AB \longrightarrow CD$
@@ -92,7 +92,7 @@
             \cup Y)$
       \item Since $Z$ is all attributes of $\textbf{R}$ not in $X$ and $Y$, $Z
             \cap XY = \emptyset$
-      \item Apply Coalensence on $X \twoheadrightarrow Z$, $XY \longrightarrow Z
+      \item Apply Coalescence on $X \twoheadrightarrow Z$, $XY \longrightarrow Z
             \setminus (X \cup Y)$, $Z \cap XY = \emptyset$ and $Z \setminus (X
             \cup Y) \subseteq Z$, we conclude that $X \longrightarrow Z
             \setminus (X \cup Y)$
@@ -135,7 +135,29 @@
   \ \\
 
   % Question 6
-  \item TODO: Do Question 6
+  \item \begin{itemize}
+          \item Let $Y = \{y_1, y_2, \dots, y_n\}$ where each $y_i$ is
+                ``atomic'' attribute (i.e., not a set of attributes)
+          \item Let $X = \{x_1, x_2, \dots, x_m\}$ where each $x_i$ is
+                ``atomic'' attribute (i.e., not a set of attributes)
+          \item Since $\mathfrak{S} \vDash X \longrightarrow Y$, by
+                Decomposition, we know $\mathfrak{S} \vDash X \longrightarrow
+                y_i$ for all $y_i \in Y$ ($1 \leq i \leq n$)
+          \item Furthermore, since closure is complete, we know $y_i \in X^+$
+                for all $y_i \in Y$. Thus, $Y \subseteq X^+$
+          \item So, we can write $X^+ = X Y Z_1 Z_2 \dots Z_k$ \\
+                where $Z_1 Z_2 \dots Z_k$ are sets of attributes different from
+                each other and different from $X$ and $Y$. They are added during
+                the process of the closure algorithm. \\
+                Note that $Z_i$ may contain some attributes in $X$ and/or $Y$
+                but not all. $Z_i$ could also be strict subset of $X$ or $Y$. 
+          \item Another way of writing $X^+$ is $X^+ = X \cup Y \cup Z_1 \cup
+                Z_2 \cup \dots \cup Z_k$
+          \item If there is no $Z_i \in X^+$, that is $X^+ = X \cup Y$, then it
+                means that $X \longrightarrow Y \in \mathfrak{S}$. Thus, it is
+                obviously that we can derive $X \longrightarrow Y$ from
+                $\mathfrak{S}$
+        \end{itemize}
   \ \\
 
   % Question 7
@@ -289,9 +311,10 @@
                 So we have $ABCDE \longrightarrow X$ for all $X \subseteq \{A,
                 B, C, D, E\}$
           \item From the closure, we know that any combination that contains $C$
-                is the superkey, more specifically, $AC, BC, C, CD, CE, ABC,
-                ACD, ACE, BCD, BCE, CDE, ABCD, ABCE, ACDE, BCDE, ABCDE$
-          \item notice that, from $C$, we can derive all attributes in
+                is the superkey, more specifically, $AC$, $BC$, $C$, $CD$, $CE$,
+                $ABC$, $ACD$, $ACE$, $BCD$, $BCE$, $CDE$, $ABCD$, $ABCE$,
+                $ACDE$, $BCDE$, $ABCDE$ are superkeys
+          \item Notice that, from $C$, we can derive all attributes in
                 \textbf{r} $C$ is already minimal, so $C$ is the (candidate) key
         \end{itemize}
   \ \\
@@ -339,6 +362,9 @@
             \longrightarrow A$. \\
             $\{AB \longrightarrow D, D \longrightarrow A, E \longrightarrow B, C
             \longrightarrow E, C \longrightarrow D\}$
+      \item From here, we cannot ``reduce'' anymore. Thus, the minimal cover for
+            $\mathfrak{S}$ is $\{AB \longrightarrow D, D \longrightarrow A, E
+            \longrightarrow B, C \longrightarrow E, C \longrightarrow D\}$
     \end{itemize}
   
   
