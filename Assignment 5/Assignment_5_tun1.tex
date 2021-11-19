@@ -247,11 +247,13 @@
   % Question 8
   \item Compute $X^+$ for every $X \subseteq \{A, B, C, D, E\}$
         \begin{itemize}
-          \item $A^+ = \{A\}$ since there is no dependency that would
-                satisfy the closure algorithm \\
+          \item $\{\}^+ = \{\}$ since there is no $\{\} \longrightarrow \dots$
+                in $\mathfrak{S}$
+          \item $A^+ = \{A\}$ since there is no dependency that would satisfy
+                the closure algorithm \\
                 So we have $A \longrightarrow A$
-          \item $B^+ = \{B\}$ since there is no dependency that would
-                satisfy the closure algorithm \\
+          \item $B^+ = \{B\}$ since there is no dependency that would satisfy
+                the closure algorithm \\
                 So we have $B \longrightarrow B$
           \item $C^+ = \{A, B, C, D, E\}$ from question 7 \\
                 So we have $C \longrightarrow X$ for all $X \subseteq \{A, B, C,
