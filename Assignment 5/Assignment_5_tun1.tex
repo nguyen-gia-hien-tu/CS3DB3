@@ -135,29 +135,70 @@
   \ \\
 
   % Question 6
-  \item \begin{itemize}
-          \item Let $Y = \{y_1, y_2, \dots, y_n\}$ where each $y_i$ is
-                ``atomic'' attribute (i.e., not a set of attributes)
-          \item Let $X = \{x_1, x_2, \dots, x_m\}$ where each $x_i$ is
-                ``atomic'' attribute (i.e., not a set of attributes)
-          \item Since $\mathfrak{S} \vDash X \longrightarrow Y$, by
-                Decomposition, we know $\mathfrak{S} \vDash X \longrightarrow
-                y_i$ for all $y_i \in Y$ ($1 \leq i \leq n$)
-          \item Furthermore, since closure is complete, we know $y_i \in X^+$
-                for all $y_i \in Y$. Thus, $Y \subseteq X^+$
-          \item So, we can write $X^+ = X Y Z_1 Z_2 \dots Z_k$ \\
-                where $Z_1 Z_2 \dots Z_k$ are sets of attributes different from
-                each other and different from $X$ and $Y$. They are added during
-                the process of the closure algorithm. \\
-                Note that $Z_i$ may contain some attributes in $X$ and/or $Y$
-                but not all. $Z_i$ could also be strict subset of $X$ or $Y$. 
-          \item Another way of writing $X^+$ is $X^+ = X \cup Y \cup Z_1 \cup
-                Z_2 \cup \dots \cup Z_k$
-          \item If there is no $Z_i \in X^+$, that is $X^+ = X \cup Y$, then it
-                means that $X \longrightarrow Y \in \mathfrak{S}$. Thus, it is
-                obviously that we can derive $X \longrightarrow Y$ from
-                $\mathfrak{S}$
+  \item 
+    \begin{itemize}
+      \item For the most trivial case where $Y \subseteq X$, we can just use
+            Reflexivity to get $X \longrightarrow Y$. Otherwise,
+      \item Let $Y = \{y_1, y_2, \dots, y_n\}$ where each $y_i$ is ``atomic''
+            attribute (i.e., not a set of attributes)
+      \item Let $X = \{x_1, x_2, \dots, x_m\}$ where each $x_i$ is ``atomic''
+            attribute (i.e., not a set of attributes)
+      \item Since $\mathfrak{S} \vDash X \longrightarrow Y$, by Decomposition,
+            we know $\mathfrak{S} \vDash X \longrightarrow y_i$ for all $y_i \in
+            Y$ ($1 \leq i \leq n$)
+      \item Furthermore, since closure is complete, we know $y_i \in X^+$ for
+            all $y_i \in Y$. Thus, $Y \subseteq X^+$
+      \item So, we can write $X^+ = X Y Z_1 Z_2 \dots Z_k$ \\
+            where $Z_1 Z_2 \dots Z_k$ are sets of attributes different from each
+            other and different from $X$ and $Y$. They are added during the
+            process of the closure algorithm. \\
+            Note that $Z_i$ may contain attributes of $X$ and/or $Y$. $Z_i$
+            could also be strict subset or strict superset of $X$ and/or $Y$. 
+      \item Another way of writing $X^+$ is $X^+ = X \cup Y \cup Z_1 \cup Z_2
+            \cup \dots \cup Z_k$
+      \item If there is no $Z_i \in X^+$, that is $X^+ = X \cup Y$, then it
+            means that $X \longrightarrow Y \in \mathfrak{S}$. Thus, it is
+            obvious that we can derive $X \longrightarrow Y$ from $\mathfrak{S}$
+      \item If there is at least one $Z_i \in X^+$
+        \begin{itemize}
+          \item If $X \longrightarrow Y \in \mathfrak{S}$, then it is trivial as
+                shown before
+          \item If $X \longrightarrow Y \not \in \mathfrak{S}$: \\
+                We will prove by induction on the last step taken to get $X
+                \longrightarrow Y$. We will proceed by case analysis over all
+                possible situations of the last step taken to get $X
+                \longrightarrow Y$. \\
+                From the start of the closure algorithm for $X^+$, we know that
+                $X \longrightarrow Z_i \in \mathfrak{S}$ for some $Z_i$ that is
+                neither $X$ nor $Y$. \\
+                \underline{Case 1}: \\
+                If $Z_i \longrightarrow Y \in \mathfrak{S}$, then we can use
+                Transitivity on $X \longrightarrow Z_i$ and $Z_i \longrightarrow
+                Y$ to get $X \longrightarrow Y$. \\
+                \underline{Case 2}: \\
+                If $Z_i \supset Y$ ($Z_i$ is a strict superset of $Y$), then, by
+                Decomposition rule, we could get $X \longrightarrow Y$ (and $X
+                \longrightarrow Z_i \setminus Y$). \\
+                \underline{Case 3}: \\
+                If $Z_i \subset Y$ and we also have $X \longrightarrow Z_j \in
+                \mathfrak{S}$ where $Y = Z_i \cup Z_j$, then we can use Union
+                rule to get $X \longrightarrow Y$. \\
+                \underline{Case 4}: \\
+                If, from the start of the closure algorithm, instead of having
+                $X \longrightarrow Z_i$, we have $X_k \longrightarrow Z_i$ where
+                $X_k \subset X$.
+                \begin{itemize}
+                  \item If $X \setminus X_k \cup Z_i = Y$ ($Y$ is made of $Z_i$
+                        and the part of $X$ where $X_k$ does not have), then we
+                        can use Augmentation, to get $X_i (X \setminus X_i)
+                        \longrightarrow Z_i (X \setminus X_i)$, which is
+                        equivalent to $X \longrightarrow Y$.
+                  \item If $X \setminus X_k \cup Z_i \neq Y$, then we will fall
+                        into one of the above cases.
+                \end{itemize}
+                
         \end{itemize}
+    \end{itemize}
   \ \\
 
   % Question 7
