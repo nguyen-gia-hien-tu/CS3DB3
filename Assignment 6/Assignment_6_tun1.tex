@@ -66,6 +66,43 @@
         attributes (user\_id, date, product, p\_price, p\_amount) are the same
         as the first row. This row is the second row.
 \end{enumerate}
+\ \\
+
+
+\textbf{Part 2: Refinement of an order-table for a cinema chain}
+
+We will use the short hand notation for each attribute for brevity.
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item The relational schema is not in 3NF since I $\longrightarrow$ St, Si,
+        Ss, Sd would violate the 3NF property since \{St, Si, Ss, Sd\} $\not
+        \subseteq$ I, I is not a (super)key and each attribute in \{St, Si, Ss,
+        Sd\} $\setminus$ I = \{St, Si, Ss, Sd\} is not part of a key. \\
+        We need to compute the minimal cover of the functional dependencies
+        \begin{itemize}
+          \item We can use Decomposition on the first three functional
+                dependencies to get \\
+                \{I $\longrightarrow$ St; I $\longrightarrow$ Si; I
+                $\longrightarrow$ Ss; I $\longrightarrow$ Sd; I
+                $\longrightarrow$ Fi; I $\longrightarrow$ Fl; I
+                $\longrightarrow$ Fs; I $\longrightarrow$ Ri; I
+                $\longrightarrow$ Rs; Si $\longrightarrow$ Si; Si
+                $\longrightarrow$ Ss; Si $\longrightarrow$ Sd; Ss
+                $\longrightarrow$ Sd; Sd $\longrightarrow$ Ss; St, Ri
+                $\longrightarrow$ Fi; Fi $\longrightarrow$ Fl; Fi, Si
+                $\longrightarrow$ Fs; Ri $\longrightarrow$ Rs\}
+          \item From Reflexivity, since Si $\subseteq$ Si, we can get Si
+                $\longrightarrow$ Si. So, we don't need to include Si
+                $\longrightarrow$ Si in the minimal cover. \\
+                By Transitivity on I $\longrightarrow$ Si and Si
+                $\longrightarrow$ Ss, we can get I $\longrightarrow$ Ss. So, we
+                don't need I $\longrightarrow$ Ss. \\
+                By Transitivity on I $\longrightarrow$ Si and Si
+                $\longrightarrow$ Sd, we can get I $\longrightarrow$ Sd
+        \end{itemize}
+  
+        
+\end{enumerate}
 
 
 \end{document}
