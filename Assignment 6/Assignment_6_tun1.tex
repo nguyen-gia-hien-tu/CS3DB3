@@ -374,8 +374,46 @@ We will use the short hand notation for each attribute for brevity.
           \item By repeatedly applying the same argument to I $\longrightarrow$
                 Ss, I $\longrightarrow$ Sd, I $\longrightarrow$ Fi, I
                 $\longrightarrow$ Fl, I $\longrightarrow$ Fs, I
-                $\longrightarrow$ Ri, I $\longrightarrow$ Rs; we get
-                
+                $\longrightarrow$ Ri, I $\longrightarrow$ Rs; we get \\
+                \{I, Ss\}, \{I, Sd\}, \{I, Fi\}, \{I, Fl\}, \{I, Fs\}, \{I,
+                Ri\}, \{I, Rs\}, \{I, P, Rp\} \\
+                Note that from the above sets, all except \{I, P, Rp\} are in
+                4NF since I is the (super)key.
+          \item For \{I, P, Rp\}, by Reflexivity, we know I $\longrightarrow$ I,
+                by Union on I $\longrightarrow$ St, Si, Ss, Sd and I
+                $\longrightarrow$ Fi, Fl, Fs, Ri, Rs; we get I $\longrightarrow$
+                St, Si, Ss, Sd, Fi, Fl, Fs, Ri, Rs. Applying this with I
+                $\longrightarrow$ I using Union rule, we get I $\longrightarrow$
+                I, St, Si, Ss, Sd, Fi, Fl, Fs, Ri, Rs. Note that ID = \{I, St,
+                Si, Ss, Sd, Fi, Fl, Fs, Ri, Rs\}, so I $\longrightarrow$ ID.
+                Then, using Replication, we get I $\twoheadrightarrow$ ID. From
+                the question, we also have ID $\twoheadrightarrow$ P. By using
+                Transitivity, we get I $\twoheadrightarrow$ P $\setminus$ ID.
+                Since ID does not include P, P $\setminus$ ID = P. Thus, we get
+                I $\twoheadrightarrow$ P. Since I $\twoheadrightarrow$ P
+                violates the 4NF constraint, we will decompose \{I, P, Rp\} into
+                \{I, P\} and \{I, Rp\}, which are in 4NF.
+          \item Therefore, all of the relational schemas in the resulting
+                decomposition are \{I, St\}, \{I, Si\}, \{I, Ss\}, \{I, Sd\},
+                \{I, Fi\}, \{I, Fl\}, \{I, Fs\}, \{I, Ri\}, \{I, Rs\}, \{I, P\},
+                \{I, Rp\}.
+        \end{itemize}
+
+        Minimal cover of each relational schema in the resulting decomposition:
+        \begin{itemize}
+          \item \{I, St\} $\implies$ \{I $\longrightarrow$ St\}
+          \item \{I, Si\} $\implies$ \{I $\longrightarrow$ Si\}
+          \item \{I, Ss\} $\implies$ \{I $\longrightarrow$ Ss\}
+          \item \{I, Sd\} $\implies$ \{I $\longrightarrow$ Sd\}
+          \item \{I, Fi\} $\implies$ \{I $\longrightarrow$ Fi\}
+          \item \{I, Fl\} $\implies$ \{I $\longrightarrow$ Fl\}
+          \item \{I, Fs\} $\implies$ \{I $\longrightarrow$ Fs\}
+          \item \{I, Ri\} $\implies$ \{I $\longrightarrow$ Ri\}
+          \item \{I, Rs\} $\implies$ \{I $\longrightarrow$ Rs\}
+          \item \{I, P\} $\implies$ \{\} since I $\twoheadrightarrow$ P, not I
+                $\longrightarrow$ P
+          \item \{I, Rp\} $\implies$ \{\} since I $\twoheadrightarrow$ Rp, not I
+                $\longrightarrow$ Rp
         \end{itemize}
 
 
