@@ -326,6 +326,18 @@ We will use the short hand notation for each attribute for brevity.
         It is proved in the lecture that \textsc{Decompose-BCNF} is
         lossless-join. Thus, the decomposition is lossless-join.
 
+  % Question 5
+  \item The relational schema is not in 4NF since, although the multi-valued
+        functional dependencies ID $\longrightarrow$ P and ID $\longrightarrow$
+        Rp satisfy the 4NF constraint (as ID is the super key), we have other
+        multi-valued dependencies in $\mathfrak{S}^+$ that does not satisfy the
+        4NF constraint. More specifically, since I $\longrightarrow$ St, Si, Ss,
+        Sd; by Replication, we have I $\twoheadrightarrow$ St, Si, Ss, Sd. Thus,
+        I $\twoheadrightarrow$ St, Si, Ss, Sd $\in \mathfrak{S}^+$. However, I
+        is not a (super)key. Therefore, it violates the 4NF constraint and the 
+        relational schema is not in 4NF. \\
+
+        
 
 
 \end{enumerate}
