@@ -23,13 +23,48 @@
 
 \textbf{Part 1: The analysis of a quick-event wizard for a local community}
 \begin{enumerate}
+  % Question 1
   \item Minimal cover of all realistic non-trivial functional dependencies:
         \begin{itemize}
           \item Since each event is organized by a user, we know that if the
                 event id (\emph{id}) is the same, then the organizer
                 (\emph{user\_id}) must be the same. So, we can have id
-                $\longrightarrow$ user\_id
+                $\longrightarrow$ user\_id. The reverse would not hold since an
+                organizer could organize many events.
+          \item Furthermore, each event happens in a day, so, we know that if
+                the event id (\emph{id}) is the same, the date that the event
+                happens in (\emph{date}) must be the same. So, we can have id
+                $\longrightarrow$ date.
+          \item We also have id, inv\_id $\longrightarrow$ inv\_confirmed since
+                each guest would determine what event to go to. We need both the
+                event id (\emph{id}) and the guest (\emph{inv\_id}) to determine
+                if the invitation is confirmed (\emph{inv\_confirmed}).
+          \item Furthermore, we have id, product $\longrightarrow$ p\_amount
+                since we would only know how much to bring if we know what to
+                bring and where we need to bring it to. Only the product
+                wouldn't be able to determine the amount since different event
+                could need different amount of the same product. For example, in
+                the given table, event 1 needs 4 chips while event 2 only needs
+                2 chips.
+          \item We have product $\longrightarrow$ p\_price since each product
+                has its own price. The price of the product wouldn't depend on
+                the event that the product is brough into. An example is that,
+                in the given table, the chips cost \$2 no matter if it is
+                brought into event with id 1 or 2 and the cola would cost \$4 no
+                matter if it is brought into event with id 1 or 2.
         \end{itemize}
+
+  % Question 2
+  \item An example of a non-trivial dependency is id $\twoheadrightarrow$
+        inv\_id, inv\_confirmed. This would hold since, for example, in the
+        given table, from the first row and the fourth row, we know that there
+        would exist a row where inv\_id and inv\_confirmed are the same as the
+        first row and the rest of the attributes (user\_id, date, product,
+        p\_price, p\_amount) are the same as the fourth row. This row is the
+        thrid row. We also know that there would exist a row where inv\_id and
+        inv\_confirmed are the same as the fourth row and the rest of the
+        attributes (user\_id, date, product, p\_price, p\_amount) are the same
+        as the first row. This row is the second row.
 \end{enumerate}
 
 
