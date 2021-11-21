@@ -78,7 +78,9 @@ We will use the short hand notation for each attribute for brevity.
         Ss, Sd would violate the 3NF property since \{St, Si, Ss, Sd\} $\not
         \subseteq$ I, I is not a (super)key and each attribute in \{St, Si, Ss,
         Sd\} $\setminus$ I = \{St, Si, Ss, Sd\} is not part of a key. \\
-        We need to compute the minimal cover of the functional dependencies
+
+        To decompose, first, we need to compute the minimal cover of the
+        functional dependencies
         \begin{itemize}
           \item We can use Decomposition on the first three functional
                 dependencies to get \\
@@ -193,11 +195,38 @@ We will use the short hand notation for each attribute for brevity.
         Rp)\} \\
         Since (Sd, Ss) $\subseteq$ (Ss, Sd), we will remove (Sd, Ss) from
         $result$. Thus, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (St,
-        Ri, Fi), (Fi, Fl), (Fi, Si, Fs), (Ri, Rs), (I, P, Rp)\}
+        Ri, Fi), (Fi, Fl), (Fi, Si, Fs), (Ri, Rs), (I, P, Rp)\} \\
 
+        Minimal cover for each relational schema of the resulting decomposition
+        \begin{itemize}
+          \item (I, St, Si, Ri) \\
+                $\implies$ \{I $\longrightarrow$ St; I $\longrightarrow$ Si, I
+                $\longrightarrow$ Ri\}
+          \item (Si, Ss) \\
+                $\implies$ \{Si $\longrightarrow$ Ss\}
+          \item (Ss, Sd) \\
+                $\implies$ \{Ss $\longrightarrow$ Sd\}
+          \item (St, Ri, Fi) \\
+                $\implies$ \{St, Ri $\longrightarrow$ Fi\}
+          \item (Fi, Fl) \\
+                $\implies$ \{Fi $\longrightarrow$ Fl\}
+          \item (Fi, Si, Fs) \\
+                $\implies$ \{Fi, Si $\longrightarrow$ Fs\}
+          \item (Ri, Rs) \\
+                $\implies$ \{Ri $\longrightarrow$ Rs\}
+        \end{itemize}
 
-  
+        From the minimal covers of the relational schemas of the resulting
+        decomposition, we can see that the decomposition is
+        dependency-preserving. It is also proved in the lecture that
+        Decompose-3NF is dependency-preserving.
+
+        Furthermore, it is proved in the lecture that Decompose-3NF is also
+        lossless-join. Thus, this decomposition should be lossless-join as well.
+
         
+
+
 \end{enumerate}
 
 
