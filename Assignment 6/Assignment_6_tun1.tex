@@ -238,6 +238,8 @@ We will use the short hand notation for each attribute for brevity.
                                = \{I, St, Si, Ss, Sd, Fi, Fl, Fs, Ri, Rs\}
           \item $\textbf{R}_2$ = I $\cup$ Z
                                = \{I, P, Rp\}
+          \item Note that \{I, P, Rp\} satisfies the BCNF constraint, so they
+                would be part of the resulting decomposition.
         \end{itemize}
 
         For $\textbf{R}_1$, since Si $\longrightarrow$ Si, Ss, Sd $\in
@@ -250,7 +252,50 @@ We will use the short hand notation for each attribute for brevity.
                                     = \{Si, I, St, Fi, Fl, Fs, Ri, Rs\}
         \end{itemize}
 
-        
+        For $\textbf{R}_{1,1}$, since Ss $\longrightarrow$ Sd $\in
+        \mathfrak{S}_{1,1}^+$ violates the BCNF constraint, then
+        \begin{itemize}
+          \item $\textbf{R}_{1,1,1}$ = $\text{(Ss)}^+$
+                                     = \{Ss, Sd\}
+          \item $\textbf{R}_{1,1,2}$ = Ss $\cup$ Z
+                                     = \{Ss, Si\}
+          \item Note that \{Ss, Sd\} and \{Ss, Si\} satisfies BCNF, so they
+                would be part of the resulting decomposition.
+        \end{itemize}
+
+        For $\textbf{R}_{1,2}$, since St, Ri $\longrightarrow$ Fi $\in
+        \mathfrak{S}_{1,2}^+$ violates the BCNF constraint, then
+        \begin{itemize}
+          \item $\textbf{R}_{1,2,1}$ = $\text{\{St, Ri\}}^+$
+                                     = \{St, Ri, Fi, Fl, Rs\}
+          \item $\textbf{R}_{1,2,2}$ = \{St, Ri\} $\cup$ Z
+                                     = \{St, Ri, I, Fs, Si\}
+          \item Note that \{St, Ri, I, Fs, Si\} satisfies BCNF, so they would be
+                part of the resulting decomposition.
+        \end{itemize}
+
+        For $\textbf{R}_{1,2,1}$, since Fi $\longrightarrow$ Fl $\in
+        \mathfrak{S}_{1,2,1}^+$ violates the BCNF constraint, then
+        \begin{itemize}
+          \item $\textbf{R}_{1,2,1,1}$ = $\text{(Fi)}^+$
+                                       = \{Fi, Fl\}
+          \item $\textbf{R}_{1,2,1,2}$ = Fi $\cup$ Z
+                                       = \{Fi, St, Ri, Rs\}
+          \item Note that \{Fi, Fl\} satisfies the BCNF constraint, so they
+                would be part of the resulting decomposition.
+        \end{itemize}
+
+        For $\textbf{R}_{1,2,1,2}$, since Ri $\longrightarrow$ Rs $\in
+        \mathfrak{S}_{1,2,1,2}^+$ violates the BCNF constraint, then
+        \begin{itemize}
+          \item $\textbf{R}_{1,2,1,2,1}$ = $\text{(Ri)}^+$
+                                         = \{Ri, Rs\}
+          \item $\textbf{R}_{1,2,1,2,2}$ = Ri $\cup$ Z
+                                         = \{Ri, Fi, St\}
+          \item Noe that \{Ri, Rs\} and \{Ri, Fi, St\} satisfies the BCNF
+                constraint, so they would be part of the resulting
+                decomposition.
+        \end{itemize}
 
 
 
