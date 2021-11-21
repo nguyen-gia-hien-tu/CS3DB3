@@ -223,8 +223,35 @@ We will use the short hand notation for each attribute for brevity.
 
         Furthermore, it is proved in the lecture that Decompose-3NF is also
         lossless-join. Thus, this decomposition should be lossless-join as well.
+  \ \\
+
+  % Question 4
+  \item The relational schema is not in BCNF since I $\longrightarrow$ St, Si,
+        Ss, Sd $\in \mathfrak{S}^+$ but I is not a (super)key. \\
+
+        \textsc{Decompose-BCNF}:
+
+        Since I $\longrightarrow$ St, Si, Ss, Sd $\in \mathfrak{S}^+$ violates
+        the BCNF constraint since I is not the (super)key, then
+        \begin{itemize}
+          \item $\textbf{R}_1$ = $\text{I}^+$ 
+                               = \{I, St, Si, Ss, Sd, Fi, Fl, Fs, Ri, Rs\}
+          \item $\textbf{R}_2$ = I $\cup$ Z
+                               = \{I, P, Rp\}
+        \end{itemize}
+
+        For $\textbf{R}_1$, since Si $\longrightarrow$ Si, Ss, Sd $\in
+        \mathfrak{S}_1^+$ violates the BCNF constraint since Si is not the
+        (super)key, then
+        \begin{itemize}
+          \item $\textbf{R}_{1, 1}$ = $\text{(Si)}^+$
+                                    = \{Si, Ss, Sd\}
+          \item $\textbf{R}_{1, 2}$ = Si $\cup$ Z
+                                    = \{Si, I, St, Fi, Fl, Fs, Ri, Rs\}
+        \end{itemize}
 
         
+
 
 
 \end{enumerate}
