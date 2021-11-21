@@ -98,7 +98,54 @@ We will use the short hand notation for each attribute for brevity.
                 $\longrightarrow$ Ss, we can get I $\longrightarrow$ Ss. So, we
                 don't need I $\longrightarrow$ Ss. \\
                 By Transitivity on I $\longrightarrow$ Si and Si
-                $\longrightarrow$ Sd, we can get I $\longrightarrow$ Sd
+                $\longrightarrow$ Sd, we can get I $\longrightarrow$ Sd. So, we
+                don't need I $\longrightarrow$ Sd. \\
+                By Union on I $\longrightarrow$ St and I $\longrightarrow$ Ri;
+                we can get I $\longrightarrow$ St, Ri. By Transitivity on I
+                $\longrightarrow$ St, Ri and St, Ri $\longrightarrow$ Fi; we can
+                get I $\longrightarrow$ Fi. So we don't need I $\longrightarrow$
+                Fi. \\
+                By Transitivity on I $\longrightarrow$ Fi (that we just proved)
+                and Fi $\longrightarrow$ Fl, we can get I $\longrightarrow$ Fl.
+                So, we don't need I $\longrightarrow$ Fl. \\
+                By Union on I $\longrightarrow$ Fi and I $\longrightarrow$ Si;
+                we can get I $\longrightarrow$ Fi, Si. By Transitivity on I
+                $\longrightarrow$ Fi, Si and Fi, Si $\longrightarrow$ Fs, we can
+                get I $\longrightarrow$ Fs. So, we don't need I
+                $\longrightarrow$ Fs. \\
+                By Transitivity on Si $\longrightarrow$ Ss and Ss
+                $\longrightarrow$ Sd, we can get Si $\longrightarrow$ Sd. So, we
+                don't need Si $\longrightarrow$ Sd. \\
+                Thus, we would get \\
+                \{I $\longrightarrow$ St; I $\longrightarrow$ Si; I
+                $\longrightarrow$ Ri; Si $\longrightarrow$ Ss; Ss
+                $\longrightarrow$ Sd; Sd $\longrightarrow$ Ss; St, Ri
+                $\longrightarrow$ Fi; Fi $\longrightarrow$ Fl; Fi, Si
+                $\longrightarrow$ Fs; Ri $\longrightarrow$ Rs\}
+          \item Notice that the set above is already minimal. So it is the
+                minimal cover.
+        \end{itemize}
+        Starting the algorithm, we get know 
+        \begin{itemize}
+          \item $result = \{\}$
+          \item $cover = $
+                \{I $\longrightarrow$ St; I $\longrightarrow$ Si; I
+                $\longrightarrow$ Ri; Si $\longrightarrow$ Ss; Ss
+                $\longrightarrow$ Sd; Sd $\longrightarrow$ Ss; St, Ri
+                $\longrightarrow$ Fi; Fi $\longrightarrow$ Fl; Fi, Si
+                $\longrightarrow$ Fs; Ri $\longrightarrow$ Rs\}
+        \end{itemize}
+        First, we have I $\longrightarrow$ St
+        \begin{itemize}
+          \item Since we have I $\longrightarrow$ St, I $\longrightarrow$ Si, I
+                $\longrightarrow$ Ri $\in cover$, we get $B = \{St, Si, Ri\}$
+          \item So, $result = \{(I, St, Si, Ri)\}$
+        \end{itemize}
+        Next, we have Si $\longrightarrow$ Ss
+        \begin{itemize}
+          \item Since only Si $\longrightarrow$ Ss $\in cover$ that starts with
+                Si, $B = \{Ss\}$
+          \item So, $result = \{(I, St, Si, Ri), (Si, Ss)\}$
         \end{itemize}
   
         
