@@ -326,6 +326,8 @@ We will use the short hand notation for each attribute for brevity.
         It is proved in the lecture that \textsc{Decompose-BCNF} is
         lossless-join. Thus, the decomposition is lossless-join.
 
+  \ \\
+
   % Question 5
   \item The relational schema is not in 4NF since, although the multi-valued
         functional dependencies ID $\longrightarrow$ P and ID $\longrightarrow$
@@ -337,7 +339,44 @@ We will use the short hand notation for each attribute for brevity.
         is not a (super)key. Therefore, it violates the 4NF constraint and the 
         relational schema is not in 4NF. \\
 
-        
+        We will decompose the relational schema using the \textsc{Decompose-4NF}
+        algorithm
+        \begin{itemize}
+          \item As mentioned before, by using Decomposition rule on I
+                $\longrightarrow$ St, Si, Ss, Sd and I $\longrightarrow$ Fi,
+                Fl, Fs, Ri, Rs; we get \\
+                I $\longrightarrow$ St, I $\longrightarrow$ Si, I
+                $\longrightarrow$ Ss, I $\longrightarrow$ Sd, I
+                $\longrightarrow$ Fi, I $\longrightarrow$ Fl, I
+                $\longrightarrow$ Fs, I $\longrightarrow$ Ri, I
+                $\longrightarrow$ Rs
+          \item By Replication on I $\longrightarrow$ St, we get I
+                $\twoheadrightarrow$ St, which violates the 4NF constraint since
+                I is not a (super)key. We will decompose into
+                \begin{itemize}
+                  \item $\textbf{R}_1$ = \{I, St\}
+                  \item $\textbf{R}_2$ = \{I, Si, Ss, Sd, Fi, Fl, Fs, Ri, Rs, P,
+                                          Rp\}
+                  \item Note that \{I, St\} is in 4NF since I is the key of
+                        $\textbf{R}_1$
+                \end{itemize}
+          \item For $\textbf{R}_2$, since I $\longrightarrow$ Si, by
+                Replication, we get I $\twoheadrightarrow$ Si, which violates
+                the 4NF constraint since I is not the (super)key. Thus, we will
+                decompose $\textbf{R}_2$ into
+                \begin{itemize}
+                  \item $\textbf{R}_{2,1}$ = \{I, Si\}
+                  \item $\textbf{R}_{2,2}$ = \{I, Ss, Sd, Fi, Fl, Fs, Ri, Rs, P,
+                                              Rp\}
+                  \item Note that \{I, Si\} is in 4NF since I is the key of
+                        $\textbf{R}_{2,1}$
+                \end{itemize}
+          \item By repeatedly applying the same argument to I $\longrightarrow$
+                Ss, I $\longrightarrow$ Sd, I $\longrightarrow$ Fi, I
+                $\longrightarrow$ Fl, I $\longrightarrow$ Fs, I
+                $\longrightarrow$ Ri, I $\longrightarrow$ Rs; we get
+                
+        \end{itemize}
 
 
 \end{enumerate}
