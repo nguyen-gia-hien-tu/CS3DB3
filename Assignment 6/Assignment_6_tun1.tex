@@ -74,6 +74,7 @@
 We will use the short hand notation for each attribute for brevity.
 \begin{enumerate}
   \setcounter{enumi}{2}
+  % Question 3
   \item The relational schema is not in 3NF since I $\longrightarrow$ St, Si,
         Ss, Sd would violate the 3NF property since \{St, Si, Ss, Sd\} $\not
         \subseteq$ I, I is not a (super)key and each attribute in \{St, Si, Ss,
@@ -223,6 +224,78 @@ We will use the short hand notation for each attribute for brevity.
 
         Furthermore, it is proved in the lecture that Decompose-3NF is also
         lossless-join. Thus, this decomposition should be lossless-join as well.
+
+        Decompose the example dataset
+        \begin{itemize}
+          \item (I, St, Si, Ri)
+                \begin{center}
+                  \begin{tabular}{ c c c c }
+                    \hline
+                    I & St           & Si & Ri \\
+                    \hline
+                    1 & Nov. 1, 1pm  & 1  & 7  \\
+                    2 & Nov. 1, 1pm  & 2  & 7  \\
+                    3 & Nov. 7, 2pm  & 2  & 3  \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+          \item (Si, Ss)
+                \begin{center}
+                  \begin{tabular}{c c}
+                    \hline
+                    Si & Ss \\
+                    \hline
+                    1  & Oct. 1 \\
+                    2  & Oct. 3 \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+          \item (Ss, Sd)
+                \begin{center}
+                  \begin{tabular}{c c}
+                    \hline
+                    Ss     & Sd \\
+                    \hline
+                    Oct. 1 & 31 \\
+                    Oct. 3 & 29 \\
+                    \hline                    
+                  \end{tabular}
+                \end{center}
+          \item (St, Ri, Fi)
+                \begin{center}
+                  \begin{tabular}{c c c}
+                    \hline
+                    St          & Ri & Fi \\
+                    \hline
+                    Nov. 1, 1pm & 7  & 5  \\
+                    Nov. 7, 2pm & 3  & 9  \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+          \item (Fi, Fl)
+                \begin{center}
+                  \begin{tabular}{c c}
+                    \hline
+                    Fi & Fl \\
+                    \hline
+                    5  & 120 \\
+                    9  & 99 \\
+                    \hline                    
+                  \end{tabular}
+                \end{center}
+          \item (Fi, Si, Fs)
+                \begin{center}
+                  \begin{tabular}{c c c}
+                    \hline
+                    Fi & Si & Fs \\
+                    \hline
+                    5  & 1  & great \\
+                    5  & 2  & awful \\
+                    9  & 2  & not-scored \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+        \end{itemize}
   \ \\
 
   % Question 4
