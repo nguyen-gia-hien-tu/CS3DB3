@@ -354,8 +354,6 @@ We will use the short hand notation for each attribute for brevity.
                                      = \{St, Ri, Fi, Fl, Rs\}
           \item $\textbf{R}_{1,2,2}$ = \{St, Ri\} $\cup$ Z
                                      = \{St, Ri, I, Fs, Si\}
-          \item Note that \{St, Ri, I, Fs, Si\} satisfies BCNF, so they would be
-                part of the resulting decomposition.
         \end{itemize}
 
         For $\textbf{R}_{1,2,1}$, since Fi $\longrightarrow$ Fl $\in
@@ -381,26 +379,43 @@ We will use the short hand notation for each attribute for brevity.
                 decomposition.
         \end{itemize}
 
+        For $\textbf{R}_{1,2,2}$ = \{I, St, Si, Fs, Ri\}: We have St, Ri
+        $\longrightarrow$ Fi. By Augmentation on that functional dependency with
+        Si; we get St, Ri, Si $\longrightarrow$ Fi, Si. From the one we just got
+        and Fi, Si $\longrightarrow$ Fs; using Transitivity; we get St, Ri, Si
+        $\longrightarrow$ Fs. However, this dependency violates the BCNF
+        constraint since (St, Ri, Si) is not (super)key. Thus, we will decompose 
+        $\textbf{R}_{1,2,2}$ into
+        \begin{itemize}
+          \item $\textbf{R}_{1,2,2,1}$ = \{St, Ri, Si\}$^+$
+                                       = \{St, Ri, Si, Fs\}
+          \item $\textbf{R}_{1,2,2,2}$ = \{St, Ri, Si\} $\cup$ Z
+                                       = \{St, Ri, Si, I\}
+          \item Note that \{St, Ri, Si, Fs\} and \{St, Ri, Si, I\} satisfy the
+                BCNF constraint, so they would be part of the resulting
+                decomposition.
+        \end{itemize}
+
         All relational schemas in the resulting decomposition are \\
         \{I, P, Rp\}, \{Ss, Sd\}, \{Si, Ss\}, \{St, Ri, Fs, Si, I\}, \{Fi, Fl\},
         \{Ri, Rs\}, \{Ri, Fi, St\}. \\
 
         Minimal cover for each relational schema
         \begin{itemize}
-          \item \{I, P, Rp\} \\
+          \item (I, P, Rp) \\
                 $\implies$ \{\}
-          \item \{Ss, Sd\} \\
+          \item (Ss, Sd) \\
                 $\implies$ \{Ss $\longrightarrow$ Sd, Sd $\longrightarrow$ Ss\}
-          \item \{Si, Ss\} \\
+          \item (Si, Ss) \\
                 $\implies$ \{Si $\longrightarrow$ Ss\}
-          \item \{St, Ri, Fs, Si, I\} \\
+          \item (St, Ri, Fs, Si, I) \\
                 $\implies$ \{I $\longrightarrow$ St, I $\longrightarrow$ Ri, I
                 $\longrightarrow$ Si\}
-          \item \{Fi, Fl\} \\
+          \item (Fi, Fl) \\
                 $\implies$ \{Fi $\longrightarrow$ Fl\}
-          \item \{Ri, Rs\} \\
+          \item (Ri, Rs) \\
                 $\implies$ \{Ri $\longrightarrow$ Rs\}
-          \item \{Ri, Fi, St\} \\
+          \item (Ri, Fi, St) \\
                 $\implies$ \{St, Ri $\longrightarrow$ Fi\}
         \end{itemize}
 
@@ -409,6 +424,63 @@ We will use the short hand notation for each attribute for brevity.
 
         It is proved in the lecture that \textsc{Decompose-BCNF} is
         lossless-join. Thus, the decomposition is lossless-join.
+
+        Decompose the example data set
+        \begin{itemize}
+          \item (I, P, Rp)
+                \begin{center}
+                  \begin{tabular}{c c c}
+                    \hline
+                    I  & P      & Rp \\
+                    \hline
+                    1  & ticket & 3D \\
+                    1  & ticket & Dolby \\
+                    1  & 3D     & 3D \\
+                    1  & 3D     & Dolby \\
+                    2  & ticket & 3D \\
+                    2  & ticket & Dolby \\
+                    2  & 3D     & 3D \\
+                    2  & 3D     & Dolby \\
+                    3  & ticket & IMAX \\
+                    3  & IMAX   & IMAX \\
+                    3  & ticket & 4D \\
+                    3  & IMAX   & 4D \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+          \item (Ss, Sd)
+                \begin{center}
+                  \begin{tabular}{c c}
+                    \hline
+                    Ss     & Sd \\
+                    \hline
+                    Oct. 1 & 31 \\
+                    Oct. 3 & 29 \\
+                    \hline                    
+                  \end{tabular}
+                \end{center}
+          \item (Si, Ss)
+                \begin{center}
+                  \begin{tabular}{c c}
+                    \hline
+                    Si & Ss \\
+                    \hline
+                    1  & Oct. 1 \\
+                    2  & Oct. 3 \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+          \item (I, St, Si, Fs, Ri)
+                \begin{center}
+                  \begin{tabular}{c c c c c}
+                    \hline
+                    I & St & Si & Fs & Ri \\
+                    \hline
+
+                    
+                  \end{tabular}
+                \end{center}
+        \end{itemize}
 
   \ \\
 
