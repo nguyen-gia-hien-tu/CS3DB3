@@ -397,8 +397,8 @@ We will use the short hand notation for each attribute for brevity.
         \end{itemize}
 
         All relational schemas in the resulting decomposition are \\
-        \{I, P, Rp\}, \{Ss, Sd\}, \{Si, Ss\}, \{St, Ri, Fs, Si, I\}, \{Fi, Fl\},
-        \{Ri, Rs\}, \{Ri, Fi, St\}. \\
+        \{I, P, Rp\}, \{Ss, Sd\}, \{Si, Ss\}, \{Fi, Fl\}, \{Ri, Rs\}, \{Ri, Fi,
+        St\}, \{St, Ri, Si, Fs\}, \{St, Ri, Si, I\}. \\
 
         Minimal cover for each relational schema
         \begin{itemize}
@@ -408,15 +408,17 @@ We will use the short hand notation for each attribute for brevity.
                 $\implies$ \{Ss $\longrightarrow$ Sd, Sd $\longrightarrow$ Ss\}
           \item (Si, Ss) \\
                 $\implies$ \{Si $\longrightarrow$ Ss\}
-          \item (St, Ri, Fs, Si, I) \\
-                $\implies$ \{I $\longrightarrow$ St, I $\longrightarrow$ Ri, I
-                $\longrightarrow$ Si\}
           \item (Fi, Fl) \\
                 $\implies$ \{Fi $\longrightarrow$ Fl\}
           \item (Ri, Rs) \\
                 $\implies$ \{Ri $\longrightarrow$ Rs\}
           \item (Ri, Fi, St) \\
                 $\implies$ \{St, Ri $\longrightarrow$ Fi\}
+          \item (St, Ri, Si, Fs) \\
+                $\implies$ \{St, Ri, Si $\longrightarrow$ Fs\}
+          \item (St, Ri, Si, I) \\
+                $\implies$ \{I $\longrightarrow$ St, I $\longrightarrow$ Ri, I
+                            $\longrightarrow$ Si\}
         \end{itemize}
 
         This decomposition is not dependency-preserving since we lost the
@@ -470,14 +472,49 @@ We will use the short hand notation for each attribute for brevity.
                     \hline
                   \end{tabular}
                 \end{center}
-          \item (I, St, Si, Fs, Ri)
+          \item (Fi, Fl)
                 \begin{center}
-                  \begin{tabular}{c c c c c}
+                  \begin{tabular}{c c}
                     \hline
-                    I & St & Si & Fs & Ri \\
+                    Fi & Fl \\
                     \hline
-
-                    
+                    5  & 120 \\
+                    9  & 99 \\
+                    \hline                    
+                  \end{tabular}
+                \end{center}
+          \item (Ri, Rs)
+                \begin{center}
+                  \begin{tabular}{c c }
+                    \hline
+                    Ri & Rs \\
+                    \hline
+                    7  & medium \\
+                    3  & large \\
+                    \hline
+                  \end{tabular}
+                \end{center}      
+          \item (St, Fi, Ri)
+                \begin{center}
+                  \begin{tabular}{c c c}
+                    \hline
+                    St          & Fi & Ri \\
+                    \hline
+                    Nov. 1, 1pm & 5 & 7 \\
+                    Nov. 7, 2pm & 9 & 3 \\
+                    \hline
+                  \end{tabular}
+                \end{center}
+          \item (St, Si, Fs, Ri)
+                \begin{center}
+                  \begin{tabular}{c c c c}
+                    \hline
+                    St          & Si & Fs         & Ri \\
+                    \hline
+                    Nov. 1, 1pm & 1  & great      & 7 \\
+                    Nov. 1, 1pm & 2  & awful      & 7 \\
+                    Nov. 7, 2pm & 2  & not-scored & 3 \\
+                    \hline
                   \end{tabular}
                 \end{center}
         \end{itemize}
