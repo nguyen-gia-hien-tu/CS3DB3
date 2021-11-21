@@ -314,9 +314,17 @@ We will use the short hand notation for each attribute for brevity.
                 $\longrightarrow$ Si\}
           \item \{Fi, Fl\} \\
                 $\implies$ \{Fi $\longrightarrow$ Fl\}
+          \item \{Ri, Rs\} \\
+                $\implies$ \{Ri $\longrightarrow$ Rs\}
           \item \{Ri, Fi, St\} \\
                 $\implies$ \{St, Ri $\longrightarrow$ Fi\}
         \end{itemize}
+
+        This decomposition is not dependency-preserving since we lost the
+        dependency Fi, Si $\longrightarrow$ Fs.
+
+        It is proved in the lecture that \textsc{Decompose-BCNF} is
+        lossless-join. Thus, the decomposition is lossless-join.
 
 
 
