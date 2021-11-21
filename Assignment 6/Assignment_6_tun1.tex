@@ -139,14 +139,63 @@ We will use the short hand notation for each attribute for brevity.
         \begin{itemize}
           \item Since we have I $\longrightarrow$ St, I $\longrightarrow$ Si, I
                 $\longrightarrow$ Ri $\in cover$, we get $B = \{St, Si, Ri\}$
-          \item So, $result = \{(I, St, Si, Ri)\}$
+          \item So, $result =$ \{(I, St, Si, Ri)\}
         \end{itemize}
         Next, we have Si $\longrightarrow$ Ss
         \begin{itemize}
           \item Since only Si $\longrightarrow$ Ss $\in cover$ that starts with
                 Si, $B = \{Ss\}$
-          \item So, $result = \{(I, St, Si, Ri), (Si, Ss)\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss)\}
         \end{itemize}
+        Then, we have Ss $\longrightarrow$ Sd
+        \begin{itemize}
+          \item Since only Ss $\longrightarrow$ Sd $\in cover$ that starts with
+                Ss, $B = \{Sd\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd)\}
+        \end{itemize}
+        Then, we have Sd $\longrightarrow$ Ss
+        \begin{itemize}
+          \item Since only Sd $\longrightarrow$ Ss $\in cover$ that starts with
+                Sd, $B = \{Ss\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (Sd, Ss)\}
+        \end{itemize}
+        Next, we have St, Ri $\longrightarrow$ Fi
+        \begin{itemize}
+          \item Since only St, Ri $\longrightarrow$ Fi $\in cover$ that starts
+                with St, Ri; $B = \{Fi\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (Sd, Ss),
+                (St, Ri, Fi)\}
+        \end{itemize}
+        Next, we have Fi $\longrightarrow$ Fl
+        \begin{itemize}
+          \item Since only Fi $\longrightarrow$ Fl $\in cover$ that starts with
+                Fi, $B = \{Fl\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (Sd, Ss),
+                (St, Ri, Fi), (Fi, Fl)\}
+        \end{itemize}
+        Next, we have Fi, Si $\longrightarrow$ Fs
+        \begin{itemize}
+          \item Since only Fi, Si $\longrightarrow$ Fs $\in cover$ that starts
+                with Fi, Si; $B = \{Fs\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (Sd, Ss),
+                (St, Ri, Fi), (Fi, Fl), (Fi, Si, Fs)\}
+        \end{itemize}
+        Finally, we have Ri $\longrightarrow$ Rs
+        \begin{itemize}
+          \item Since only Ri $\longrightarrow$ Rs $\in cover$ that starts
+                with Ri, $B = \{Fi\}$
+          \item So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (Sd, Ss),
+                (St, Ri, Fi), (Fi, Fl), (Fi, Si, Fs), (Ri, Rs)\}
+        \end{itemize}
+        Since $result$ doesn't contain the key, which is ``I, P, Rp'', we need
+        to add it to $result$. So, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss,
+        Sd), (Sd, Ss), (St, Ri, Fi), (Fi, Fl), (Fi, Si, Fs), (Ri, Rs), (I, P,
+        Rp)\} \\
+        Since (Sd, Ss) $\subseteq$ (Ss, Sd), we will remove (Sd, Ss) from
+        $result$. Thus, $result =$ \{(I, St, Si, Ri), (Si, Ss), (Ss, Sd), (St,
+        Ri, Fi), (Fi, Fl), (Fi, Si, Fs), (Ri, Rs), (I, P, Rp)\}
+
+
   
         
 \end{enumerate}
