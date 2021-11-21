@@ -410,11 +410,15 @@ We will use the short hand notation for each attribute for brevity.
           \item \{I, Fs\} $\implies$ \{I $\longrightarrow$ Fs\}
           \item \{I, Ri\} $\implies$ \{I $\longrightarrow$ Ri\}
           \item \{I, Rs\} $\implies$ \{I $\longrightarrow$ Rs\}
-          \item \{I, P\} $\implies$ \{\} since I $\twoheadrightarrow$ P, not I
-                $\longrightarrow$ P
-          \item \{I, Rp\} $\implies$ \{\} since I $\twoheadrightarrow$ Rp, not I
-                $\longrightarrow$ Rp
+          \item \{I, P\} $\implies$ \{I $\twoheadrightarrow$ P\}
+          \item \{I, Rp\} $\implies$ \{I $\twoheadrightarrow$ Rp\}
         \end{itemize}
+
+        The decomposition is lossless-join since we can do natural join on all
+        the decomposed relational schemas on I (the event id \emph{id}).
+
+        The decomposition is not dependency-preserving since we lost Si
+        $\longrightarrow$ Si, Ss, Sd and more.
 
 
 \end{enumerate}
