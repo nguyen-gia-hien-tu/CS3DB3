@@ -297,6 +297,27 @@ We will use the short hand notation for each attribute for brevity.
                 decomposition.
         \end{itemize}
 
+        All relational schemas in the resulting decomposition are \\
+        \{I, P, Rp\}, \{Ss, Sd\}, \{Si, Ss\}, \{St, Ri, Fs, Si, I\}, \{Fi, Fl\},
+        \{Ri, Rs\}, \{Ri, Fi, St\}. \\
+
+        Minimal cover for each relational schema
+        \begin{itemize}
+          \item \{I, P, Rp\} \\
+                $\implies$ \{\}
+          \item \{Ss, Sd\} \\
+                $\implies$ \{Ss $\longrightarrow$ Sd, Sd $\longrightarrow$ Ss\}
+          \item \{Si, Ss\} \\
+                $\implies$ \{Si $\longrightarrow$ Ss\}
+          \item \{St, Ri, Fs, Si, I\} \\
+                $\implies$ \{I $\longrightarrow$ St, I $\longrightarrow$ Ri, I
+                $\longrightarrow$ Si\}
+          \item \{Fi, Fl\} \\
+                $\implies$ \{Fi $\longrightarrow$ Fl\}
+          \item \{Ri, Fi, St\} \\
+                $\implies$ \{St, Ri $\longrightarrow$ Fi\}
+        \end{itemize}
+
 
 
 \end{enumerate}
