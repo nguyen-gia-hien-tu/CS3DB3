@@ -1,0 +1,36 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[normalem]{ulem}
+
+\newcommand{\mname}[1]{\mbox{\sf #1}}
+\newcommand{\pnote}[1]{{\langle \text{#1} \rangle}}
+
+
+\title{Assignment 6: Decomposition and Normal Forms}
+\author{Hien Tu - tun1}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Part 1: The analysis of a quick-event wizard for a local community}
+\begin{enumerate}
+  \item Minimal cover of all realistic non-trivial functional dependencies:
+        \begin{itemize}
+          \item Since each event is organized by a user, we know that if the
+                event id (\emph{id}) is the same, then the organizer
+                (\emph{user\_id}) must be the same. So, we can have id
+                $\longrightarrow$ user\_id
+        \end{itemize}
+\end{enumerate}
+
+
+\end{document}
