@@ -38,7 +38,12 @@
           \item We also have id, inv\_id $\longrightarrow$ inv\_confirmed since
                 each guest would determine what event to go to. We need both the
                 event id (\emph{id}) and the guest (\emph{inv\_id}) to determine
-                if the invitation is confirmed (\emph{inv\_confirmed}).
+                if the invitation is confirmed (\emph{inv\_confirmed}). Only the
+                guest (\emph{inv\_id}) would not be able to determine
+                \emph{inv\_confirmed} since we also need to know what event the
+                guest is confirming. Similarly, only the event id (\emph{id})
+                would not be able to determine \emph{inv\_confirmed} since we
+                also need to know who confirmed going to the event.
           \item Furthermore, we have id, product $\longrightarrow$ p\_amount
                 since we would only know how much to bring if we know what to
                 bring and where we need to bring it to. Only the product
@@ -52,7 +57,16 @@
                 in the given table, the chips cost \$2 no matter if it is
                 brought into event with id 1 or 2 and the cola would cost \$4 no
                 matter if it is brought into event with id 1 or 2.
+          \item So, the cover is \{id $\longrightarrow$ user\_id, id
+                $\longrightarrow$ date, id, inv\_id $\longrightarrow$
+                inv\_confirmed, id, product $\longrightarrow$ p\_amount, product
+                $\longrightarrow$ p\_price\}. Note that this is already minimal
+                since there is no dependency that is trivial or can be derived
+                from the other dependencies in the cover. Therefore, this is the
+                minimal cover of all realistic non-trivial functional
+                dependencies.
         \end{itemize}
+  \ \\
 
   % Question 2
   \item An example of a non-trivial dependency is id $\twoheadrightarrow$
