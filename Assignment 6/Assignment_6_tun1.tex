@@ -222,6 +222,10 @@ We will use the short hand notation for each attribute for brevity.
         dependency-preserving. It is also proved in the lecture that
         Decompose-3NF is dependency-preserving.
 
+        Notice that we know that we can join (I, St, Si, Ri) and (Si, Ss) on Si.
+        Then, we can join the result with (Ss, Sd) on Ss. After that, we can
+        join the result with (St, Ri, Fi) on St. Then, we join with (Fi, Fl) and
+        (Fi, Si, Fs) on Fi. Finally, we can join the result with (Ri, Rs) on Ri.
         Furthermore, it is proved in the lecture that Decompose-3NF is also
         lossless-join. Thus, this decomposition should be lossless-join as well.
 
@@ -422,10 +426,15 @@ We will use the short hand notation for each attribute for brevity.
         \end{itemize}
 
         This decomposition is not dependency-preserving since we lost the
-        dependency Fi, Si $\longrightarrow$ Fs.
+        dependencies Fi, Si $\longrightarrow$ Fs.
 
-        It is proved in the lecture that \textsc{Decompose-BCNF} is
-        lossless-join. Thus, the decomposition is lossless-join.
+        The decomposition is lossless-join since we can join (I, P, Rp) and (St,
+        Ri, Si, I) on I. Then, we can join this result with (Si, Ss) on Si.
+        After that, we can join the result with (Ss, Sd) on Ss. Then, we can
+        join with (Ri, Rs), (Ri, Fi, St) and (St, Ri, Si, Fs) on Ri. Finally, we
+        can join with (Fi, Fl) on Fi. Furthermore, it is proved in the lecture
+        that \textsc{Decompose-BCNF} is lossless-join. Thus, the decomposition
+        is lossless-join.
 
         Decompose the example data set
         \begin{itemize}
